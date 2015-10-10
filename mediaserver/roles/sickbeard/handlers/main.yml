@@ -1,0 +1,5 @@
+---
+
+- name: restart sickbeard
+  service: name=sickbeard state=restarted
+

@@ -1,0 +1,51 @@
+__version__ = 19
+[misc]
+permissions = 775
+host = {{sabnzbd_ip}}
+admin_dir = {{sabnzbd_admin_dir}}
+log_dir = {{sabnzbd_logs_dir}}
+api_key = {{sabnzbd_api_key}}
+nzb_key = {{sabnzbd_nzb_key}}
+dirscan_dir = {{incoming_content_dir}}/usenet/.poll
+download_dir = {{incoming_content_dir}}/usenet/.incomplete
+complete_dir = {{incoming_content_dir}}/usenet
+script_dir = "{{sickbeard_autoprocess_dir}}"
+[categories]
+[[*]]
+priority = 0
+pp = 3
+name = *
+script = None
+newzbin = ""
+dir = ""
+[[films]]
+priority = -100
+pp = ""
+name = films
+script = Default
+newzbin = ""
+dir = {{incoming_content_dir}}/usenet/films
+[[tv]]
+priority = -100
+pp = ""
+name = tv
+script = sabToSickBeard.py
+newzbin = ""
+dir = {{incoming_content_dir}}/usenet/tv
+[servers]
+{% for item in sabnzbd_servers %}
+[[{{item.url}}]]
+username = {{item.username}}
+enable = 1
+name = {{item.url}}
+fillserver = 0
+connections = {{item.connections | default('8')}}
+ssl = 1
+host = {{item.url}}
+timeout = 120
+password = {{item.password}}
+optional = 0
+port = {{item.port}}
+retention = 0
+{% endfor %}
+

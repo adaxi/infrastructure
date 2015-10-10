@@ -1,0 +1,12 @@
+---
+- name: install a media server
+  hosts: [mediaservers]
+  become: yes
+  become_user: root
+  roles:
+     - essencia
+     - sickbeard
+     - sabnzbd
+     - plexmediaserver
+     - omv
+     - plexhometheater

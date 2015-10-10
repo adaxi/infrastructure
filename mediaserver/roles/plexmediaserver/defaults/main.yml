@@ -1,0 +1,21 @@
+---
+# plexmediaserver user/group properties
+plexmediaserver_user_name: plexmediaserver
+plexmediaserver_group_name: "{{content_group_name}}"
+plexmediaserver_user_home: /var/lib/plexmediaserver
+
+# plexmediaserver paths
+plexmediaserver_conf_path: "/etc/plexmediaserverplus"
+plexmediaserver_logs_dir:  "/var/log/plexmediaserverplus"
+
+
+# plexmediaserver service properties
+plexmediaserver_ip: 0.0.0.0
+plexmediaserver_port: 32400
+
+
+
+
+
+
+

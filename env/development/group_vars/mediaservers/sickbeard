@@ -1,0 +1,18 @@
+---
+
+#
+# \author	Gerik Bonaert
+# \date		2015
+# \brief	Configuration file for sickbeard.
+# 
+# You can use this file to provision newznab providers into sickbeard.
+# Each provider requires a name, the URL to the newznab site, and the
+# api key to access it. You can find the API key on your profile page.
+# 
+
+sickbeard_providers:
+    - name: "NZBs.org"
+      url: "http://google.com"
+      api_key: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+      
+      

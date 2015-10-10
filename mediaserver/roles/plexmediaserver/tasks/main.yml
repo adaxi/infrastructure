@@ -1,0 +1,40 @@
+---
+  
+- name: Add shell.ninthgate.se public key
+  apt_key: data="{{ lookup('file', 'shell.ninthgate.se.pubkey') }}" state=present
+
+- name: Add shell.ninthgate.se repository
+  apt_repository: repo='deb http://shell.ninthgate.se/packages/debian wheezy main' state=present
+
+- name: Ensure plexmediaserver service group is present
+  group: name={{ plexmediaserver_group_name }}
+         state=present
+           
+- name: Ensure plexmediaserver service user is present
+  user: name={{ plexmediaserver_user_name }}
+        group={{ plexmediaserver_group_name }}
+        shell="/bin/bash"
+        home={{ plexmediaserver_user_home }}
+        createhome=yes
+        state=present
+
+- name: Ensure plexmediaserver service user environment is set up
+  shell: cp /etc/skel/{.bash*,.login,.profile} {{ plexmediaserver_user_home }}/
+  args:
+    creates: "{{ plexmediaserver_user_home }}/.bashrc"
+
+- name: Ensure plexmediaserver and its dependencies are installed
+  apt: name=plexmediaserver state=present 
+  notify: restart plexmediaserver
+  
+- name: Copy defaults values
+  template: src=plexmediaserver.defaults.j2 
+            dest=/etc/default/plexmediaserver
+            owner={{ plexmediaserver_user_name }}
+  notify: restart plexmediaserver
+              
+- name: Ensure plexmediaserver service is running and enabled on boot
+  service: name=plexmediaserver 
+           state=started 
+           pattern="plexmediaserver"
+           enabled=yes

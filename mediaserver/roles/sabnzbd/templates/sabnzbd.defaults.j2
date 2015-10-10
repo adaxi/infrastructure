@@ -1,0 +1,29 @@
+# This file is sourced by /etc/init.d/sabnzbdplus
+#
+# When sabnzbdplus is started using the init script
+# is started under the account of , as set below.
+#
+# Each setting is marked either "required" or "optional";
+# leaving any required setting unconfigured will cause
+# the service to not start.
+
+
+# [optional] change to 1 to enable daemon
+ENABLE_DAEMON=1
+
+# [required] user or uid of account to run the program as:
+USER={{sabnzbd_user_name}}
+
+# [optional] change to 1 to enable updating from webinterface
+# this changes ownership of /opt/sabnzbdplus to user set @ RUN_AS=
+WEB_UPDATE=0
+
+# [optional] full path to the configuration file of your choice;
+# otherwise, the default location (~/.sabnzbdplus) is used:
+CONFIG={{sabnzbd_conf_path}}/config.ini
+
+# [required] host to listen on:
+HOST={{sabnzbd_ip}}
+
+# [optional] port number to listen on:
+PORT={{sabnzbd_port}}

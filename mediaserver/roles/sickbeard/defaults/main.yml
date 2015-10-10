@@ -1,0 +1,18 @@
+---
+# SickBeard user/group properties
+sickbeard_user_name: sickbeard
+sickbeard_group_name: "{{content_group_name}}"
+sickbeard_user_home: /var/lib/sickbeard
+
+# SickBeard paths
+sickbeard_logs_dir:  "/var/log/sickbeard"
+sickbeard_conf_path: "/etc/sickbeard"
+sickbeard_app_path : "/usr/share/sickbeard"
+sickbeard_autoprocess_path : "{{sickbeard_app_path}}/autoProcessTV"
+
+
+# SickBeard service properties
+sickbeard_port: 8081
+sickbeard_host: 0.0.0.0
+
+sickbeard_providers: {}

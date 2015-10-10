@@ -1,0 +1,26 @@
+---
+# SABnzbd user/group properties
+sabnzbd_user_name: sabnzbd
+sabnzbd_group_name: "{{content_group_name}}"
+sabnzbd_user_home: /var/lib/sabnzbdplus
+
+# SABnzbd paths
+sabnzbd_conf_path: "/etc/sabnzbdplus"
+sabnzbd_logs_dir:  "/var/log/sabnzbdplus"
+sabnzbd_admin_dir: "{{sabnzbd_user_home}}/admin"
+sickbeard_autoprocess_dir: "/usr/share/sickbeard/autoProcessTV"
+
+# SABnzbd service properties
+sabnzbd_ip: 0.0.0.0
+sabnzbd_port: 8080
+
+# SABnzbd api key
+sabnzbd_api_key: ""
+sabnzbd_nzb_key: ""
+
+sabnzbd_servers: {}
+
+
+
+
+

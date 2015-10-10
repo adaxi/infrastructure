@@ -1,0 +1,18 @@
+---
+# plexhometheater user/group properties
+plexhometheater_user_name: plexhometheater
+plexhometheater_group_name: "{{content_group_name}}"
+plexhometheater_user_home: /var/lib/plexhometheater
+
+# plexhometheater paths
+plexhometheater_conf_path: "/etc/plexhometheaterplus"
+plexhometheater_logs_dir:  "/var/log/plexhometheaterplus"
+
+
+
+
+
+
+
+
+

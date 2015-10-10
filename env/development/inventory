@@ -1,0 +1,22 @@
+;
+; \author	Gerik Bonaert
+; \date		2015
+; \brief	Example inventory file.
+;
+; In this example a single media server (mean) is added to
+; the mediaserver group.
+; 
+; The mediaserver group was only tested against Debian Wheezy.
+;
+; The mediaservers will require to become root on the machine.
+; As its not a good practice to run as root, I recommend using
+; sudo. You will also require ssh running. On a fresh install:
+;
+; # su root
+; # apt-get install sudo ssh -y
+; # usermod -a -G sudo <username> 
+;
+;
+
+[mediaservers]
+mean
