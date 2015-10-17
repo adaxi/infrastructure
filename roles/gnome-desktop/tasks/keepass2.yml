@@ -1,0 +1,4 @@
+---
+- name: Install keepass2
+  apt: name=keepass2
+  become: yes

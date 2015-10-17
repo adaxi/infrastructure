@@ -1,0 +1,7 @@
+---
+- name: Install development tools
+  apt: name={{item}} 
+  with_items:
+    - tshark
+    - subversion
+    - git

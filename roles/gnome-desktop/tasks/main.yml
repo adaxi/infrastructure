@@ -1,0 +1,6 @@
+---
+- include: gvim.yml
+- include: fonts.yml
+- include: themes.yml
+- include: keepass2.yml
+- include: network-manager.yml

@@ -1,0 +1,21 @@
+---
+
+- name: Add content group
+  group: name="{{content_group_name}}" system=yes state=present
+
+- name: Add adaxisoft.be public key
+  apt_key: data="{{ lookup('file', 'adaxisoft.be.pubkey') }}" state=present
+
+- name: Add adaxisoft.be repository
+  apt_repository: repo='deb http://apt.adaxisoft.be/debian {{ansible_distribution_release}} main' state=present
+  
+- name: Add contrib to the repositories repository
+  apt_repository: repo='deb http://httpredir.debian.org/debian {{ansible_distribution_release}} main contrib non-free' state=present
+  
+- name: Ensure media incoming directory exists
+  file: dest="{{ incoming_content_dir }}"
+        owner=root
+        group="{{content_group_name}}"
+        state=directory
+        
+

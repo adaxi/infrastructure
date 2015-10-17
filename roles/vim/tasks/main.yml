@@ -1,0 +1,5 @@
+- name: Install Vim
+  apt: name={{item}} state=present
+  become: yes
+  with_items:
+    - vim

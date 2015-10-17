@@ -1,0 +1,16 @@
+---
+- name: Install development tools
+  apt: name=stow
+  
+- name: Clone all dot files
+  git: repo=https://github.com/adaxi/.dotfiles dest="/home/{{username}}/.dotfiles"
+  become: yes
+  become_user: "{{username}}"
+  
+- name: Install all dotfiles
+  shell: "/usr/bin/find * -mindepth 0 -maxdepth 0 -type d -not -path '*/\\.*' -exec stow {} \\;"
+  args:
+    chdir: "/home/{{username}}/.dotfiles"
+  become: yes
+  become_user: "{{username}}"
+  changed_when: False

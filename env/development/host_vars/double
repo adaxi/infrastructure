@@ -1,0 +1,14 @@
+
+#
+# \author	Gerik Bonaert
+# \date		2015
+# \brief	Configuration file for your daily driver.
+# 
+# Basic information required to setup your daily driver.
+# This is the example of a hosts file for a daily driver.
+# 
+
+#
+# \var Your account name.
+#
+username: vagrant

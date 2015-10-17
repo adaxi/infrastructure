@@ -3,20 +3,46 @@
 ; \date		2015
 ; \brief	Example inventory file.
 ;
-; In this example a single media server (mean) is added to
-; the mediaserver group.
 ; 
-; The mediaserver group was only tested against Debian Wheezy.
+; Requirements
+; ------------
+;  - Root access on the machine using sudo. (not required when using vagrant)
+;  - SSH access on the machine. (not required when using vagrant)
+;  - Public key login.
+; 
+; 
+; Root access on the machine using sudo
+; -------------------------------------
+; 
+; Connect to your guest as root and run the following commands.
+; 
+; # su root
+; # usermod -a -G sudo <username>
 ;
-; The mediaservers will require to become root on the machine.
-; As its not a good practice to run as root, I recommend using
-; sudo. You will also require ssh running. On a fresh install:
+; 
+; SSH access on the machine
+; --------------------------
+;
+; Connect to your guest as root and run the following commands.
 ;
 ; # su root
 ; # apt-get install sudo ssh -y
-; # usermod -a -G sudo <username> 
 ;
+;
+; Public key login
+; ----------------
+; 
+; After booting your guests, execute on your host:
+;
+; ssh-copy-id <username>@<hostname of guest>
+;
+; The default username on a vagrant machine is 'vagrant'.
 ;
 
+
+
 [mediaservers]
-mean
+mean ansible_user=vagrant
+
+[dailydrivers]
+double ansible_user=vagrant
