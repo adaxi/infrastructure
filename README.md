@@ -31,7 +31,7 @@ cd -
 
 ssh-copy-id vagrant@mean
 
-ansible-playbook -i env/development/inventory mediaservers.yml
+ansible-playbook -i env/development/inventory mediaserver.yml
 ```
 
 
