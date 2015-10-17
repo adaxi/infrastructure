@@ -1,0 +1,17 @@
+---
+- name: install a daily driver
+  hosts: [dailydrivers]
+  become: yes
+  become_user: root
+  roles:
+     - _base
+     - devtools-common
+     - devtools-desktop
+     - firefox
+     - chrome
+     - java
+     - vim
+     - eclipse
+     - dotfiles
+     - gnome-desktop
+
