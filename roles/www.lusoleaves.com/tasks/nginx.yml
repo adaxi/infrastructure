@@ -1,0 +1,13 @@
+---
+
+- name: Make lusoleaves_com.conf available
+  template: src=nginx.lusoleaves_com.conf.j2 
+            dest=/etc/nginx/sites-available/lusoleaves_com.conf
+  notify: reload nginx
+  
+- name: Enable lusoleaves_com.conf
+  file: src=/etc/nginx/sites-available/lusoleaves_com.conf 
+        dest=/etc/nginx/sites-enabled/lusoleaves_com.conf
+        state=link
+  
+  

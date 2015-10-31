@@ -1,0 +1,11 @@
+--- index.php	2015-10-18 13:06:05.142225719 +0000
++++ index.php	2015-10-18 13:06:30.386226548 +0000
+@@ -18,7 +18,7 @@
+  * NOTE: If you change these, also change the error_reporting() code below
+  *
+  */
+-	define('ENVIRONMENT', 'development');
++	define('ENVIRONMENT', 'production');
+ /*
+  *---------------------------------------------------------------
+  * ERROR REPORTING

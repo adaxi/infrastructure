@@ -1,0 +1,12 @@
+---
+
+- name: Add content group
+  group: name="{{content_group_name}}" system=yes state=present
+
+- name: Ensure media incoming directory exists
+  file: dest="{{ incoming_content_dir }}"
+        owner=root
+        group="{{content_group_name}}"
+        state=directory
+        
+

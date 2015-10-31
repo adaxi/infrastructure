@@ -1,0 +1,14 @@
+---
+- name: install a web server
+  hosts: [webservers]
+  gather_facts: yes
+  become: yes
+  become_user: root
+  roles:
+     - common._base
+     - common.vim
+     - common.glacier
+     - { role: common.dotfiles, install_dofiles: False }
+     - www.lusoleaves.com
+     - www.adaxisoft.be
+     - www.apt.adaxisoft.be

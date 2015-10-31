@@ -1,0 +1,9 @@
+---
+lusoleaves_com_domain: lusoleaves.com
+lusoleaves_com_group: lusoleaves_com
+lusoleaves_com_user: lusoleaves_com
+lusoleaves_com_home: /var/www/lusoleaves_com
+lusoleaves_com_db_host: localhost
+lusoleaves_com_db_username: lusoleaves_com
+lusoleaves_com_db_name: lusoleaves_com
+lusoleaves_com_debug: False

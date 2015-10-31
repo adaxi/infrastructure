@@ -1,0 +1,57 @@
+---
+
+- name: create adaxisoft.be group
+  group: name="{{adaxisoft_be_group}}" 
+
+- name: create adaxisoft.be user
+  user: name="{{adaxisoft_be_user}}" 
+        shell=/bin/nologin 
+        group="{{adaxisoft_be_group}}" 
+        append=yes
+        home={{adaxisoft_be_home}}
+        createhome=yes
+        skeleton=/dev/shm
+
+- name: deploy adaxisoft.be
+  git: repo=https://github.com/adaxi/adaxisoft.be.git
+       dest="{{adaxisoft_be_home}}"
+  become: yes
+  become_user: "{{adaxisoft_be_user}}"
+  
+- name: install wordpress
+  apt: name=wordpress state=present
+  
+- name: install mog theme
+  unarchive: src=https://downloads.wordpress.org/theme/mog.1.1.10.zip 
+             dest=/usr/share/wordpress/wp-content/themes
+             copy=no
+             
+- name: install crayon syntax highlight plugin
+  unarchive: src=https://downloads.wordpress.org/plugin/crayon-syntax-highlighter.zip
+             dest=/usr/share/wordpress/wp-content/plugins
+             copy=no
+  
+- name: generate config.php 
+  template: src=config.php.j2 dest="/etc/wordpress/config-{{adaxisoft_be_domain}}.php"
+
+- name: link blog to root path
+  file: src=/usr/share/wordpress dest={{adaxisoft_be_home}}/blog state=link
+
+- name: Install nginx configuration
+  include: nginx.yml
+  
+- name: Install php-fpm configuration
+  include: php-fpm.yml
+  
+- name: Install nodejs configuration
+  include: nodejs.yml
+  
+- name: Install php-fpm configuration
+  include: mariadb.yml
+  
+- name: Restart php-fpm
+  service: name=php5-fpm state=restarted
+  
+- name: Reload nginx
+  service: name=nginx state=reloaded
+

@@ -38,7 +38,7 @@
 ;
 ; The default username on a vagrant machine is 'vagrant'.
 ;
-
+; 
 
 
 [mediaservers]
@@ -46,3 +46,9 @@ mean ansible_user=vagrant
 
 [dailydrivers]
 double ansible_user=vagrant
+
+[webservers]
+zero ansible_user=vagrant
+
+[vpnservers]
+zero ansible_user=vagrant

@@ -1,0 +1,6 @@
+---
+dependencies: 
+  - { role: server.nginx }
+  - { role: server.php-fpm }
+  - { role: server.mariadb }
+  - { role: server.nodejs }

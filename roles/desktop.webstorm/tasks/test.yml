@@ -1,0 +1,11 @@
+---
+
+- name: Get stat of webstorm
+  stat:
+    path="{{ webstorm_bin }}"
+  register: webstorm_stat
+
+- name: Test if webstorm is executable
+  fail:
+    msg="{{ webstorm_bin }} isn't executable"
+  when: webstorm_stat.stat.xgrp != true

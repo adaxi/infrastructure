@@ -1,0 +1,8 @@
+---
+adaxisoft_be_domain: adaxisoft.be
+adaxisoft_be_group: adaxisoft_be
+adaxisoft_be_user: adaxisoft_be
+adaxisoft_be_home: /var/www/adaxisoft_be
+adaxisoft_be_db_host: localhost
+adaxisoft_be_db_username: adaxisoft_be_blog
+adaxisoft_be_db_name: adaxisoft_be

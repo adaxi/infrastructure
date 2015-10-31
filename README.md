@@ -25,11 +25,11 @@ git clone git://github.com/adaxi/infrastructure.git .
 git clone git://github.com/ansible/ansible.git --recursive
 source ansible/hacking/env-setup
 
-cd env/development/vagrant/mediaserver
-vagrant up
+cd env/development/vagrant
+vagrant up mediaserver
 cd -
 
-ssh-copy-id vagrant@mean
+ssh-copy-id vagrant@mean # password is "vagrant"
 
 ansible-playbook -i env/development/inventory mediaserver.yml
 ```
@@ -45,6 +45,17 @@ My media server is based on a Debian Wheezy contains the following components:
  * Plex Media Server: Streams media to all my devices
  * Plex Home Theater: Media center
  
+
+Before reinstalling your system make sure that the following items are safe:
+ * /etc/mdadm.conf
+ 
+After installing the production system:
+ * Install LVM over LUKS over RAID5.
+ * ```mv /media/raid/* /media/<uuid> && rm -rf /media/raid && ln -sf /media/<uuid> /media/raid```
+ * Backup ```/etc/mdadm.conf```
+ * Add media libraries to Plex Media Server
+ * Configure addns in OMV
+
  
 Daily Driver
 ------------
@@ -52,9 +63,39 @@ Daily Driver
 My daily drivers consists of a Debian Jessie distribution. It contains all the tools
 I use regularly. It is also pre-configured for my needs: my dotfiles are included.
 
+Before reinstalling your system make sure that the following items are safe:
+ * SSH keys
+ * GPG keys
+ * Keepass2 database
+ 
 
+Webserver
+---------
 
+Hosts my websites with a Nginx + ( PHP-FPM | Node ) + Maria DB stack.
+Hosts my apt repository.
 
+Before reinstalling your system make sure that the following items are safe:
+ * GPG keys (aptly)
 
+When installing the webserver you need to place the GPG keys for your repository
+into ```env/<environment>/keys```
+
+To create new GPG keys:
+```sh
+sudo apt-get install gnupg
+gpg --gen-key # copy the key id
+gpg --export-secret-keys --armor <keyid> > env/<environment>/private.gpg.key
+gpg --export --armor 61B1BA69 > env/<environment>/public.gpg.key
+
+```
+ 
+Place a backup of the adaxisoft database in ```/backups/adaxisoft.sql``` for it to be restored.
+Place a backup of the lusoleaves database in ```/backups/lusoleaves.sql``` for it to be restored.
+Place a backup of the lusoleaves products in ```/backups/products``` for it to be restored.
+
+After installing the production system:
+ * Add the debian packages to the repository
+ 
 
 

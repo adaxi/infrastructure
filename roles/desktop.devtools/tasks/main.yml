@@ -1,0 +1,9 @@
+---
+- name: Install development tools for machines with an GUI
+  apt: name={{item}} 
+  with_items:
+    - virtualbox
+    - wireshark
+    - terminator
+    - vagrant
+

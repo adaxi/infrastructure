@@ -1,0 +1,5 @@
+---
+
+webstorm_version: 9.0
+webstorm_install_dir: /usr/share
+webstorm_bin: /usr/bin/webstorm

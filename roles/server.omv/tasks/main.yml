@@ -1,0 +1,44 @@
+---
+  
+- name: Add packages.openmediavault.org public key
+  apt_key: data="{{ lookup('file', 'packages.openmediavault.org.pubkey') }}" state=present
+
+- name: Add packages.openmediavault.org repository
+  apt_repository: repo='deb http://packages.openmediavault.org/public stoneburner main' state=present
+
+- name: Ensure OpenMediaVault dependencies are installed
+  apt: name={{item}} state=present
+  with_items:
+      - openmediavault-keyring
+      - postfix
+      
+- name: Ensure OpenMediaVault is installed
+  apt: name=openmediavault state=present update_cache=yes
+ 
+- name: Initialize OpenMediaVault 
+  shell: '/usr/sbin/omv-config -s /config/system/network/hostname | grep -oq openmediavault && /usr/sbin/omv-initsystem && echo 1 || /bin/true'
+  register: openmediavault_initilized
+  changed_when: "openmediavault_initilized == 1"
+  
+- name: Ensure optional modules are installed
+  apt: name={{item}} state=present update_cache=yes
+  with_items:
+    - openmediavault-sickbeard-essencia
+    - openmediavault-sabnzbdplus-essencia
+    - openmediavault-addns-essencia
+
+- name: Make really sure we do not cut the ssh connection
+  shell: "/usr/sbin/omv-config -m /config/services/ssh/enable 1"
+
+- name: Ensure engine is running and enabled on boot
+  service: name=openmediavault-engined
+           state=started 
+           enabled=yes
+
+- name: Ensure SSH engine is running and enabled on boot
+  service: name=ssh
+           state=started 
+           enabled=yes
+           
+          
+           

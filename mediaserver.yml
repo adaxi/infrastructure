@@ -5,11 +5,11 @@
   become: yes
   become_user: root
   roles:
-     - _base
-     - devtools-common
-     - essencia
-     - sickbeard
-     - sabnzbd
-     - plexmediaserver
-     - omv
-     - plexhometheater
+     - common._base
+     - common.devtools
+     - media.essencia
+     - media.sickbeard
+     - media.sabnzbd
+     - media.plexmediaserver
+     - media.plexhometheater
+     - server.omv

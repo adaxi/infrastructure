@@ -1,0 +1,20 @@
+---
+#
+# \author	Gerik Bonaert
+# \date		2015
+# \brief	Configuration file for your web server.
+# 
+# Basic information required to setup your web server.
+# 
+
+###
+# Environment
+###
+
+#
+# \var environment on which the installation is launched
+#
+installation_environment: development
+
+
+

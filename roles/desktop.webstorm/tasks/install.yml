@@ -1,0 +1,24 @@
+---
+
+- name: Download and decompress WebStorm
+  unarchive:
+    src=https://download.jetbrains.com/webstorm/WebStorm-10.0.4.tar.gz
+    dest="{{ webstorm_install_dir }}"
+    creates="{{ webstorm_install_dir }}/webstorm"
+    copy=no
+    
+- name: Rename WebStorm
+  shell:
+    mv {{ webstorm_install_dir }}/WebStorm-* {{ webstorm_install_dir }}/webstorm
+    creates="{{ webstorm_install_dir }}/webstorm"
+
+- name: Create symlink
+  file:
+    src="{{ webstorm_install_dir }}/webstorm/bin/webstorm.sh"
+    dest="{{ webstorm_bin }}"
+    state=link
+    
+- name: Create desktop icon
+  copy: src=webstorm.desktop dest=/usr/share/applications
+  become: yes
+

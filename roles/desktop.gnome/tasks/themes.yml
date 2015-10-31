@@ -1,0 +1,95 @@
+---
+- name: Add numix repository key
+  apt_key: keyserver=keyserver.ubuntu.com id=0F164EEB
+  become: yes
+
+- name: Add numix repository
+  apt_repository: repo='deb http://ppa.launchpad.net/numix/ppa/ubuntu trusty main' state=present
+  become: yes
+
+- name: install numix theme and install circle icon theme
+  apt: name={{item}} 
+  with_items:
+    - numix-icon-theme-circle
+    - numix-gtk-theme
+    - gnome-tweak-tool
+    - nautilus-image-converter
+  become: yes
+  
+- name: Create dconf cache dir
+  become_user: "{{ansible_user_id}}"
+  file: path="~/.cache/dconf"
+        state=directory
+        owner="{{ansible_user_id}}"
+  
+
+- name: Set icons to numix circle
+  become_user: "{{ansible_user_id}}"
+  gsettings:
+    settings:
+      - schema: org.gnome.desktop.interface
+        key: icon-theme 
+        value: Numix-Circle
+        
+        
+- name: Set number of worspaces to 4
+  become_user: "{{ansible_user_id}}"
+  gsettings:
+    settings:
+      - schema: org.gnome.desktop.wm.preferences
+        key: num-workspaces
+        value: 4
+        
+- name: Disable dynamic workspaces
+  become_user: "{{ansible_user_id}}"
+  gsettings:
+    settings:
+      - schema: org.gnome.shell.overrides
+        key: dynamic-workspaces
+        value: false
+        
+- name: Enable workspaces on all screens
+  become_user: "{{ansible_user_id}}"
+  gsettings:
+    settings:
+      - schema: org.gnome.shell.overrides
+        key: workspaces-only-on-primary
+        value: false
+        
+        
+- name: Show date 
+  become_user: "{{ansible_user_id}}"
+  gsettings:
+    settings:
+      - schema: org.gnome.desktop.interface
+        key: clock-show-date
+        value: true
+        
+- name: Show seconds 
+  become_user: "{{ansible_user_id}}"
+  gsettings:
+    settings:
+      - schema: org.gnome.desktop.interface
+        key: clock-show-seconds
+        value: true
+
+- name: Add minimize to button layout
+  become_user: "{{ansible_user_id}}"
+  gsettings:
+    settings:
+      - schema: org.gnome.desktop.wm.preferences
+        key: button-layout
+        value: ":minimize,close"
+        
+- name: Add minimize to button layout
+  become_user: "{{ansible_user_id}}"
+  gsettings:
+    settings:
+      - schema: org.gnome.desktop.background
+        key: picture-uri
+        value: "file:///usr/share/backgrounds/gnome/Bokeh_Tails.jpg"
+        
+
+
+
+

@@ -4,14 +4,15 @@
   become: yes
   become_user: root
   roles:
-     - _base
-     - devtools-common
-     - devtools-desktop
-     - firefox
-     - chrome
-     - java
-     - vim
-     - eclipse
-     - dotfiles
-     - gnome-desktop
+     - common._base
+     - common.vim
+     - common.java
+     - common.devtools
+     - common.dotfiles
+     - desktop.devtools
+     - desktop.firefox
+     - desktop.chrome
+     - desktop.eclipse
+     - desktop.webstorm
+     - desktop.gnome
 

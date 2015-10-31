@@ -1,0 +1,26 @@
+---
+- name: Add adaxisoft.be public key
+  apt_key: url='http://apt.adaxisoft.be/public.gpg.key' state=present
+  become: yes
+  
+- name: Add adaxisoft.be repository
+  apt_repository: repo='deb http://apt.adaxisoft.be/debian {{ansible_distribution_release}} main' state=present
+  become: yes
+  
+- name: Add contrib and non-free section to debian repositories
+  apt_repository: repo='deb http://httpredir.debian.org/debian {{ansible_distribution_release}} contrib non-free' state=present
+  become: yes
+  
+- name: Install debconf, debconf utils and git required for ansible deployment
+  apt: name={{item}}
+  with_items:
+    - debconf
+    - debconf-utils
+    - software-properties-common
+    - git
+    - apt-transport-https
+  become: yes
+    
+    
+    
+

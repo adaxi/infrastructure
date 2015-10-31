@@ -1,0 +1,56 @@
+---
+#
+# \author	Gerik Bonaert
+# \date		2015
+# \brief	Configuration file for your web server.
+# 
+# Basic information required to setup your web server.
+# This is the example of a hosts file for a web server.
+#
+# This file should be encrypted:
+#
+# ansible-vault encrypt env/development/zero
+#
+
+#
+# \var MySQL root password.
+#
+mysql_root_password: AAAAAAAAAAAAAAAA
+
+#
+# \var Domain name for lusoleaves.com. In the production environment this var should not be present.
+#
+lusoleaves_com_domain: zero
+
+#
+# \var CodeIgniter encryption key for lusoleaves.com.
+#
+lusoleaves_com_encryption_key: AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+
+#
+# \var MySQL password for lusoleaves.com
+#
+lusoleaves_com_db_password: AAAAAAAAAA
+
+#
+# \var Domain name for adaxisoft.be. In the production environment this var should not be present.
+#
+adaxisoft_be_domain: zero
+
+
+#
+# \var MySQL password for adaxisoft.be
+#
+adaxisoft_be_db_password: AAAAAAAAAAAA
+
+#
+# \var Wordpress security
+#
+adaxisoft_be_auth_key: AAAAAAAAAAAA
+adaxisoft_be_secure_auth_key: AAAAAAAAAAAA
+adaxisoft_be_logged_in_key: AAAAAAAAAAAA
+adaxisoft_be_nonce_key: AAAAAAAAAAAA
+adaxisoft_be_auth_salt: AAAAAAAAAAAA
+adaxisoft_be_secure_auth_salt: AAAAAAAAAAAA
+adaxisoft_be_logged_in_salt: AAAAAAAAAAAA
+adaxisoft_be_nonce_salt: AAAAAAAAAAAA
