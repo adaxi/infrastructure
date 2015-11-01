@@ -25,9 +25,7 @@ git clone git://github.com/adaxi/infrastructure.git .
 git clone git://github.com/ansible/ansible.git --recursive
 source ansible/hacking/env-setup
 
-cd env/development/vagrant
 vagrant up mediaserver
-cd -
 
 ssh-copy-id vagrant@mean # password is "vagrant"
 
