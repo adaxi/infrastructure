@@ -1,0 +1,6 @@
+aptly_version: 0.9.5
+aptly_user: aptly
+aptly_secret_key_path: env/{{installation_environment}}/keys/
+aptly_secret_key_file: private.gpg.key
+aptly_virtualhost: apt.adaxisoft.be
+aptly_secret_key_id: 7C9E513D
