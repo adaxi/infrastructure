@@ -1,9 +1,12 @@
 ---
 - name: add glacier key 
   apt_key: url=https://mt-aws.com/vsespb.gpg.key state=present
+  become: yes
   
 - name: add glacier repository
   apt_repository: repo="deb http://dl.mt-aws.com/debian/current {{ ansible_distribution_release }} main" state=present
+  become: yes
   
 - name: apt install mtglacier 
   apt: name=libapp-mtaws-perl state=present
+  become: yes

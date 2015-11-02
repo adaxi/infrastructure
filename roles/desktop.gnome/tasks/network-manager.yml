@@ -1,6 +1,7 @@
 ---
 - name: Install network manager addons
   apt: name={{item}}
+  become: yes
   with_items:
     - network-manager-openvpn
     - network-manager-openvpn-gnome

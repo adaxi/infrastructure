@@ -6,11 +6,13 @@
     dest="{{ webstorm_install_dir }}"
     creates="{{ webstorm_install_dir }}/webstorm"
     copy=no
+  become: yes
     
 - name: Rename WebStorm
   shell:
     mv {{ webstorm_install_dir }}/WebStorm-* {{ webstorm_install_dir }}/webstorm
     creates="{{ webstorm_install_dir }}/webstorm"
+  become: yes
 
 - name: Create symlink
   file:

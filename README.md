@@ -12,7 +12,7 @@ ansible-playbook -i env/<environment>/inventory all.yml
 Discover, modify and test using vagrant
 ---------------------------------------
 
-A development and a production environment are available. The production environment 
+A development and a production environment are available. The production environment
 are my actual machines. The development machines are Vagrant based.
 
 Example for mediaserver:
@@ -42,11 +42,11 @@ My media server is based on a Debian Wheezy contains the following components:
  * Sickbeard: TV Series episode management
  * Plex Media Server: Streams media to all my devices
  * Plex Home Theater: Media center
- 
+
 
 Before reinstalling your system make sure that the following items are safe:
  * /etc/mdadm.conf
- 
+
 After installing the production system:
  * Install LVM over LUKS over RAID5.
  * ```mv /media/raid/* /media/<uuid> && rm -rf /media/raid && ln -sf /media/<uuid> /media/raid```
@@ -54,7 +54,7 @@ After installing the production system:
  * Add media libraries to Plex Media Server
  * Configure addns in OMV
 
- 
+
 Daily Driver
 ------------
 
@@ -65,7 +65,12 @@ Before reinstalling your system make sure that the following items are safe:
  * SSH keys
  * GPG keys
  * Keepass2 database
- 
+
+When testing in the development environement, you need to login and run:
+./install-gnome.
+For some reason it requires /dev/tty and I have not found how to bypass
+this. Either I find a way to fix it, or I build a box with gnome included.
+
 
 Webserver
 ---------
@@ -87,13 +92,13 @@ gpg --export-secret-keys --armor <keyid> > env/<environment>/private.gpg.key
 gpg --export --armor 61B1BA69 > env/<environment>/public.gpg.key
 
 ```
- 
+
 Place a backup of the adaxisoft database in ```/backups/adaxisoft.sql``` for it to be restored.
 Place a backup of the lusoleaves database in ```/backups/lusoleaves.sql``` for it to be restored.
 Place a backup of the lusoleaves products in ```/backups/products``` for it to be restored.
 
 After installing the production system:
  * Add the debian packages to the repository
- 
+
 
 

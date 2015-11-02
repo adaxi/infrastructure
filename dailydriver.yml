@@ -1,8 +1,6 @@
 ---
 - name: install a daily driver
   hosts: [dailydrivers]
-  become: yes
-  become_user: root
   roles:
      - common._base
      - common.vim

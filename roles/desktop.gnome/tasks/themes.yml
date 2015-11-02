@@ -17,13 +17,15 @@
   become: yes
   
 - name: Create dconf cache dir
+  become: yes
   become_user: "{{ansible_user_id}}"
   file: path="~/.cache/dconf"
         state=directory
         owner="{{ansible_user_id}}"
   
 
-- name: Set icons to numix circle
+- name: Set icons to numix circle+
+  become: yes
   become_user: "{{ansible_user_id}}"
   gsettings:
     settings:
@@ -33,6 +35,7 @@
         
         
 - name: Set number of worspaces to 4
+  become: yes
   become_user: "{{ansible_user_id}}"
   gsettings:
     settings:
@@ -41,6 +44,7 @@
         value: 4
         
 - name: Disable dynamic workspaces
+  become: yes
   become_user: "{{ansible_user_id}}"
   gsettings:
     settings:
@@ -49,6 +53,7 @@
         value: false
         
 - name: Enable workspaces on all screens
+  become: yes
   become_user: "{{ansible_user_id}}"
   gsettings:
     settings:
@@ -57,7 +62,8 @@
         value: false
         
         
-- name: Show date 
+- name: Show date
+  become: yes
   become_user: "{{ansible_user_id}}"
   gsettings:
     settings:
@@ -65,7 +71,8 @@
         key: clock-show-date
         value: true
         
-- name: Show seconds 
+- name: Show seconds
+  become: yes
   become_user: "{{ansible_user_id}}"
   gsettings:
     settings:
@@ -74,6 +81,7 @@
         value: true
 
 - name: Add minimize to button layout
+  become: yes
   become_user: "{{ansible_user_id}}"
   gsettings:
     settings:
@@ -81,7 +89,8 @@
         key: button-layout
         value: ":minimize,close"
         
-- name: Add minimize to button layout
+- name: Set wallpaper
+  become: yes
   become_user: "{{ansible_user_id}}"
   gsettings:
     settings:

@@ -1,6 +1,7 @@
 ---
 - name: Install development tools
-  apt: name={{item}} 
+  apt: name={{item}}
+  become: yes
   with_items:
     - tshark
     - subversion
