@@ -1,5 +1,5 @@
 server {
-    root /var/www/{{ aptly_user }}/.aptly/public;
+    root {{ aptly_home }}/.aptly/public;
     server_name {{ aptly_virtualhost }};
 
     location / {

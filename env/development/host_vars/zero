@@ -35,7 +35,12 @@ lusoleaves_com_db_password: AAAAAAAAAA
 #
 # \var Domain name for adaxisoft.be. In the production environment this var should not be present.
 #
-adaxisoft_be_domain: zero
+adaxisoft_be_domain: x.adaxisoft.be
+
+#
+# \var Domain name for the apt repository In the production environment this var should not be present.
+#
+aptly_virtualhost: apt.x.adaxisoft.be
 
 
 #

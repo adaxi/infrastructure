@@ -1,6 +1,6 @@
 -
     name: Creating user repo
-    user: name={{ aptly_user }} shell=/bin/false home=/var/www/{{ aptly_virtualhost }}
+    user: name={{ aptly_user }} shell=/bin/false home={{ aptly_home }}
     become: yes
 -
     name: Install aptly debian repository
