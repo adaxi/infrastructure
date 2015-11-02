@@ -42,6 +42,10 @@ adaxisoft_be_domain: x.adaxisoft.be
 #
 aptly_virtualhost: apt.x.adaxisoft.be
 
+#
+# \var iodine password
+#
+iodine_password: AAAAAAAAAAAAA
 
 #
 # \var MySQL password for adaxisoft.be

@@ -1,12 +1,12 @@
 ---
 
 - name: Create lusoleaves.com group
-  group: name="{{lusoleaves_com_group}}" 
+  group: name="{{lusoleaves_com_group}}"
 
 - name: Create lusoleaves.com user
-  user: name="{{lusoleaves_com_user}}" 
-        shell=/bin/nologin 
-        group="{{lusoleaves_com_group}}" 
+  user: name="{{lusoleaves_com_user}}"
+        shell=/bin/nologin
+        group="{{lusoleaves_com_group}}"
         append=yes
         home={{lusoleaves_com_home}}
         createhome=yes
@@ -17,46 +17,51 @@
              dest=/tmp
              copy=no
              creates="{{lusoleaves_com_home}}/index.php"
-             
+
+- name: Check if CodeIginter was already installed
+  stat: path={{lusoleaves_com_home}}/index.php
+  register: code_igniter_index
+
 - name: Deploy lusoleaves.com
   git: repo=https://github.com/harokb/LusoLeaves.git
        dest="{{lusoleaves_com_home}}"
   become: yes
   become_user: "{{lusoleaves_com_user}}"
-  
-- name: Generate config.php 
+
+- name: Generate config.php
   template: src=config.php.j2 dest="{{lusoleaves_com_home}}/application/config/config.php"
   become: yes
   become_user: "{{lusoleaves_com_user}}"
-  
-- name: Generate database.php 
+
+- name: Generate database.php
   template: src=database.php.j2 dest="{{lusoleaves_com_home}}/application/config/database.php"
   become: yes
   become_user: "{{lusoleaves_com_user}}"
-             
+
 - name: Copy CodeIgninter to HTTP root path
   command: "cp -r /tmp/CodeIgniter-2.2.5/system /tmp/CodeIgniter-2.2.5/index.php {{lusoleaves_com_home}}"
   become: yes
   become_user: "{{lusoleaves_com_user}}"
-        
+  when: code_igniter_index.stat.exists == False
+
 - name: Set CodeIgniter to production mode
   patch: src=code-igniter-to-production.patch dest="{{lusoleaves_com_home}}/index.php"
   become: yes
   become_user: "{{lusoleaves_com_user}}"
   when: lusoleaves_com_debug == False
-  
+
 - name: Check if we need to import something
   command: mv /backup/products {{lusoleaves_com_home}} removes=/backup/products
 
 - name: Install nginx configuration
   include: nginx.yml
-  
+
 - name: Install php-fpm configuration
   include: php-fpm.yml
-  
+
 - name: Install mariadb configuration
   include: mariadb.yml
-  
+
 - name: Restart php-fpm
   service: name=php5-fpm state=restarted
 

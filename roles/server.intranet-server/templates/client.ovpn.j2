@@ -1,0 +1,13 @@
+client
+dev tun
+proto udp
+remote {{openvpn_server_key_name}} 1194
+resolv-retry infinite
+comp-lzo
+persist-key
+persist-tun
+ca /etc/openvpn/keys/ca.crt
+cert /etc/openvpn/keys/{{item}}.crt
+key /etc/openvpn/keys/{{item}}.key
+ns-cert-type server
+verb 3

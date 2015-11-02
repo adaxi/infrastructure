@@ -1,0 +1,4 @@
+---
+iodine_network: 192.168.99.1
+iodine_nameserver: io.adaxisoft.be
+iodine_password: changeme

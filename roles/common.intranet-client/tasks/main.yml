@@ -1,0 +1,21 @@
+---
+
+- name: Ensure OpenVPN packages are installed
+  apt: "name={{ item }} state=installed update_cache=yes"
+  with_items:
+    - openvpn
+    - easy-rsa
+  become: yes
+
+- name: Ensure that we can start openvpn
+  command: systemctl enable openvpn
+  become: yes
+  when: '"{{ansible_distribution_release}}" != "wheezy"'
+
+- name: Copy openvpn defaults file
+  copy: src=openvpn_defaults dest=/etc/default/openvpn
+  become: yes
+
+- name: Restart the server
+  service: name=openvpn state=restarted
+  become: yes

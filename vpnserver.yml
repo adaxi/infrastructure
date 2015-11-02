@@ -1,0 +1,12 @@
+---
+- name: install a vpn server
+  hosts: [vpnservers]
+  gather_facts: yes
+  become: yes
+  become_user: root
+  roles:
+     - common._base
+     - { role: common.dotfiles, install_dofiles: False }
+     - server.iodine
+     - server.fail2ban
+     - server.intranet-server

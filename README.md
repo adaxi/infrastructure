@@ -53,6 +53,7 @@ After installing the production system:
  * Backup ```/etc/mdadm.conf```
  * Add media libraries to Plex Media Server
  * Configure addns in OMV
+ * Add certificates and restart OpenVPN
 
 
 Daily Driver
