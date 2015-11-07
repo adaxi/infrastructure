@@ -1,6 +1,17 @@
 ---
-dependencies: 
-  - { role: server.nginx }
-  - { role: server.php-fpm }
-  - { role: server.mariadb }
-  - { role: server.nodejs }
+dependencies:
+  - role: common.certificates
+    openssl_self_signed:
+      - name: '{{adaxisoft_be_domain}}'
+        domains: ['www.{{adaxisoft_be_domain}}', '{{adaxisoft_be_domain}}']
+        country: 'BE'
+        state: 'Brussels'
+        city: 'Brussels'
+        organization: 'adaxisoft.be'
+        unit: ''
+        email: 'dev@adaxisoft.be'
+        days: 3650
+  - role: server.nginx
+  - role: server.php-fpm
+  - role: server.mariadb
+  - role: server.nodejs

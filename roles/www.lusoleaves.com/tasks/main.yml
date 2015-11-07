@@ -51,7 +51,7 @@
   when: lusoleaves_com_debug == False
 
 - name: Check if we need to import something
-  command: mv /backup/products {{lusoleaves_com_home}} removes=/backup/products
+  command: mv /backups/products {{lusoleaves_com_home}} removes=/backups/products
 
 - name: Install nginx configuration
   include: nginx.yml
@@ -65,6 +65,6 @@
 - name: Restart php-fpm
   service: name=php5-fpm state=restarted
 
-- name: Reload nginx
-  service: name=nginx state=reloaded
+#- name: Reload nginx
+#  service: name=nginx state=reloaded
 

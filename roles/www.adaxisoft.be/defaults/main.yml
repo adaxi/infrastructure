@@ -6,3 +6,14 @@ adaxisoft_be_home: /var/www/adaxisoft_be
 adaxisoft_be_db_host: localhost
 adaxisoft_be_db_username: adaxisoft_be_blog
 adaxisoft_be_db_name: adaxisoft_be
+
+openssl_self_signed:
+   - name: '{{adaxisoft_be_domain}}'
+     domains: ['www.{{adaxisoft_be_domain}}', '{{adaxisoft_be_domain}}']
+     country: 'BE'
+     state: 'Brussels'
+     city: 'Brussels'
+     organization: 'adaxisoft.be'
+     unit: ''
+     email: 'dev@adaxisoft.be'
+     days: 3650

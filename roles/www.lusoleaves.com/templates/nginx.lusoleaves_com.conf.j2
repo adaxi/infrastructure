@@ -3,29 +3,39 @@ upstream php_lusoleaves_com {
 }
 
 server {
-    listen          80;
-    server_name     {{lusoleaves_com_domain}} www.{{lusoleaves_com_domain}};
-    root            {{lusoleaves_com_home}};
-    access_log      /var/log/nginx/{{lusoleaves_com_domain}}.access.log	combined;
-    error_log       /var/log/nginx/{{lusoleaves_com_domain}}.error.log     error;
+       listen           80;
+       server_name      {{lusoleaves_com_domain}} www.{{lusoleaves_com_domain}};
+       return           301 https://$server_name$request_uri;
+}
+
+server {
+    listen              443 ssl;
+    ssl_certificate     /etc/ssl/certs/{{lusoleaves_com_domain}}.crt;
+    ssl_certificate_key /etc/ssl/private/{{lusoleaves_com_domain}}.key;
+    keepalive_timeout   70;
+
+    server_name         {{lusoleaves_com_domain}} www.{{lusoleaves_com_domain}};
+    root                {{lusoleaves_com_home}};
+    access_log          /var/log/nginx/{{lusoleaves_com_domain}}.access.log	combined;
+    error_log           /var/log/nginx/{{lusoleaves_com_domain}}.error.log     error;
 
     location / {
-        index       index.php;
-        try_files   $uri $uri/ /index.php;
+        index           index.php;
+        try_files       $uri $uri/ /index.php;
     }
 
     location ~ \.php$ {
-        try_files $uri =404;
-        fastcgi_pass   php_lusoleaves_com;
-        fastcgi_index  index.php;
-        fastcgi_param  SCRIPT_FILENAME $document_root$fastcgi_script_name;
-        include        /etc/nginx/fastcgi_params;
+        try_files $uri  =404;
+        fastcgi_pass    php_lusoleaves_com;
+        fastcgi_index   index.php;
+        fastcgi_param   SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        include         /etc/nginx/fastcgi_params;
     }
 
     # deny access to .dotfiles files
     location ~ /\. {
-        deny          all;
-        access_log    off; 
-        log_not_found off;
+        deny            all;
+        access_log      off;
+        log_not_found   off;
     }
 }
