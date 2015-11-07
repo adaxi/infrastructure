@@ -90,7 +90,7 @@ To create new GPG keys:
 sudo apt-get install gnupg
 gpg --gen-key # copy the key id
 gpg --export-secret-keys --armor <keyid> > env/<environment>/private.gpg.key
-gpg --export --armor 61B1BA69 > env/<environment>/public.gpg.key
+gpg --export --armor <keyid> > env/<environment>/public.gpg.key
 
 ```
 
