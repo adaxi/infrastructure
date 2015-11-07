@@ -9,6 +9,7 @@
      - common.vim
      - common.glacier
      - { role: common.dotfiles, install_dofiles: False }
+     - server.motd
      - www.lusoleaves.com
      - www.adaxisoft.be
      - www.apt.adaxisoft.be
