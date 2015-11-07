@@ -51,6 +51,7 @@
     name: Upload dummy package
     copy: src=dummy_0.1_all.deb dest=/tmp/
     become: yes
+
 -
     name: Import dummy package to repository
     command: aptly repo add {{ item.name }} /tmp/dummy_0.1_all.deb
@@ -58,19 +59,38 @@
     become_user: "{{ aptly_user }}"
     with_items: aptly_repositories
     when: aptly_repositories is defined
+
 -
-    name: Publish repositories
+    name: Unpublish repositories
     shell: >
         (aptly publish list | grep -q "{{ item.name }}")
-        || aptly publish repo \
-            --gpg-key "{{ aptly_secret_key_id }}" \
-            --architectures "{{ item.architectures|default('amd64,i386') }}" \
+        || aptly publish drop \
             "{{ item.name }}" \
             "{{ item.prefix|default(item.name) }}"
     become: yes
     become_user: "{{ aptly_user }}"
     with_items: aptly_repositories
     when: aptly_repositories is defined
+
+-
+    name: Publish repositories
+    shell: >
+        (aptly publish list | grep -q "{{ item.name }}")
+        || aptly publish repo \
+            --gpg-key "{{ aptly_secret_key_id }}" \
+            --architectures "{{ item.architectures|default('amd64,i386,all') }}" \
+            "{{ item.name }}" \
+            "{{ item.prefix|default(item.name) }}"
+    become: yes
+    become_user: "{{ aptly_user }}"
+    with_items: aptly_repositories
+    when: aptly_repositories is defined
+
+-
+    name: Make public key available
+    copy: src="{{ aptly_public_key_path }}/{{ aptly_public_key_file }}" dest={{ aptly_home }}/.aptly/public
+    become: yes
+
 -
     name: Upload nginx configuration file
     template: src=nginx-aptly.conf.j2 dest=/etc/nginx/sites-available/aptly.conf owner=root group=root mode=644
