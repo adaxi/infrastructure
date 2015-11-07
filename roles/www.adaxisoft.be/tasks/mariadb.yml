@@ -1,27 +1,28 @@
 ---
-- name: Create lusoleaves database
+- name: Create adaxisoft database
   mysql_db: name={{adaxisoft_be_db_name}} state=present
-  
-- name: Create lusoleaves user
-  mysql_user: name={{adaxisoft_be_db_username}} 
-              password={{adaxisoft_be_db_password}} 
+
+- name: Create adaxisoft user
+  mysql_user: name={{adaxisoft_be_db_username}}
+              password={{adaxisoft_be_db_password}}
               priv={{adaxisoft_be_db_name}}.*:ALL state=present
-  
+
 - name: Check if we need to import something
-  stat: path=/backup/adaxisoft.sql
+  stat: path=/backups/adaxisoft.sql
   register: adaxisoft_blog_backup
-  
+
 - name: Import backup
   mysql_db: login_user={{adaxisoft_be_db_username}}
             login_password={{adaxisoft_be_db_password}}
             state=import
-            target=/backup/adaxisoft.sql
+            target=/backups/adaxisoft.sql
+            name={{adaxisoft_be_db_name}}
   when: adaxisoft_blog_backup.stat.exists
-  
-- name: Copy patch to remote host 
-  template: src=/domain_name.sql.j2 dest=/dev/shm/domain_name.sql 
+
+- name: Copy patch to remote host
+  template: src=domain_name.sql.j2 dest=/dev/shm/domain_name.sql
   when: adaxisoft_blog_backup.stat.exists
-    
+
 - name: Patch domain name
-  mysql_db: name={{adaxisoft_be_db_name}} state=import target=/dev/shm/domain_name.sql 
+  mysql_db: name={{adaxisoft_be_db_name}} state=import target=/dev/shm/domain_name.sql
   when: adaxisoft_blog_backup.stat.exists
