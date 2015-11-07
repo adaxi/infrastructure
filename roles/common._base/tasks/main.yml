@@ -6,7 +6,6 @@
 - name: Add adaxisoft.be repository
   apt_repository: repo='deb http://apt.adaxisoft.be/debian {{ansible_distribution_release}} main' state=present
   become: yes
-  when: '"{{ansible_distribution_release}}" == "wheezy"'
 
 - name: Add contrib and non-free section to debian repositories
   apt_repository: repo='deb http://httpredir.debian.org/debian {{ansible_distribution_release}} contrib non-free' state=present
@@ -15,6 +14,8 @@
 - name: Install debconf, debconf utils and git required for ansible deployment
   apt: name={{item}}
   with_items:
+    - sudo
+    - unzip
     - debconf
     - debconf-utils
     - software-properties-common
