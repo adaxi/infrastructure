@@ -7,3 +7,14 @@ lusoleaves_com_db_host: localhost
 lusoleaves_com_db_username: lusoleaves_com
 lusoleaves_com_db_name: lusoleaves_com
 lusoleaves_com_debug: False
+
+lusoleaves_com_openssl_self_signed:
+  - name: '{{lusoleaves_com_domain}}'
+    domains: ['www.{{lusoleaves_com_domain}}', '{{lusoleaves_com_domain}}']
+    country: 'PT'
+    state: 'Algarve'
+    city: 'Rogil'
+    organization: 'Lusoleaves'
+    unit: ''
+    email: 'dev@lusoleaves.com'
+    days: 3650

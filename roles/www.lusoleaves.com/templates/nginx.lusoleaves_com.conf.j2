@@ -4,14 +4,16 @@ upstream php_lusoleaves_com {
 
 server {
        listen           80;
+       listen           [::]:80;
        server_name      {{lusoleaves_com_domain}} www.{{lusoleaves_com_domain}};
        return           301 https://$server_name$request_uri;
 }
 
 server {
     listen              443 ssl;
-    ssl_certificate     /etc/ssl/certs/{{lusoleaves_com_domain}}.crt;
-    ssl_certificate_key /etc/ssl/private/{{lusoleaves_com_domain}}.key;
+    listen              [::]:443 ssl;
+    ssl_certificate     /etc/{{ "selfsigned" if installation_environment == "production" else "selfsigned" }}/live/{{lusoleaves_com_domain}}/fullchain.pem;
+    ssl_certificate_key /etc/{{ "selfsigned" if installation_environment == "production" else "selfsigned" }}/live/{{lusoleaves_com_domain}}/privkey.pem;
     keepalive_timeout   70;
 
     server_name         {{lusoleaves_com_domain}} www.{{lusoleaves_com_domain}};

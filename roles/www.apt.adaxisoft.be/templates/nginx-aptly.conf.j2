@@ -1,4 +1,6 @@
 server {
+    listen           80;
+	listen           [::]:80;
     root {{ aptly_home }}/.aptly/public;
     server_name {{ aptly_virtualhost }};
 

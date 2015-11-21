@@ -7,13 +7,24 @@ adaxisoft_be_db_host: localhost
 adaxisoft_be_db_username: adaxisoft_be_blog
 adaxisoft_be_db_name: adaxisoft_be
 
-openssl_self_signed:
-   - name: '{{adaxisoft_be_domain}}'
-     domains: ['www.{{adaxisoft_be_domain}}', '{{adaxisoft_be_domain}}']
-     country: 'BE'
-     state: 'Brussels'
-     city: 'Brussels'
-     organization: 'adaxisoft.be'
-     unit: ''
-     email: 'dev@adaxisoft.be'
-     days: 3650
+adaxisoft_be_openssl_self_signed:
+  - name: '{{adaxisoft_be_domain}}'
+    domains: ['{{adaxisoft_be_domain}}', 'www.{{adaxisoft_be_domain}}']
+    country: 'BE'
+    state: 'Brussels'
+    city: 'Brussels'
+    organization: 'adaxisoft.be'
+    unit: ''
+    email: 'dev@adaxisoft.be'
+    days: 3650
+
+#adaxisoft_letsencrypt:
+#  - name: '{{adaxisoft_be_domain}}'
+#    domains: ['{{adaxisoft_be_domain}}', 'www.{{adaxisoft_be_domain}}']
+#    email: 'dev@adaxisoft.be'
+
+adaxisoft_be_openssl_external_ssl:
+  - name: '{{adaxisoft_be_domain}}'
+    keyfile: env/{{installation_environment}}/keys/adaxisoft.be.privkey.pem
+    certfile: env/{{installation_environment}}/keys/adaxisoft.be.fullchain.pem
+

@@ -6,22 +6,14 @@
 - name: Installing packages with APT
   apt: name=openssl state=present
 
-- name: Creating certificates directory
-  file:
-    path: "{{ openssl_certs_path }}"
-    state: directory
+- name: Configuring
+  template:
+    src: etc-ssl-openssl.cnf.j2
+    dest: /etc/ssl/openssl.cnf
     owner: root
     group: root
-    mode: "0755"
+    mode: 0644
 
-- name: Creating private keys directory
-  file:
-    path: "{{ openssl_keys_path }}"
-    state: directory
-    owner: root
-    group: root
-    mode: "0700"
- 
     
     
     

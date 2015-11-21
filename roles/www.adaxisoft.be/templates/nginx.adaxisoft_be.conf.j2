@@ -4,14 +4,16 @@ upstream php_adaxisoft_be {
 
 server {
        listen           80;
+       listen           [::]:80;
        server_name      {{adaxisoft_be_domain}} www.{{adaxisoft_be_domain}};
        return           301 https://$server_name$request_uri;
 }
 
 server {
     listen              443 ssl;
-    ssl_certificate     /etc/ssl/certs/{{adaxisoft_be_domain}}.crt;
-    ssl_certificate_key /etc/ssl/private/{{adaxisoft_be_domain}}.key;
+    listen              [::]:443 ssl;
+    ssl_certificate     /etc/{{ "ssl-external" if installation_environment == "production" else "selfsigned" }}/live/{{adaxisoft_be_domain}}/fullchain.pem;
+    ssl_certificate_key /etc/{{ "ssl-external" if installation_environment == "production" else "selfsigned" }}/live/{{adaxisoft_be_domain}}/privkey.pem;
     keepalive_timeout   70;
 
     server_name         {{adaxisoft_be_domain}} www.{{adaxisoft_be_domain}};

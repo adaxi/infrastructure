@@ -11,17 +11,19 @@
 ###
 
 - name: Creating self-signed server SSL cert
-  file: path="{{ openssl_certs_path }}/live/{{ item.name }}" state=directory
+  file: path="/etc/ssl-external/live/{{ item.name }}" state=directory owner=root group=root mode="0700"
   with_items: openssl_external_ssl
+  become: yes
 
 - name: Copying external_ssl keys
   copy:
     src: "{{ item.keyfile }}"
     dest: "/etc/ssl-external/live/{{ item.name }}/privkey.pem"
-    owner: roote
+    owner: root
     group: ssl-cert
     mode: "0640"
   with_items: openssl_external_ssl
+  become: yes
 
 - name: Copying external_ssl certificates
   copy:
@@ -31,6 +33,7 @@
     group: root
     mode: "0644"
   with_items: openssl_external_ssl
+  become: yes
   
 ###
 # Self signed keys
@@ -38,6 +41,7 @@
 - name: Creating self-signed directory path
   file: path="/etc/selfsigned/live/{{ item.name }}" state=directory
   with_items: openssl_self_signed
+  become: yes
 
 - name: Creating self-signed server SSL cert
   command: >
@@ -52,6 +56,7 @@
   args:
     creates: "/etc/selfsigned/live/{{ item.name }}/fullchain.pem"
   with_items: openssl_self_signed
+  become: yes
 
 ###
 # Lets encrypt keys

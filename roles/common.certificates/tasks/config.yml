@@ -1,9 +1,0 @@
----
-
-- name: Configuring
-  template:
-    src: etc-ssl-openssl.cnf.j2
-    dest: /etc/ssl/openssl.cnf
-    owner: root
-    group: root
-    mode: 0644

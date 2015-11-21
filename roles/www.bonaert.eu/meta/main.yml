@@ -1,0 +1,6 @@
+---
+dependencies:
+  - role: common.certificates
+    openssl_self_signed: '{{bonaert_eu_openssl_self_signed}}'
+    letsencrypt: '{{bonaert_eu_letsencrypt}}'
+  - role: server.nginx

@@ -2,7 +2,6 @@
 
 - name: Make adaxisoft_be.conf nginx configuration is available
   template: dest="/etc/nginx/sites-available/adaxisoft_be.conf" src="nginx.adaxisoft_be.conf.j2" 
-            
   notify: reload nginx
   
 - name: Enable nginx adaxisoft_be.conf

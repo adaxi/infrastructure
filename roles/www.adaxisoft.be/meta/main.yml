@@ -1,16 +1,8 @@
 ---
 dependencies:
   - role: common.certificates
-    openssl_self_signed:
-      - name: '{{adaxisoft_be_domain}}'
-        domains: ['www.{{adaxisoft_be_domain}}', '{{adaxisoft_be_domain}}']
-        country: 'BE'
-        state: 'Brussels'
-        city: 'Brussels'
-        organization: 'adaxisoft.be'
-        unit: ''
-        email: 'dev@adaxisoft.be'
-        days: 3650
+    openssl_self_signed: '{{adaxisoft_be_openssl_self_signed}}'
+    openssl_external_ssl: '{{adaxisoft_be_openssl_external_ssl}}'
   - role: server.nginx
   - role: server.php-fpm
   - role: server.mariadb
