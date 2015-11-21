@@ -7,14 +7,14 @@
     - easy-rsa
   become: yes
 
-- name: Ensure that we can start openvpn
+- name: Copy OpenVPN defaults file
+  copy: src=openvpn_defaults dest=/etc/default/openvpn
+  become: yes
+
+- name: Ensure that we can start OpenVPN
   command: systemctl enable openvpn
   become: yes
   when: '"{{ansible_distribution_release}}" != "wheezy"'
-
-- name: Copy openvpn defaults file
-  copy: src=openvpn_defaults dest=/etc/default/openvpn
-  become: yes
 
 - name: Restart the server
   service: name=openvpn state=restarted
