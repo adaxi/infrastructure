@@ -1,13 +1,20 @@
 ---
-# For more information about default variables see:
-# http://www.ansibleworks.com/docs/playbooks_variables.html#id26
-#
 # openssl_keys:
 #   - name: mykey.key
-#     key: "-----BEGIN PRIVATE KEY-----"
+#     keyfile: /local/path/to/key.pem
 # openssl_certs:
 #   - name: mycert.crt
-#     cert: "-----BEGIN CERTIFICATE-----"
+#     certfile: /local/path/to/cert.pem
+
+# openssl_config:
+#   default_bits: 2048
+#   countryName_default: BE
+#   stateOrProvinceName_default: Brussels
+#   localityName_default: Brussels
+#   organizationName_default: 'My Organization'
+#   organizationalUnitName_default: 'My Organization Unit'
+#   commonName_default: 'example.org'
+
 # openssl_self_signed:
 #   - name: 'example.org'
 #     domains: ['*.example.org', 'example.org']
@@ -18,15 +25,11 @@
 #     unit: ''
 #     email: 'foo@example.org'
 #     days: 3650
-# openssl_config:
-#   default_bits: 2048
-#   countryName_default: DE
-#   stateOrProvinceName_default: Brussels
-#   localityName_default: Brussels
-#   organizationName_default: 'My Organization'
-#   organizationalUnitName_default: 'My Organization Unit'
-#   commonName_default: 'example.org'
-# openssl_config_template: templates/openssl.cnf.j2
+
+# letsencrypt:
+#    - name: 'example.org'
+#      domains: ['*.example.org', 'example.org']
+#      email: 'foo@example.org'
 
 # keys to import
 openssl_keys: []
@@ -36,9 +39,11 @@ openssl_certs: []
 openssl_certs_path: /etc/ssl/certs
 # path to keys
 openssl_keys_path: /etc/ssl/private
-# self signed certificates
-openssl_self_signed: []
+
 # config variables
 openssl_config: {}
-# config template to install, relative to the ansible repository root
-openssl_config_template:
+# self signed certificates
+openssl_self_signed: []
+
+# letsencrypt certificates
+letsencrypt: []

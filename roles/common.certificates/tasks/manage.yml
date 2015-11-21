@@ -1,23 +1,29 @@
 ---
 
+###
+# Pre existing keys
+###
 - name: Copying keys
   copy:
-    content: "{{ item.key }}"
+    src: "{{ item.keyfile }}"
     dest: "{{ openssl_keys_path }}/{{ item.name }}"
     owner: root
     group: ssl-cert
     mode: "0640"
   with_items: openssl_keys
 
-- name: Copying certs
+- name: Copying certificates
   copy:
-    content: "{{ item.cert }}"
+    src: "{{ item.certfile }}"
     dest: "{{ openssl_certs_path }}/{{ item.name }}"
     owner: root
     group: root
     mode: "0644"
   with_items: openssl_certs
-
+  
+###
+# Self signed keys
+###
 - name: Creating self-signed server SSL cert
   command: >
     openssl req -new
@@ -31,3 +37,36 @@
   args:
     creates: "{{ openssl_certs_path }}/{{ item.name }}.crt"
   with_items: openssl_self_signed
+
+###
+# Lets encrypt keys
+###
+- name: Stop nginx temporarily to allow letsencrypt to validate domain
+  service: name=nginx state=stopped
+  become: yes
+
+- name: Creating letencrypt certificates
+  command: >
+    /usr/local/share/letsencrypt/letsencrypt-auto 
+      -d {{ item.domains | join(" -d ") }}
+      -a standalone 
+      --agree-dev-preview 
+      --agree-tos 
+      --email {{ item.email }} 
+      --server https://acme-v01.api.letsencrypt.org/directory auth 
+      --renew-by-default
+  args:
+    chdir: /usr/local/share/letsencrypt
+    creates: "/etc/letsencrypt/live/{{ item.name }}/fullchain.pem"
+  with_items: letsencrypt
+  become: yes
+  
+- name: Start nginx
+  service: name=nginx state=started
+  become: yes
+  
+- name: Add cron file
+  template: src=letsencrypt.cron.j2 dest=/etc/cron.d/letsencrypt_{{item.name}}
+  with_items: letsencrypt
+  become: yes
+  

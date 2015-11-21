@@ -1,20 +1,32 @@
 ---
 
-- name: Installing packages with APT
-  apt:
-    pkg: "{{ item }}"
-    state: present
-  with_items:
-    - openssl
+- name: Clone letsencrypt
+  git: repo=https://github.com/letsencrypt/letsencrypt dest=/usr/local/share/letsencrypt update=no
 
-- name: Creating certs dir
-  include: create_dir.yml
-  vars:
-    item: "{{ openssl_certs_path }}"
+- name: Installing packages with APT
+  apt: name=openssl state=present
+
+- name: Creating certificates directory
+  file:
+    path: "{{ openssl_certs_path }}"
+    state: directory
+    owner: root
+    group: root
     mode: "0755"
 
-- name: Creating keys dir
-  include: create_dir.yml
-  vars:
-    item: "{{ openssl_keys_path }}"
+- name: Creating private keys directory
+  file:
+    path: "{{ openssl_keys_path }}"
+    state: directory
+    owner: root
+    group: root
     mode: "0700"
+ 
+    
+    
+    
+
+
+
+  
+  
