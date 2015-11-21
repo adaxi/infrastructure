@@ -1,9 +1,10 @@
 ---
 - name: Install development tools
   apt: name=stow
+  become: yes
   
 - name: Clone all dot files
-  git: repo=https://github.com/adaxi/.dotfiles dest="/home/{{ansible_user_id}}/.dotfiles"
+  git: repo=https://github.com/adaxi/.dotfiles dest="/home/{{ansible_user_id}}/.dotfiles" update=yes
   become: yes
   become_user: "{{ansible_user_id}}"
   
