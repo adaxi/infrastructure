@@ -1,3 +1,8 @@
 ---
 - name: Install nginx
   apt: name=nginx state=present
+  become: yes
+
+- name: Include SSL configuration
+  copy: src=ssl.conf dest=/etc/nginx/conf.d/ssl.conf
+  become: yes
