@@ -1,2 +1,6 @@
 ---
-java_ppa_distribution: trusty
+ppa_ubuntu_to_debian:
+  wheezy: precise
+  jessie: trusty
+
+java_package: oracle-java7-installer
