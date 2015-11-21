@@ -19,6 +19,7 @@
     src="{{ webstorm_install_dir }}/webstorm/bin/webstorm.sh"
     dest="{{ webstorm_bin }}"
     state=link
+  become: yes
     
 - name: Create desktop icon
   copy: src=webstorm.desktop dest=/usr/share/applications
