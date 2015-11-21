@@ -4,7 +4,7 @@
   become: yes
 
 - name: Add Java webupdate repository
-  apt_repository: repo='deb http://ppa.launchpad.net/webupd8team/java/ubuntu {{ ppa_ubuntu_to_debian[ansible_distribution_release] }} main' state=present
+  apt_repository: repo='deb http://ppa.launchpad.net/webupd8team/java/ubuntu {{ debian_to_ubuntu_release_mapping[ansible_distribution_release] }} main' state=present
   become: yes
   
 - name: Accept Oracle license

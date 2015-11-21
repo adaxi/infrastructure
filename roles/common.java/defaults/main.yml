@@ -1,5 +1,7 @@
 ---
-ppa_ubuntu_to_debian:
+debian_to_ubuntu_release_mapping:
+  precise: precise
+  trusty: trusty
   wheezy: precise
   jessie: trusty
 
