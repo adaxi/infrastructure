@@ -1,11 +1,4 @@
 ---
-# openssl_keys:
-#   - name: mykey.key
-#     keyfile: /local/path/to/key.pem
-# openssl_certs:
-#   - name: mycert.crt
-#     certfile: /local/path/to/cert.pem
-
 # openssl_config:
 #   default_bits: 2048
 #   countryName_default: BE
@@ -14,6 +7,11 @@
 #   organizationName_default: 'My Organization'
 #   organizationalUnitName_default: 'My Organization Unit'
 #   commonName_default: 'example.org'
+
+# openssl_external_ssl:
+#   - name: 'example.org'
+#     keyfile: /path/to/keyfile.pem
+#     certfile: /path/to/keyfile.pem
 
 # openssl_self_signed:
 #   - name: 'example.org'
@@ -31,17 +29,12 @@
 #      domains: ['*.example.org', 'example.org']
 #      email: 'foo@example.org'
 
-# keys to import
-openssl_keys: []
-# certificates to import
-openssl_certs: []
-# path to certificates
-openssl_certs_path: /etc/ssl/certs
-# path to keys
-openssl_keys_path: /etc/ssl/private
-
 # config variables
 openssl_config: {}
+
+# manually managed certificates
+openssl_external_ssl: []
+
 # self signed certificates
 openssl_self_signed: []
 
