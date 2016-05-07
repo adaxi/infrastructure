@@ -12,8 +12,8 @@ server {
 server {
     listen              443 ssl;
     listen              [::]:443 ssl;
-    ssl_certificate     /etc/{{ "selfsigned" if installation_environment == "production" else "selfsigned" }}/live/{{lusoleaves_com_domain}}/fullchain.pem;
-    ssl_certificate_key /etc/{{ "selfsigned" if installation_environment == "production" else "selfsigned" }}/live/{{lusoleaves_com_domain}}/privkey.pem;
+    ssl_certificate     /etc/{{ "letsencrypt" if installation_environment == "production" else "selfsigned" }}/live/{{lusoleaves_com_domain}}/fullchain.pem;
+    ssl_certificate_key /etc/{{ "letsencrypt" if installation_environment == "production" else "selfsigned" }}/live/{{lusoleaves_com_domain}}/privkey.pem;
     keepalive_timeout   70;
 
     server_name         {{lusoleaves_com_domain}} www.{{lusoleaves_com_domain}};

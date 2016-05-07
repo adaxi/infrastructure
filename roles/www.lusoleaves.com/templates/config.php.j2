@@ -300,6 +300,12 @@ $config['csrf_token_name'] = 'csrf_lusoleaves_token';
 $config['csrf_cookie_name'] = 'csrf_lusleaves_cookie';
 $config['csrf_expire'] = 7200;
 
+if (stripos($_SERVER["REQUEST_URI"],'/weather/update') === FALSE) {
+	$config['csrf_protection'] 	= TRUE;
+}else{
+	$config['csrf_protection'] 	= FALSE;
+}
+
 /*
 |--------------------------------------------------------------------------
 | Output Compression
@@ -359,6 +365,8 @@ $config['rewrite_short_tags'] = FALSE;
 */
 $config['proxy_ips'] = '';
 
+
+$config['upload_key'] = '{{lusoleaves_com_upload_key}}';
 
 /* End of file config.php */
 /* Location: ./application/config/config.php */

@@ -5,4 +5,5 @@ dependencies:
   - role: server.mariadb
   - role: common.certificates
     openssl_self_signed: '{{lusoleaves_com_openssl_self_signed}}'
+    letsencrypt: '{{lusoleaves_com_letsencrypt}}'
 

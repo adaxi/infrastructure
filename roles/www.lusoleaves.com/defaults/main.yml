@@ -18,3 +18,8 @@ lusoleaves_com_openssl_self_signed:
     unit: ''
     email: 'dev@lusoleaves.com'
     days: 3650
+
+lusoleaves_com_letsencrypt:
+  - name: '{{lusoleaves_com_domain}}'
+    domains: ['{{lusoleaves_com_domain}}', 'www.{{lusoleaves_com_domain}}']
+    email: 'dev@adaxisoft.be'
