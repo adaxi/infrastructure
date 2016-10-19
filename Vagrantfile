@@ -23,6 +23,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # Every Vagrant virtual environment requires a box to build off of.
   config.vm.define "mediaserver" do |c|
     c.vm.box = "debian/wheezy64"
+    c.vm.synced_folder '.', '/vagrant', disabled: true
     c.vm.hostname = "mean.local"
     c.vm.provider "virtualbox" do |v|
       v.gui = true
@@ -32,6 +33,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   config.vm.define "webserver" do |c|
     c.vm.box = "debian/jessie64"
+    c.vm.synced_folder '.', '/vagrant', disabled: true
     c.vm.hostname = "zero.local"
     c.vm.provider "virtualbox" do |v|
       v.name = "Webserver (zero)"
@@ -40,6 +42,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   
   config.vm.define "dailydriver" do |c|
     c.vm.box = "debian/jessie64"
+    c.vm.synced_folder '.', '/vagrant', disabled: true
     c.vm.hostname = "double.local"
     c.vm.provision :shell, inline: $script
     c.vm.provider "virtualbox" do |v|

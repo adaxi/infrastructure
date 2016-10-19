@@ -8,7 +8,7 @@
     become: yes
 -
     name: Import aptly key
-    apt_key: id=2A194991 keyserver=keys.gnupg.net state=present
+    apt_key: id=9E3E53F19C7DE460 keyserver=keys.gnupg.net state=present
     become: yes
 -
     name: Install GPG and nginx
@@ -45,7 +45,7 @@
         )
     become: yes
     become_user: "{{ aptly_user }}"
-    with_items: aptly_repositories
+    with_items: '{{aptly_repositories}}'
     when: aptly_repositories is defined
 -
     name: Upload dummy package
@@ -57,19 +57,19 @@
     command: aptly repo add {{ item.name }} /tmp/dummy_0.1_all.deb
     become: yes
     become_user: "{{ aptly_user }}"
-    with_items: aptly_repositories
+    with_items: '{{aptly_repositories}}'
     when: aptly_repositories is defined
 
 -
     name: Unpublish repositories
     shell: >
         (aptly publish list | grep -q "{{ item.name }}")
-        || aptly publish drop \
+        && aptly publish drop \
             "{{ item.name }}" \
-            "{{ item.prefix|default(item.name) }}"
+            "{{ item.prefix | default(item.name) }}" || true 
     become: yes
     become_user: "{{ aptly_user }}"
-    with_items: aptly_repositories
+    with_items: '{{aptly_repositories}}'
     when: aptly_repositories is defined
 
 -

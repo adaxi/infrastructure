@@ -12,5 +12,5 @@
   become: yes
   
 - name: Symlink
-  file: dest=/etc/motd src=/var/run/motd state=link
+  file: dest=/etc/motd src=/var/run/motd state=link force=yes
   become: yes

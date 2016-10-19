@@ -10,9 +10,9 @@
 # Pre external_ssl keys
 ###
 
-- name: Creating self-signed server SSL cert
+- name: Creating external server SSL cert directory
   file: path="/etc/ssl-external/live/{{ item.name }}" state=directory owner=root group=root mode="0700"
-  with_items: openssl_external_ssl
+  with_items: '{{openssl_external_ssl | default([]) }}'
   become: yes
 
 - name: Copying external_ssl keys
@@ -22,7 +22,7 @@
     owner: root
     group: ssl-cert
     mode: "0640"
-  with_items: openssl_external_ssl
+  with_items: '{{openssl_external_ssl}}'
   become: yes
 
 - name: Copying external_ssl certificates
@@ -32,7 +32,7 @@
     owner: root
     group: root
     mode: "0644"
-  with_items: openssl_external_ssl
+  with_items: '{{openssl_external_ssl | default([]) }}'
   become: yes
   
 ###
@@ -40,7 +40,7 @@
 ###
 - name: Creating self-signed directory path
   file: path="/etc/selfsigned/live/{{ item.name }}" state=directory
-  with_items: openssl_self_signed
+  with_items: '{{openssl_self_signed | default([]) }}'
   become: yes
 
 - name: Creating self-signed server SSL cert
@@ -55,7 +55,7 @@
       -out /etc/selfsigned/live/{{ item.name }}/fullchain.pem
   args:
     creates: "/etc/selfsigned/live/{{ item.name }}/fullchain.pem"
-  with_items: openssl_self_signed
+  with_items: '{{openssl_self_signed | default([]) }}'
   become: yes
 
 ###
@@ -70,7 +70,6 @@
     /usr/local/share/letsencrypt/letsencrypt-auto 
       -d {{ item.domains | join(" -d ") }}
       -a standalone 
-      --agree-dev-preview 
       --agree-tos 
       --email {{ item.email }} 
       --server https://acme-v01.api.letsencrypt.org/directory auth 
@@ -78,7 +77,7 @@
   args:
     chdir: /usr/local/share/letsencrypt
     creates: "/etc/letsencrypt/live/{{ item.name }}/fullchain.pem"
-  with_items: letsencrypt
+  with_items: '{{ letsencrypt | default([]) }}'
   become: yes
   
 - name: Start nginx
@@ -87,6 +86,6 @@
   
 - name: Add cron file
   template: src=letsencrypt.cron.j2 dest=/etc/cron.d/letsencrypt_{{item.name}}
-  with_items: letsencrypt
+  with_items: '{{ letsencrypt | default([]) }}'
   become: yes
   

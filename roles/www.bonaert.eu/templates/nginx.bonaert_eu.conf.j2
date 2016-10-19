@@ -5,6 +5,29 @@ server {
        return           301 https://$server_name$request_uri;
 }
 
+map $request_uri $new_uri {
+    default     "";
+    /blog/?p=5  /blog/2010/02/27/add-google-autocomplete-to-your-website/;
+    /blog/?p=12 /blog/2010/02/27/relax-with-rain-and-some-jazz/;
+    /blog/?p=19 /blog/2010/03/01/the-father/;
+    /blog/?p=25 /blog/2010/09/07/abu-dhabi/;
+    /blog/?p=29 /blog/2010/09/09/3eme-jour-a-manille/;
+    /blog/?p=31 /blog/2010/09/10/cagayan-de-oro/;
+    /blog/?p=39 /blog/2010/09/16/cagayan-de-oro-2/;
+    /blog/?p=43 /blog/2010/09/16/davao/;
+    /blog/?p=36 /blog/2010/09/16/impalutao/;
+    /blog/?p=38 /blog/2010/09/16/malay-balay/;
+    /blog/?p=41 /blog/2010/09/16/maramag/;
+    /blog/?p=49 /blog/2010/09/20/cebu-city/;
+    /blog/?p=47 /blog/2010/09/20/davao-airport/;
+    /blog/?p=52 /blog/2010/09/23/tagbilaran/;
+    /blog/?p=54 /blog/2010/09/26/loboc/;
+    /blog/?p=56 /blog/2010/09/26/manille/;
+    /blog/?p=60 /blog/2010/09/28/belgique/;
+    /blog/?p=69 /blog/2010/10/23/ovh-configuration-for-addns/;
+    /blog/?p=80 /blog/2013/11/03/addns-pl-debian-package/;
+}
+
 server {
     listen              443 ssl;
     listen              [::]:443 ssl;
@@ -16,6 +39,10 @@ server {
     root                {{bonaert_eu_home}};
     access_log          /var/log/nginx/{{bonaert_eu_domain}}.access.log	combined;
     error_log           /var/log/nginx/{{bonaert_eu_domain}}.error.log    error;
+
+    if ($new_uri != "") {
+        rewrite ^(.*)$ $new_uri permanent;
+    }
 
     location / {
         index           index.html index.php;

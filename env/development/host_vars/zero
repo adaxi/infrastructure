@@ -33,6 +33,11 @@ lusoleaves_com_encryption_key: AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 lusoleaves_com_db_password: AAAAAAAAAA
 
 #
+# \var Lusoleaves weather upload key
+#
+lusoleaves_com_upload_key: AAAAAAAAAAA
+
+#
 # \var Domain name for adaxisoft.be. In the production environment this var should not be present.
 #
 adaxisoft_be_domain: x.adaxisoft.be

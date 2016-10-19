@@ -1,8 +1,8 @@
 ---
 dependencies:
   - role: common.certificates
-    openssl_self_signed: '{{adaxisoft_be_openssl_self_signed}}'
-    openssl_external_ssl: '{{adaxisoft_be_openssl_external_ssl}}'
+    openssl_self_signed: '{{adaxisoft_be_openssl_self_signed | default([]) }}'
+    openssl_external_ssl: '{{adaxisoft_be_openssl_external_ssl | default([])  }}'
   - role: server.nginx
   - role: server.php-fpm
   - role: server.mariadb
