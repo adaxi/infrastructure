@@ -12,4 +12,5 @@
      - desktop.chrome
      - desktop.eclipse
      - desktop.gnome
+     - desktop.vscode
 
