@@ -98,7 +98,13 @@
         key: picture-uri
         value: "file:///usr/share/backgrounds/gnome/Bokeh_Tails.jpg"
         
-
-
+- name: Remember numlock state
+  become: yes
+  become_user: "{{ansible_user_id}}"
+  gsettings:
+    settings:
+      - schema: org.gnome.settings-daemon.peripherals.keyboard
+        key: remember-numlock-state
+        value: true
 
 
