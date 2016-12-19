@@ -21,7 +21,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # vagrantup.com.
 
   # Every Vagrant virtual environment requires a box to build off of.
-  config.vm.define "mediaserver" do |c|
+  config.vm.define "mean" do |c| 
     c.vm.box = "debian/wheezy64"
     c.vm.synced_folder '.', '/vagrant', disabled: true
     c.vm.hostname = "mean.local"
@@ -31,16 +31,20 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     end
   end
 
-  config.vm.define "webserver" do |c|
+  config.vm.define "zero" do |c|
     c.vm.box = "debian/jessie64"
     c.vm.synced_folder '.', '/vagrant', disabled: true
     c.vm.hostname = "zero.local"
     c.vm.provider "virtualbox" do |v|
       v.name = "Webserver (zero)"
     end
+    c.vm.provision "ansible" do |ansible|
+      ansible.playbook = "webserver.yml"
+      ansible.inventory_path = "env/development/inventory"
+    end
   end
   
-  config.vm.define "dailydriver" do |c|
+  config.vm.define "double" do |c|
     c.vm.box = "debian/jessie64"
     c.vm.synced_folder '.', '/vagrant', disabled: true
     c.vm.hostname = "double.local"
