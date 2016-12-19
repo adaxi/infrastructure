@@ -94,7 +94,6 @@ gpg --export --armor <keyid> > env/<environment>/public.gpg.key
 
 ```
 
-Place a backup of the adaxisoft database in ```/backups/adaxisoft.sql``` for it to be restored.
 Place a backup of the lusoleaves database in ```/backups/lusoleaves.sql``` for it to be restored.
 Place a backup of the lusoleaves products in ```/backups/products``` for it to be restored.
 
