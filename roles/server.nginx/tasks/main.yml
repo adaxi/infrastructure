@@ -1,7 +1,10 @@
 ---
 - name: Install nginx
-  apt: name=nginx state=present
+  apt: name='{{item}}' state=present
   become: yes
+  with_items:
+    - nginx-extras
+    - python-passlib
 
 - name: Include SSL configuration
   copy: src=ssl.conf dest=/etc/nginx/conf.d/ssl.conf
