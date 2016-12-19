@@ -1,4 +1,5 @@
 ansible
+*.retry
 env/development/keys/*
 env/production
 .project

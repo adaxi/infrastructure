@@ -58,13 +58,7 @@ iodine_password: AAAAAAAAAAAAA
 adaxisoft_be_db_password: AAAAAAAAAAAA
 
 #
-# \var Wordpress security
+# \var Dav Htpasswd
 #
-adaxisoft_be_auth_key: AAAAAAAAAAAA
-adaxisoft_be_secure_auth_key: AAAAAAAAAAAA
-adaxisoft_be_logged_in_key: AAAAAAAAAAAA
-adaxisoft_be_nonce_key: AAAAAAAAAAAA
-adaxisoft_be_auth_salt: AAAAAAAAAAAA
-adaxisoft_be_secure_auth_salt: AAAAAAAAAAAA
-adaxisoft_be_logged_in_salt: AAAAAAAAAAAA
-adaxisoft_be_nonce_salt: AAAAAAAAAAAA
+adaxisoft_be_dav_htpasswd: AAAAAAAAAAAA
+
