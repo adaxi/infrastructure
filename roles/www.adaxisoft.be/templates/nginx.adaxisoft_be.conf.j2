@@ -75,25 +75,33 @@ server {
     }
 
 
-    location /blog {
-		index   index.html index.htm index.php;
-		try_files $uri $uri/ /blog/index.php?$args;
+#   location /blog {
+#		index   index.html index.htm index.php;
+#		try_files $uri $uri/ /blog/index.php?$args;
+#	}
+
+#	location ~ \.php$ {
+#		# Prevent Zero-day exploit
+#		try_files $uri =404;
+#
+#		fastcgi_split_path_info ^(.+\.php)(/.+)$;
+#		#NOTE: You should have "cgi.fix_pathinfo = 0;" in php.ini
+#
+#		fastcgi_pass    php_adaxisoft_be;
+#		fastcgi_index   index.php;
+#		fastcgi_param   SCRIPT_FILENAME $document_root$fastcgi_script_name;
+#		include         fastcgi_params;
+#	}
+
+	location /keepass {
+		root                  /var/dav;
+		client_body_temp_path /var/dav/temp;
+		dav_methods	          DELETE MOVE PUT;
+		create_full_put_path  off;
+		dav_access            user:rw;
+		autoindex             on;
+		auth_basic            "restricted";
+		auth_basic_user_file  /etc/nginx/htpasswd;
 	}
-
-	location ~ \.php$ {
-		# Prevent Zero-day exploit
-		try_files $uri =404;
-
-		fastcgi_split_path_info ^(.+\.php)(/.+)$;
-		#NOTE: You should have "cgi.fix_pathinfo = 0;" in php.ini
-
-		fastcgi_pass    php_adaxisoft_be;
-		fastcgi_index   index.php;
-		fastcgi_param   SCRIPT_FILENAME $document_root$fastcgi_script_name;
-		include         fastcgi_params;
-	}
-
-
-
 
 }

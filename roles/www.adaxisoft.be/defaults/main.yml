@@ -3,9 +3,13 @@ adaxisoft_be_domain: adaxisoft.be
 adaxisoft_be_group: adaxisoft_be
 adaxisoft_be_user: adaxisoft_be
 adaxisoft_be_home: /var/www/adaxisoft_be
-adaxisoft_be_db_host: localhost
-adaxisoft_be_db_username: adaxisoft_be_blog
-adaxisoft_be_db_name: adaxisoft_be
+
+#adaxisoft_be_db_host: localhost
+#adaxisoft_be_db_username: adaxisoft_be_blog
+#adaxisoft_be_db_name: adaxisoft_be
+
+adaxisoft_be_dav_user: keepass
+adaxisoft_be_dav_passwd: 12345678
 
 adaxisoft_be_openssl_self_signed:
   - name: '{{adaxisoft_be_domain}}'
@@ -18,13 +22,12 @@ adaxisoft_be_openssl_self_signed:
     email: 'dev@adaxisoft.be'
     days: 3650
 
-#adaxisoft_letsencrypt:
+#adaxisoft_be_openssl_external_ssl:
 #  - name: '{{adaxisoft_be_domain}}'
-#    domains: ['{{adaxisoft_be_domain}}', 'www.{{adaxisoft_be_domain}}']
-#    email: 'dev@adaxisoft.be'
+#    keyfile: env/{{installation_environment}}/keys/adaxisoft.be.privkey.pem
+#    certfile: env/{{installation_environment}}/keys/adaxisoft.be.fullchain.pem
 
-adaxisoft_be_openssl_external_ssl:
+adaxisoft_be_letsencrypt:
   - name: '{{adaxisoft_be_domain}}'
-    keyfile: env/{{installation_environment}}/keys/adaxisoft.be.privkey.pem
-    certfile: env/{{installation_environment}}/keys/adaxisoft.be.fullchain.pem
-
+    domains: ['{{adaxisoft_be_domain}}', 'www.{{adaxisoft_be_domain}}']
+    email: 'dev@adaxisoft.be'

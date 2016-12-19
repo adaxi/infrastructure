@@ -32,17 +32,17 @@
 - name: Install nginx configuration
   include: nginx.yml
 
-- name: Install php-fpm configuration
-  include: php-fpm.yml
+#- name: Install php-fpm configuration
+#  include: php-fpm.yml
 
 - name: Install nodejs configuration
   include: nodejs.yml
 
-- name: Install php-fpm configuration
-  include: mariadb.yml
-
-- name: Restart php-fpm
-  service: name=php5-fpm state=restarted
+#- name: Install php-fpm configuration
+#  include: mariadb.yml
+#
+#- name: Restart php-fpm
+#  service: name=php5-fpm state=restarted
 
 - name: Reload nginx
   service: name=nginx state=reloaded
