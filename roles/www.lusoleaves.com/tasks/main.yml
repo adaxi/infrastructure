@@ -13,10 +13,11 @@
         skeleton=/dev/shm
 
 - name: Download and extract CodeIgniter
-  unarchive: src="https://github.com/bcit-ci/CodeIgniter/archive/2.2.5.tar.gz"
-             dest=/tmp
-             copy=no
-             creates="{{lusoleaves_com_home}}/index.php"
+  unarchive:
+    src: "https://github.com/bcit-ci/CodeIgniter/archive/2.2.5.tar.gz"
+    dest: /tmp
+    copy: no
+    creates: "{{lusoleaves_com_home}}/index.php"
 
 - name: Check if CodeIginter was already installed
   stat: path={{lusoleaves_com_home}}/index.php
@@ -51,7 +52,9 @@
   when: lusoleaves_com_debug == False
 
 - name: Check if we need to import something
-  command: mv /backups/products {{lusoleaves_com_home}} removes=/backups/products
+  command: mv /backups/products {{lusoleaves_com_home}}
+  args:
+    removes: /backups/products
 
 - name: Install nginx configuration
   include: nginx.yml

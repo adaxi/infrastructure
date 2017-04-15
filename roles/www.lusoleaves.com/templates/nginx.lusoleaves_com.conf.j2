@@ -1,43 +1,51 @@
 upstream php_lusoleaves_com {
-    server unix:/var/run/php5-fpm-{{lusoleaves_com_user}}.sock;
+	server unix:/var/run/php5-fpm-{{lusoleaves_com_user}}.sock;
 }
 
 server {
-       listen           80;
-       listen           [::]:80;
-       server_name      {{lusoleaves_com_domain}} www.{{lusoleaves_com_domain}};
-       return           301 https://$server_name$request_uri;
+	listen           80;
+	listen           [::]:80;
+	server_name      {{lusoleaves_com_domain}} www.{{lusoleaves_com_domain}};
+
+	location /.well-known {
+		root /var/www/html/;
+		allow all;
+	}
+
+	location / {
+		return 301 https://$server_name$request_uri;
+	}
 }
 
 server {
-    listen              443 ssl;
-    listen              [::]:443 ssl;
-    ssl_certificate     /etc/{{ "letsencrypt" if installation_environment == "production" else "selfsigned" }}/live/{{lusoleaves_com_domain}}/fullchain.pem;
-    ssl_certificate_key /etc/{{ "letsencrypt" if installation_environment == "production" else "selfsigned" }}/live/{{lusoleaves_com_domain}}/privkey.pem;
-    keepalive_timeout   70;
+	listen              443 ssl;
+	listen              [::]:443 ssl;
+	ssl_certificate     /etc/{{ "letsencrypt" if installation_environment == "production" else "selfsigned" }}/live/{{lusoleaves_com_domain}}/fullchain.pem;
+	ssl_certificate_key /etc/{{ "letsencrypt" if installation_environment == "production" else "selfsigned" }}/live/{{lusoleaves_com_domain}}/privkey.pem;
+	keepalive_timeout   70;
 
-    server_name         {{lusoleaves_com_domain}} www.{{lusoleaves_com_domain}};
-    root                {{lusoleaves_com_home}};
-    access_log          /var/log/nginx/{{lusoleaves_com_domain}}.access.log	combined;
-    error_log           /var/log/nginx/{{lusoleaves_com_domain}}.error.log     error;
+	server_name         {{lusoleaves_com_domain}} www.{{lusoleaves_com_domain}};
+	root                {{lusoleaves_com_home}};
+	access_log          /var/log/nginx/{{lusoleaves_com_domain}}.access.log	combined;
+	error_log           /var/log/nginx/{{lusoleaves_com_domain}}.error.log     error;
 
-    location / {
-        index           index.php;
-        try_files       $uri $uri/ /index.php;
-    }
+	location / {
+		index           index.php;
+		try_files       $uri $uri/ /index.php;
+	}
 
-    location ~ \.php$ {
-        try_files $uri  =404;
-        fastcgi_pass    php_lusoleaves_com;
-        fastcgi_index   index.php;
-        fastcgi_param   SCRIPT_FILENAME $document_root$fastcgi_script_name;
-        include         /etc/nginx/fastcgi_params;
-    }
+	location ~ \.php$ {
+		try_files $uri  =404;
+		fastcgi_pass    php_lusoleaves_com;
+		fastcgi_index   index.php;
+		fastcgi_param   SCRIPT_FILENAME $document_root$fastcgi_script_name;
+		include         /etc/nginx/fastcgi_params;
+	}
 
-    # deny access to .dotfiles files
-    location ~ /\. {
-        deny            all;
-        access_log      off;
-        log_not_found   off;
-    }
+	# deny access to .dotfiles files
+	location ~ /\. {
+		deny            all;
+		access_log      off;
+		log_not_found   off;
+	}
 }

@@ -1,0 +1,36 @@
+---
+
+###
+# Copy certificates provided with the playbook.
+###
+
+- name: Create external server SSL cert directory
+  file:
+    path: "/etc/ssl-external/live/{{ item.name }}"
+    state: directory
+    owner: root
+    group: root
+    mode: "0700"
+  with_items: "{{ openssl_external_ssl | default([]) }}"
+  become: yes
+
+- name: Copy external_ssl keys
+  copy:
+    src: "{{ item.keyfile }}"
+    dest: "/etc/ssl-external/live/{{ item.name }}/privkey.pem"
+    owner: root
+    group: ssl-cert
+    mode: "0640"
+  with_items: "{{ openssl_external_ssl | default([]) }}"
+  become: yes
+
+- name: Copy external_ssl certificates
+  copy:
+    src: "{{ item.certfile }}"
+    dest: "/etc/ssl-external/live/{{ item.name }}/fullchain.pem"
+    owner: root
+    group: root
+    mode: "0644"
+  with_items: "{{ openssl_external_ssl | default([]) }}"
+  become: yes
+

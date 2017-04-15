@@ -1,0 +1,41 @@
+---
+
+###
+# LetsEncrypt certificates
+###
+
+- name: Ensure jessie backports repository is present
+  apt_repository:
+    repo: "deb http://ftp.debian.org/debian jessie-backports main"
+    state: present
+
+- name: Install certbot
+  apt:
+    name: certbot
+    state: present
+    default_release: jessie-backports
+
+- name: Crate .well-known directory for lets-encrypt
+  file:
+    name: "/var/www/html/.well-known/"
+    state: directory
+
+- name: Creating letencrypt certificates
+  command: >
+    certbot certonly
+    -a webroot
+    --webroot-path=/var/www/html
+    -d {{ item.domains | join(" -d ") }}
+    --agree-tos
+    --email {{ item.email }}
+  args:
+    creates: "/etc/letsencrypt/live/{{ item.name }}"
+  with_items: "{{ letsencrypt | default([]) }}"
+  become: yes
+
+- name: Add cron file
+  copy:
+    src: letsencrypt.cron
+    dest:  "/etc/cron.d/letsencrypt.conf"
+  become: yes
+

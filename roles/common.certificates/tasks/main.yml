@@ -1,5 +1,25 @@
 ---
 
-- include: install.yml
-- include: manage.yml
+- name: Installing packages with APT
+  apt:
+    name=openssl
+    state=present
+
+- name: Install OpenSSL configuration file to Generate Self Signed Certificates
+  template:
+    src: etc-ssl-openssl.cnf.j2
+    dest: /etc/ssl/openssl.cnf
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Create strong DH Group (this can take several minutes)
+  command: openssl dhparam -out /etc/ssl/private/dhparams.pem 2048
+  become: yes
+  args:
+    creates: /etc/ssl/private/dhparams.pem
+
+- include: letsencrypt.yml
+- include: external.yml
+- include: self-signed.yml
 

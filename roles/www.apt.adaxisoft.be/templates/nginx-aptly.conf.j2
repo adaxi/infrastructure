@@ -1,10 +1,15 @@
 server {
-    listen           80;
-	listen           [::]:80;
-    root {{ aptly_home }}/.aptly/public;
-    server_name {{ aptly_virtualhost }};
+	listen      80;
+	listen      [::]:80;
+	root        {{ aptly_home }}/.aptly/public;
+	server_name {{ aptly_virtualhost }};
 
-    location / {
-        autoindex on;
-    }
+	location /.well-known {
+		root /var/www/html/;
+		allow all;
+	}
+
+	location / {
+		autoindex on;
+	}
 }

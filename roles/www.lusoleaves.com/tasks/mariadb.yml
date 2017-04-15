@@ -1,18 +1,24 @@
 ---
+
 - name: Create lusoleaves database
   mysql_db: name={{lusoleaves_com_db_name}} state=present
-  
+
 - name: Create lusoleaves user
   mysql_user: name={{lusoleaves_com_db_username}} password={{lusoleaves_com_db_password}} priv={{lusoleaves_com_db_name}}.*:ALL state=present
-  
+
 - name: Check if we need to import something
   stat: path=/backups/lusoleaves.sql
   register: lusoleaves_com_backup
-  
-- name: Import backup
-  mysql_db: login_user={{lusoleaves_com_db_username}}
-            login_password={{lusoleaves_com_db_password}}
-            state=import
-            target=/backups/lusoleaves.sql
-            name={{lusoleaves_com_db_name}}
+
+- name: Import Backup SQL database
+  mysql_db:
+    login_user: "{{lusoleaves_com_db_username}}"
+    login_password: "{lusoleaves_com_db_password}}"
+    state: import
+    target: "/backups/lusoleaves.sql"
+    name: "{{lusoleaves_com_db_name}}"
+  when: lusoleaves_com_backup.stat.exists
+
+- name: Remove database
+  command: mv /backups/lusoleaves.sql /root/lusoleaves.sql
   when: lusoleaves_com_backup.stat.exists
