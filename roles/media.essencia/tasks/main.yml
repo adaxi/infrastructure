@@ -1,12 +1,23 @@
 ---
 
 - name: Add content group
-  group: name="{{content_group_name}}" system=yes state=present
+  group:
+    name: "{{content_group_name}}"
+    system: yes
+    state: present
 
 - name: Ensure media incoming directory exists
-  file: dest="{{ incoming_content_dir }}"
-        owner=root
-        group="{{content_group_name}}"
-        state=directory
+  file:
+    dest: "{{ incoming_content_dir }}"
+    owner: root
+    group: "{{content_group_name}}"
+    state: directory
         
-
+- name: Ensure that essencia user exists
+  user:
+    name: essencia
+    shell: /usr/bin/nologin
+    groups: users,content
+    append: yes
+    home: /var/lib/essencia
+    system: yes

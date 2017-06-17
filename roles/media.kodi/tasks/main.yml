@@ -1,0 +1,71 @@
+---
+
+#- name: Ensure plexhometheater service group is present
+#  group:
+#    name: "{{ plexhometheater_group_name }}"
+#    state: "present"
+#           
+#- name: Ensure plexhometheater service user is present
+#  user:
+#    name: "{{ plexhometheater_user_name }}"
+#    group: "{{ plexhometheater_group_name }}"
+#    shell: "/usr/sbin/nologin"
+#    home: {{ plexhometheater_user_home }}
+#    createhome: yes
+#    state: present
+
+  
+- name: Ensure jessie backports are present
+  apt_repository:
+    repo: 'deb http://httpredir.debian.org/debian jessie-backports main'
+    state: present
+  when: ansible_distribution_release == "jessie"
+
+- name: Ensure Kodi and its dependencies are installed
+  apt:
+    name: "{{item}}" 
+    state: present 
+  with_items:
+    - xinit
+    - dbus-x11
+    - xorg
+    - python-gnutls 
+    - python-pycurl
+    - kodi
+    - alsa-utils
+    - pulseaudio
+
+- name: Use debconf to tell x11-common that xinit can be started by Anybody
+  debconf:
+    name: "x11-common"
+    question: "x11-common/xwrapper/allowed_users"
+    vtype: "select"
+    value: "Anybody"
+ 
+- name: Overwrite x11-common default configuration which superseeds debconf 
+  copy:
+    src: Xwrapper.config
+    dest: /etc/X11/Xwrapper.config
+    mode: 0644
+        
+- name: Reconfigure x11-common so that anyone can start xinit
+  command: "dpkg-reconfigure -f noninteractive x11-common"
+  changed_when: False
+  
+- name: Copy Kodi SystemD service
+  template:
+    src: "kodi.service.j2"
+    dest: /etc/systemd/system/kodi.service
+    mode: "0755"
+  
+- name: Ensure Kodi is enabled on boot
+  service:
+    name: kodi 
+    enabled: yes
+
+
+  
+
+
+              
+

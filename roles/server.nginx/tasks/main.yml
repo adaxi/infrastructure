@@ -1,6 +1,8 @@
 ---
 - name: Install nginx
-  apt: name='{{item}}' state=present
+  apt: 
+    name: "{{item}}" 
+    state: present
   become: yes
   with_items:
     - nginx-extras

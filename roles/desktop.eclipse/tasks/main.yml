@@ -1,14 +1,19 @@
 ---
 
 - name: Extract eclipse into installation path
-  unarchive: src="{{eclipse_download_url}}" 
-             dest="{{eclipse_installation_path}}" 
-             creates="{{eclipse_installation_path}}/eclipse"
-             copy=no
+  unarchive:
+    src: "{{eclipse_download_url}}" 
+    dest: "{{eclipse_installation_path}}" 
+    creates: "{{eclipse_installation_path}}/eclipse"
+    copy: no
   become: yes
     
 - name: Add eclipse to path
-  file: src=/usr/share/eclipse/eclipse dest=/usr/bin/eclipse state=link force=yes
+  file:
+    src: /usr/share/eclipse/eclipse
+    dest: /usr/bin/eclipse
+    state: link
+    force: yes
   become: yes
   
 - name: Create desktop icon

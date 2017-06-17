@@ -1,0 +1,13 @@
+---
+# plexhometheater user/group properties
+plexhometheater_user_name: kodi
+plexhometheater_group_name: "{{content_group_name}}"
+plexhometheater_user_home: /var/lib/kodi
+
+
+
+
+
+
+
+

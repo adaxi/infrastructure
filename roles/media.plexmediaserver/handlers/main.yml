@@ -1,4 +1,7 @@
 ---
-- name: restart plexmediaserver
-  service: name=plexmediaserver state=restarted
+
+- name: Restart plexmediaserver
+  service:
+    name: plexmediaserver
+    state: restarted
 

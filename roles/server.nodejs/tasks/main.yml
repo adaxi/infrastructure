@@ -1,12 +1,17 @@
 ---
 - name: Add nodesource repository key
-  apt_key: url=https://deb.nodesource.com/gpgkey/nodesource.gpg.key
+  apt_key: 
+    url: "https://deb.nodesource.com/gpgkey/nodesource.gpg.key"
   become: yes
   
 - name: Add nodesource repository
-  apt_repository: repo='deb https://deb.nodesource.com/node_4.x {{ansible_distribution_release}} main' state=present
+  apt_repository: 
+    repo: 'deb https://deb.nodesource.com/node_6.x {{ansible_distribution_release}} main' 
+    state: present
   become: yes
 
 - name: Install nodejs
-  apt: name=nodejs update_cache=yes
+  apt: 
+    name: nodejs 
+    update_cache: yes
   become: yes

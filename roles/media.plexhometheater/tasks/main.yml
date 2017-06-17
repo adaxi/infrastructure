@@ -1,35 +1,48 @@
 ---
   
 - name: Add shell.ninthgate.se public key
-  apt_key: data="{{ lookup('file', 'shell.ninthgate.se.pubkey') }}" state=present
+  apt_key:
+    data: "{{ lookup('file', 'shell.ninthgate.se.pubkey') }}"
+    state: present
 
 - name: Add shell.ninthgate.se repository
-  apt_repository: repo='deb http://shell.ninthgate.se/packages/debian wheezy main' state=present
+  apt_repository:
+    repo: 'deb http://shell.ninthgate.se/packages/debian wheezy main'
+    state: present
   
-- name: Ensure wheezy backports are present
-  apt_repository: repo='deb http://httpredir.debian.org/debian wheezy-backports main' state=present
+- name: Ensure Wheezy backports are present
+  apt_repository: 
+    repo: 'deb http://httpredir.debian.org/debian wheezy-backports main'
+    state: present
+  when: ansible_distribution_release == "wheezy"
   
 - name: Download ubuntu fonts
-  get_url: url="http://mirrors.kernel.org/ubuntu/pool/main/u/ubuntu-font-family-sources/ttf-ubuntu-font-family_0.80-0ubuntu2_all.deb"
-           dest=/tmp
+  get_url: 
+    url: "http://mirrors.kernel.org/ubuntu/pool/main/u/ubuntu-font-family-sources/ttf-ubuntu-font-family_0.80-0ubuntu2_all.deb"
+    dest: /tmp
   
-- name: Install ubuntu fonts
-  apt: deb=/tmp/ttf-ubuntu-font-family_0.80-0ubuntu2_all.deb
+- name: Install Ubuntu fonts
+  apt:
+    deb: "/tmp/ttf-ubuntu-font-family_0.80-0ubuntu2_all.deb"
 
 - name: Ensure plexhometheater service group is present
-  group: name={{ plexhometheater_group_name }}
-         state=present
+  group:
+    name: "{{ plexhometheater_group_name }}"
+    state: present
            
 - name: Ensure plexhometheater service user is present
-  user: name={{ plexhometheater_user_name }}
-        group={{ plexhometheater_group_name }}
-        shell="/usr/sbin/nologin"
-        home={{ plexhometheater_user_home }}
-        createhome=yes
-        state=present
+  user: 
+    name: "{{ plexhometheater_user_name }}"
+    group: "{{ plexhometheater_group_name }}"
+    shell: "/usr/sbin/nologin"
+    home: "{{ plexhometheater_user_home }}"
+    createhome: yes
+    state: present
 
 - name: Ensure plexhometheater and its dependencies are installed
-  apt: name={{item}} state=present 
+  apt:
+    name: "{{item}}"
+    state: present 
   with_items:
     - xinit
     - xorg
@@ -40,30 +53,30 @@
     - pulseaudio
 
 - name: Use debconf to tell x11-common that xinit can be started by Anybody
-  debconf: name="x11-common" question="x11-common/xwrapper/allowed_users" vtype="select" value="Anybody"
+  debconf:
+    name: "x11-common"
+    question: "x11-common/xwrapper/allowed_users"
+    vtype: "select"
+    value: "Anybody"
  
 - name: Overwrite x11-common default configuration which superseeds debconf 
-  copy: src=Xwrapper.config
-        dest=/etc/X11/Xwrapper.config
-        mode=0644
+  copy: 
+    src: Xwrapper.config
+    dest: /etc/X11/Xwrapper.config
+    mode: 0644
         
 - name: Reconfigure x11-common so that anyone can start xinit
   command: "dpkg-reconfigure -f noninteractive x11-common"
   changed_when: False
   
 - name: Copy plexhometheater init.d service
-  template: src=plexhometheater.j2
-            dest=/etc/init.d/plexhometheater
-            mode=0755
+  template:
+    src: plexhometheater.j2
+    dest: /etc/init.d/plexhometheater
+    mode: 0755
             
 - name: Ensure plexhometheater service is enabled on boot
-  service: name=plexhometheater 
-           pattern="plexhometheater"
-           enabled=yes
-
-
-  
-
-
-              
-
+  service: 
+    name: plexhometheater 
+    pattern: "plexhometheater"
+    enabled: yes

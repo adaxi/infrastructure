@@ -8,19 +8,27 @@
   apt_repository:
     repo: "deb http://ftp.debian.org/debian jessie-backports main"
     state: present
+  when: ansible_distribution_release == "jessie"
 
-- name: Install certbot
+- name: Install Certbot (from backports)
   apt:
     name: certbot
     state: present
     default_release: jessie-backports
+  when: ansible_distribution_release == "jessie"
 
-- name: Crate .well-known directory for lets-encrypt
+- name: Install Certbot
+  apt:
+    name: certbot
+    state: present
+  when: ansible_distribution_release != "jessie"
+
+- name: Crate .well-known directory for LetsEncrypt
   file:
     name: "/var/www/html/.well-known/"
     state: directory
 
-- name: Creating letencrypt certificates
+- name: Creating LetsEncrypt certificates
   command: >
     certbot certonly
     -a webroot
@@ -36,6 +44,6 @@
 - name: Add cron file
   copy:
     src: letsencrypt.cron
-    dest:  "/etc/cron.d/letsencrypt.conf"
+    dest: "/etc/cron.d/letsencrypt.conf"
   become: yes
 

@@ -1,5 +1,7 @@
 ---
 
-- name: restart sickbeard
-  service: name=sickbeard state=restarted
+- name: Restart Sickbeard
+  service:
+    name: sickbeard
+    state: restarted
 

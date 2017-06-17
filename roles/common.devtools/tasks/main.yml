@@ -1,6 +1,8 @@
 ---
 - name: Install development tools
-  apt: name={{item}}
+  apt:
+    name: "{{item}}"
+    state: "present"
   become: yes
   with_items:
     - tshark

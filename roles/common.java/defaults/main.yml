@@ -2,7 +2,9 @@
 debian_to_ubuntu_release_mapping:
   precise: precise
   trusty: trusty
+  xenial: xenial
   wheezy: precise
   jessie: trusty
+  stretch: xenial
 
-java_package: oracle-java7-installer
+java_package: oracle-java8-installer

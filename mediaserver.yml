@@ -11,5 +11,5 @@
      - media.sickbeard
      - media.sabnzbd
      - media.plexmediaserver
-     - media.plexhometheater
      - server.omv
+     - media.kodi

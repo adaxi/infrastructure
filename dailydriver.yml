@@ -7,8 +7,8 @@
      - common.java
      - common.devtools
      - common.dotfiles
+     - desktop.virtualbox
      - desktop.devtools
-     - desktop.firefox
      - desktop.chrome
      - desktop.eclipse
      - desktop.gnome

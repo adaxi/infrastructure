@@ -1,16 +1,27 @@
 ---
+
 - name: Add Java webupdate repository key
-  apt_key: keyserver=keyserver.ubuntu.com id=EEA14886
+  apt_key:
+    keyserver: "keyserver.ubuntu.com"
+    id: "EEA14886"
   become: yes
 
 - name: Add Java webupdate repository
-  apt_repository: repo='deb http://ppa.launchpad.net/webupd8team/java/ubuntu {{ debian_to_ubuntu_release_mapping[ansible_distribution_release] }} main' state=present
+  apt_repository: 
+    repo: "deb http://ppa.launchpad.net/webupd8team/java/ubuntu {{ debian_to_ubuntu_release_mapping[ansible_distribution_release] }} main"
+    state: present
   become: yes
-  
-- name: Accept Oracle license
-  debconf: name='{{java_package}}' question='shared/accepted-oracle-license-v1-1' value='true' vtype='select'
+
+- name: Accept Oracle License
+  debconf:
+    name: "{{java_package}}"
+    question: "shared/accepted-oracle-license-v1-1"
+    value: "true" 
+    vtype: "select"
   become: yes
-  
+
 - name: Install Java 
-  apt: name='{{java_package}}' state=present
+  apt:
+    name: "{{java_package}}"
+    state: present
   become: yes 

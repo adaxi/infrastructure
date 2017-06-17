@@ -1,35 +1,44 @@
 ---
   
 - name: Add shell.ninthgate.se public key
-  apt_key: data="{{ lookup('file', 'shell.ninthgate.se.pubkey') }}" state=present
+  apt_key:
+    data: "{{ lookup('file', 'shell.ninthgate.se.pubkey') }}"
+    state: present
 
 - name: Add shell.ninthgate.se repository
-  apt_repository: repo='deb http://shell.ninthgate.se/packages/debian wheezy main' state=present
+  apt_repository: 
+    repo: 'deb http://shell.ninthgate.se/packages/debian wheezy main' # jessie packages not available on 16/04/2017
+    state: present
 
 - name: Ensure plexmediaserver service group is present
-  group: name={{ plexmediaserver_group_name }}
-         state=present
+  group:
+    name: "{{ plexmediaserver_group_name }}"
+    state: present
            
 - name: Ensure plexmediaserver service user is present
-  user: name={{ plexmediaserver_user_name }}
-        group={{ plexmediaserver_group_name }}
-        shell="/usr/sbin/nologin"
-        home={{ plexmediaserver_user_home }}
-        createhome=yes
-        state=present
+  user:
+    name: "{{ plexmediaserver_user_name }}"
+    group: "{{ plexmediaserver_group_name }}"
+    shell: "/bin/bash"
+    home: "{{ plexmediaserver_user_home }}"
+    createhome: yes
+    state: present
 
 - name: Ensure plexmediaserver and its dependencies are installed
-  apt: name=plexmediaserver state=present 
-  notify: restart plexmediaserver
+  apt:
+    name: plexmediaserver
+    state: present 
+  notify: Restart plexmediaserver
   
 - name: Copy defaults values
-  template: src=plexmediaserver.defaults.j2 
-            dest=/etc/default/plexmediaserver
-            owner={{ plexmediaserver_user_name }}
-  notify: restart plexmediaserver
+  template:
+    src: plexmediaserver.defaults.j2 
+    dest: /etc/default/plexmediaserver
+    owner: "{{ plexmediaserver_user_name }}"
+  notify: Restart plexmediaserver
               
 - name: Ensure plexmediaserver service is running and enabled on boot
-  service: name=plexmediaserver 
-           state=started 
-           pattern="plexmediaserver"
-           enabled=yes
+  service:
+    name: plexmediaserver 
+    state: started 
+    enabled: yes

@@ -1,0 +1,17 @@
+---
+- name: Add Virtualbox repository key
+  apt_key:
+    url: "https://www.virtualbox.org/download/oracle_vbox_2016.asc"
+    state: present
+  become: yes
+
+- name: Add Virtualbox repositories 
+  apt_repository:
+    repo: "deb http://download.virtualbox.org/virtualbox/debian stretch contrib"
+    state: present
+  become: yes
+
+- name: Install Virtualbox
+  apt:
+    name: "virtualbox-5.1"
+  become: yes

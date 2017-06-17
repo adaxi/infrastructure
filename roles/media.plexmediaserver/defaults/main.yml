@@ -1,6 +1,6 @@
 ---
 # plexmediaserver user/group properties
-plexmediaserver_user_name: plexmediaserver
+plexmediaserver_user_name: plex
 plexmediaserver_group_name: "{{content_group_name}}"
 plexmediaserver_user_home: /var/lib/plexmediaserver
 
