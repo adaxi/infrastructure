@@ -11,4 +11,10 @@ aptly_repositories:
     prefix: debian
     distribution: jessie
     component: main
+
+  - name: debian-stretch
+    comment: adaxisoft apt repository for stretch packages
+    prefix: debian
+    distribution: stretch
+    component: main
    
