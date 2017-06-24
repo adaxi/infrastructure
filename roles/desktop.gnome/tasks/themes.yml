@@ -19,10 +19,17 @@
 - name: Create dconf cache dir
   become: yes
   become_user: "{{ansible_user_id}}"
-  file: path="~/.cache/dconf"
-        state=directory
-        owner="{{ansible_user_id}}"
-  
+  file:
+    path: "~/.cache/dconf"
+    state: directory
+    owner: "{{ansible_user_id}}"
+
+- name: Install dependencies for gsettings
+  apt:
+   name: "{{ item }}"
+  with_items:
+   - dbus-x11
+  become: yes
 
 - name: Set icons to numix circle+
   become: yes

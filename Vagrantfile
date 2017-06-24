@@ -45,7 +45,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   end
   
   config.vm.define "double" do |c|
-    c.vm.box = "debian/contrib-jessie64"
+    c.vm.box = "debian/stretch64"
     c.vm.synced_folder '.', '/vagrant', disabled: true
     c.vm.hostname = "double.local"
     c.vm.provision :shell, inline: $script

@@ -70,7 +70,7 @@ Before reinstalling your system make sure that the following items are safe:
 When testing in the development environement, you need to login and run:
 ./install-gnome.
 For some reason it requires /dev/tty and I have not found how to bypass
-this. Either I find a way to fix it, or I build a box with gnome included.
+this. Either I find a way to fix it, or build a box with gnome included.
 
 
 Webserver

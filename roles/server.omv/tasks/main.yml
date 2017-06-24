@@ -1,9 +1,12 @@
 ---
   
-- name: Add packages.openmediavault.org public key
+- name: Add OMV repository keys
   apt_key:
-    data: "{{ lookup('file', 'packages.openmediavault.org.pubkey') }}"
-    state: present
+    keyserver: keys.gnupg.net
+    id: "{{ item }}"
+  with_items:
+   - "0x716B980B"
+   - "0x2EF35D13"
 
 - name: Add packages.openmediavault.org repository
   apt_repository:
@@ -15,7 +18,7 @@
     name: "{{item}}"
     state: "present"
   with_items:
-   - openmediavault-keyring
+   # - openmediavault-keyring
    - postfix
    
 - name: Ensure OpenMediaVault is installed

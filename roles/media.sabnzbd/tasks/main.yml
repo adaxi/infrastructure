@@ -29,12 +29,13 @@
   
 - name: Ensure directory for TV content exists
   file: 
-    dest: "{{incoming_content_dir}}/usenet/tv"
+    dest: "{{ item }}"
     owner: "{{ sabnzbd_user_name }}"
     group: "{{ sabnzbd_group_name }}"
     recurse: yes 
     state: directory 
   with_items:
+   - "{{incoming_content_dir}}/usenet/tv"
    - "{{incoming_content_dir}}/usenet"
    - "{{incoming_content_dir}}/usenet/films"
    - "{{incoming_content_dir}}/usenet/.poll"
