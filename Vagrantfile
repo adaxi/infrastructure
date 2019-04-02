@@ -22,7 +22,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   # Every Vagrant virtual environment requires a box to build off of.
   config.vm.define "mean" do |c| 
-    c.vm.box = "debian/contrib-jessie64"
+    c.vm.box = "debian/stretch64"
     c.vm.synced_folder '.', '/vagrant', disabled: true
     c.vm.hostname = "mean.local"
     c.vm.provider "virtualbox" do |v|

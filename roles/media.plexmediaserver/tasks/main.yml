@@ -1,20 +1,20 @@
 ---
   
-- name: Add shell.ninthgate.se public key
+- name: Add downloads.plex.tv public key
   apt_key:
-    data: "{{ lookup('file', 'shell.ninthgate.se.pubkey') }}"
+    data: "{{ lookup('file', 'downloads.plex.tv.pubkey') }}"
     state: present
 
-- name: Add shell.ninthgate.se repository
+- name: Add downloads.plex.tv repository
   apt_repository: 
-    repo: 'deb http://shell.ninthgate.se/packages/debian wheezy main' # jessie packages not available on 16/04/2017
+    repo: 'deb https://downloads.plex.tv/repo/deb public main' # jessie packages not available on 16/04/2017
     state: present
 
 - name: Ensure plexmediaserver service group is present
   group:
     name: "{{ plexmediaserver_group_name }}"
     state: present
-           
+
 - name: Ensure plexmediaserver service user is present
   user:
     name: "{{ plexmediaserver_user_name }}"

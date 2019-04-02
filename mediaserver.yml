@@ -8,8 +8,8 @@
      - common._base
      - common.devtools
      - media.essencia
-     - media.sickbeard
-     - media.sabnzbd
+#     - media.sickbeard
+#     - media.sabnzbd
      - media.plexmediaserver
      - server.omv
      - media.kodi

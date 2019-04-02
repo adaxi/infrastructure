@@ -1,39 +1,27 @@
 ---
 
-#- name: Ensure plexhometheater service group is present
-#  group:
-#    name: "{{ plexhometheater_group_name }}"
-#    state: "present"
-#           
-#- name: Ensure plexhometheater service user is present
-#  user:
-#    name: "{{ plexhometheater_user_name }}"
-#    group: "{{ plexhometheater_group_name }}"
-#    shell: "/usr/sbin/nologin"
-#    home: {{ plexhometheater_user_home }}
-#    createhome: yes
-#    state: present
-
-  
-- name: Ensure jessie backports are present
-  apt_repository:
-    repo: 'deb http://httpredir.debian.org/debian jessie-backports main'
-    state: present
-  when: ansible_distribution_release == "jessie"
-
 - name: Ensure Kodi and its dependencies are installed
   apt:
     name: "{{item}}" 
     state: present 
   with_items:
     - xinit
+    - xauth
     - dbus-x11
     - xorg
+    - xserver-xorg
+    - xserver-common
     - python-gnutls 
     - python-pycurl
     - kodi
     - alsa-utils
     - pulseaudio
+
+- name: Add groups to kodi user.
+  user:
+    name: essencia
+    groups: audio,video,input,dialout,plugdev,tty
+    append: yes
 
 - name: Use debconf to tell x11-common that xinit can be started by Anybody
   debconf:
@@ -52,7 +40,7 @@
   command: "dpkg-reconfigure -f noninteractive x11-common"
   changed_when: False
   
-- name: Copy Kodi SystemD service
+- name: Copy Kodi systemd service
   template:
     src: "kodi.service.j2"
     dest: /etc/systemd/system/kodi.service
@@ -63,9 +51,4 @@
     name: kodi 
     enabled: yes
 
-
-  
-
-
-              
 

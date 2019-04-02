@@ -13,9 +13,10 @@ User = essencia
 Group = content
 Type = simple
 #PAMName = login # you might want to try this one, did not work on all systems
-ExecStart = /usr/bin/xinit /usr/bin/dbus-launch --exit-with-session /usr/bin/kodi-standalone -- :0 -nolisten tcp vt7
+ExecStart = /usr/bin/xinit /usr/bin/dbus-launch --exit-with-session /usr/bin/kodi-standalone -- :0 -nolisten tcp vt1
 Restart = on-abort
 RestartSec = 5
+StandardInput=tty
 
 [Install]
 WantedBy = multi-user.target
