@@ -82,15 +82,13 @@ server {
 		proxy_cache_bypass $http_upgrade;
 	}
 
-	location /keepass {
-		root                  /var/dav;
-		client_body_temp_path /var/dav/temp;
-		dav_methods	          DELETE MOVE PUT;
-		create_full_put_path  off;
-		dav_access            user:rw;
-		autoindex             on;
-		auth_basic            "restricted";
-		auth_basic_user_file  /etc/nginx/htpasswd;
+	location /open-api-to-markdown {
+		proxy_pass http://unix:/var/run/adaxisoft-api/adaxisoft-api.sock;
+		proxy_http_version 1.1;
+		proxy_set_header Upgrade $http_upgrade;
+		proxy_set_header Connection 'upgrade';
+		proxy_set_header Host $host;
+		proxy_cache_bypass $http_upgrade;
 	}
 
 }

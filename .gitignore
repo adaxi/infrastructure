@@ -4,3 +4,4 @@ env/development/keys/*
 env/production
 .project
 .vagrant
+.vscode
