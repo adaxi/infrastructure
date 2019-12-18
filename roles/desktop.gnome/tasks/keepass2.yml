@@ -1,4 +1,4 @@
 ---
-- name: Install keepass2
-  apt: name=keepass2
+- name: Install keepassxc
+  apt: name=keepassxc
   become: yes

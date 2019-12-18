@@ -1,0 +1,39 @@
+
+
+Wed Dec 18 21:55:36 2019
+Command line: TestDisk
+
+TestDisk 7.0, Data Recovery Utility, April 2015
+Christophe GRENIER <grenier@cgsecurity.org>
+http://www.cgsecurity.org
+OS: Linux, kernel 4.19.0-6-amd64 (#1 SMP Debian 4.19.67-2+deb10u2 (2019-11-11)) x86_64
+Compiler: GCC 8.2
+ext2fs lib: 1.44.5, ntfs lib: libntfs-3g, reiserfs lib: none, ewf lib: none, curses lib: ncurses 6.1
+/dev/sda: LBA, LBA48 support
+/dev/sda: size       976773168 sectors
+/dev/sda: user_max   976773168 sectors
+Warning: can't get size for Disk /dev/mapper/control - 0 B - 0 sectors, sector size=512
+Hard disk list
+Disk /dev/sda - 500 GB / 465 GiB - CHS 60801 255 63, sector size=512 - CT500MX500SSD1, S/N:1809E130C1ED, FW:M3CR010
+Disk /dev/mapper/army--vg-home - 417 GB / 388 GiB - 814866432 sectors, sector size=512
+Disk /dev/mapper/army--vg-root - 64 GB / 60 GiB - 126951424 sectors, sector size=512
+Disk /dev/mapper/army--vg-swap_1 - 17 GB / 15 GiB - 33398784 sectors, sector size=512
+Disk /dev/dm-0 - 64 GB / 60 GiB - 126951424 sectors, sector size=512
+Disk /dev/dm-1 - 17 GB / 15 GiB - 33398784 sectors, sector size=512
+Disk /dev/dm-2 - 417 GB / 388 GiB - 814866432 sectors, sector size=512
+
+Partition table type (auto): Intel
+Disk /dev/sda - 500 GB / 465 GiB - CT500MX500SSD1
+Partition table type: Intel
+
+Analyse Disk /dev/sda - 500 GB / 465 GiB - CHS 60801 255 63
+Geometry from i386 MBR: head=255 sector=63
+
+LVM2 magic value at 31/59/29
+check_part_i386 failed for partition type 83
+Current partition structure:
+ 1 * Linux                    0  32 33    31  26 59     497664
+ 2 P Linux LVM               31  59 29  9729  78 13  155799552
+No ext2, JFS, Reiser, cramfs or XFS marker
+ 3 P Linux                 9821 251 31 60801  15 14  818978816
+ 3 P Linux                 9821 251 31 60801  15 14  818978816

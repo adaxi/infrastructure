@@ -1,9 +1,10 @@
 ---
 - name: Install network manager addons
-  apt: name={{item}}
+  apt: 
+    name:
+      - network-manager-openvpn
+      - network-manager-openvpn-gnome
+#    - network-manager-iodine
+#    - network-manager-iodine-gnome
+    state: present
   become: yes
-  with_items:
-    - network-manager-openvpn
-    - network-manager-openvpn-gnome
-    - network-manager-iodine
-    - network-manager-iodine-gnome

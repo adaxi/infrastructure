@@ -1,6 +1,18 @@
 ---
+- name: Add microsoft public key
+  apt_key:
+    url: https://packages.microsoft.com/keys/microsoft.asc
+    state: present
+  become: yes
+
+- name: Add vscode repository
+  apt_repository:
+    repo: deb [arch=amd64] https://packages.microsoft.com/repos/vscode stable main
+    state: present
+  become: yes
+
 - name: Download and Install Visual Studio Code
   apt:
-    deb: "https://vscode-update.azurewebsites.net/{{vscode_version}}/linux-deb-x64/stable"
+    name: code
     state: present
   become: yes
