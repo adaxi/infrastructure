@@ -1,17 +1,23 @@
 ---
+- name: Install gpg
+  apt:
+    name: gpg
+    state: present
+  become: yes
+
 - name: Add Virtualbox repository key
   apt_key:
     url: "https://www.virtualbox.org/download/oracle_vbox_2016.asc"
     state: present
   become: yes
 
-- name: Add Virtualbox repositories 
+- name: Add Virtualbox repositories
   apt_repository:
-    repo: "deb http://download.virtualbox.org/virtualbox/debian buster contrib"
+    repo: "deb http://download.virtualbox.org/virtualbox/debian bullseye contrib"
     state: present
   become: yes
 
 - name: Install Virtualbox
   apt:
-    name: "virtualbox-6.0"
+    name: "virtualbox-6.1"
   become: yes

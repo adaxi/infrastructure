@@ -1,14 +1,22 @@
 ---
 - name: Install Microsoft core fonts
-  apt: name="ttf-mscorefonts-installer" state=present
+  apt:
+    name: "ttf-mscorefonts-installer"
+    state: present
   become: yes
-  
+
 - name: Create directory to install Droid Sans Mono for Powerline
-  file: path="/usr/share/fonts/droid/" state=directory mode=0755
+  file:
+    path: "/usr/share/fonts/droid/"
+    state: directory
+    mode: '0755'
   become: yes
 
 - name: Install Droid Sans Mono for Powerline
-  copy: src="Droid Sans Mono for Powerline.otf" dest="/usr/share/fonts/droid/" mode=0644
+  copy:
+    src: "Droid Sans Mono for Powerline.otf"
+    dest: "/usr/share/fonts/droid/"
+    mode: '0644'
   become: yes
 
 - name: Rebuild font cache

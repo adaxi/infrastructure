@@ -1,7 +1,11 @@
 ---
 - name: Install adaxisoft-api
-  apt: name=adaxisoft-api state=present
+  apt:
+    name: adaxisoft-api
+    state: present
 
 - name: Make sure adaxisoft-api is started
-  service: name=adaxisoft-api state=started
+  service: 
+    name: adaxisoft-api
+    state: started
   

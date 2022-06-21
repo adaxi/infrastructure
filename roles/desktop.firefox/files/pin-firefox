@@ -1,7 +1,0 @@
-Package: * 
-Pin: release l=linuxmint
-Pin-Priority: -1
-
-Package: firefox
-Pin: release l=linuxmint
-Pin-Priority: 900

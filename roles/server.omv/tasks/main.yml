@@ -1,29 +1,27 @@
 ---
-  
+
+- name: Install gpg
+  apt:
+    name: gpg
+    state: present
+
 - name: Add OMV repository keys
   apt_key:
-    keyserver: keys.gnupg.net
-    id: "{{ item }}"
-  with_items:
-   - "0x716B980B"
-   - "0x2EF35D13"
+    url: https://packages.openmediavault.org/public/archive.key
+    state: present
 
 - name: Add packages.openmediavault.org repository
   apt_repository:
-    repo: "deb http://packages.openmediavault.org/public arrakis main" 
+    repo: "deb http://packages.openmediavault.org/public shaitan main" 
     state: present
 
 - name: Ensure OpenMediaVault is installed
   apt: 
-    name: "{{ item }}"
+    name: [ 'openmediavault-keyring', 'openmediavault' ]
     install_recommends: no
     state: present
     update_cache: yes
-  with_items:
-    - openmediavault-keyring
-    - postfix
-    - openmediavault
-          
+
 - name: Add Vagrant user to the "ssh" group (development only)
   user:
     name: vagrant
@@ -32,28 +30,20 @@
   when: installation_environment == "development"
  
 - name: Initialize OpenMediaVault 
-  shell: '/usr/sbin/omv-confdbadm read "conf.system.network.dns" | jq .hostname -r | grep -oq openmediavault && /usr/sbin/omv-initsystem && omv-mkconf interfaces && omv-mkconf issue && echo 1 || /bin/true'
-  register: openmediavault_initilized
-  changed_when: "openmediavault_initilized == 1"
+  shell: '/usr/sbin/omv-confdbadm populate'
   
 - name: Ensure optional modules are installed
   apt: 
-    name: "{{item}}"
+    name: [ 'ddclient' ]
     state: present
     update_cache: yes
-  with_items:
-#    - openmediavault-sickbeard-essencia
-#    - openmediavault-sabnzbdplus-essencia
-    - openmediavault-addns-essencia
-
-- name: Ensure engine is running and enabled on boot
-  service:
-    name: openmediavault-engined
-    state: started 
-    enabled: yes
 
 - name: Ensure SSH engine is running and enabled on boot
   service:
     name: ssh
     state: started 
     enabled: yes
+
+- name: Print credentials
+  debug:
+    msg: "By default the web control panel administrator account has the username 'admin' and password 'openmediavault'."

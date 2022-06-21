@@ -21,8 +21,8 @@
   
 - name: Symlink /var/run/motd to /etc/motd
   file:
-    dest: /etc/motd 
-    src: /var/run/motd 
-    state: link 
+    dest: /etc/motd
+    src: /var/run/motd
+    state: link
     force: yes
   become: yes

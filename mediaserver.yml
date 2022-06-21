@@ -7,9 +7,9 @@
   roles:
      - common._base
      - common.devtools
-     - media.essencia
-#     - media.sickbeard
-#     - media.sabnzbd
-     - media.plexmediaserver
      - server.omv
-     - media.kodi
+#    - media.essencia
+#    - media.sickbeard
+#    - media.sabnzbd
+#    - media.plexmediaserver
+#    - media.kodi

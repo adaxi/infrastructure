@@ -26,7 +26,7 @@
 ; Connect to your guest as root and run the following commands.
 ;
 ; # su root
-; # apt-get install sudo ssh -y
+; # apt-get update && apt-get install sudo ssh -y
 ;
 ;
 ; Public key login
@@ -38,17 +38,16 @@
 ;
 ; The default username on a vagrant machine is 'vagrant'.
 ;
-; 
-
+;
 
 [mediaservers]
-mean ansible_user=vagrant
+media:2222 ansible_user=vagrant ansible_ssh_private_key_file=.vagrant/machines/media/virtualbox/private_key
 
 [dailydrivers]
-double ansible_user=vagrant
+daily:2222 ansible_user=vagrant ansible_ssh_private_key_file=.vagrant/machines/daily/virtualbox/private_key
 
 [webservers]
-zero ansible_user=vagrant
+web:2222 ansible_user=vagrant ansible_ssh_private_key_file=.vagrant/machines/web/virtualbox/private_key
 
-[vpnservers]
-zero ansible_user=vagrant
+[vmservers]
+vm:2222 ansible_user=vagrant ansible_ssh_private_key_file=.vagrant/machines/vm/virtualbox/private_key

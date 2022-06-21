@@ -3,9 +3,15 @@
 
 $script = <<SCRIPT
 echo '#!/bin/bash
+
+# This script cannot be run by the shell provisioner
+# the script complains that it cannot access /dev/tty
+
+set -x
 export DEBIAN_FRONTEND=noninteractive
-sudo apt-get update && sudo tasksel install gnome-desktop --new-install && sudo /etc/init.d/gdm3 start
+sudo apt update && sudo apt install gnome-control-center gnome-maps -y && sudo tasksel install gnome-desktop --new-install && sudo /etc/init.d/gdm3 start
 ' > /home/vagrant/install-gnome && chmod +x /home/vagrant/install-gnome
+echo 'To install gnome: vagrant ssh daily then run ./install-gnome'
 SCRIPT
 
 # Vagrantfile API/syntax version. Don't touch unless you know what you're doing!
@@ -21,43 +27,55 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # vagrantup.com.
 
   # Every Vagrant virtual environment requires a box to build off of.
-  config.vm.define "mean" do |c| 
-    c.vm.box = "debian/stretch64"
+  config.vm.define "media" do |c|
+    c.vm.box = "debian/bullseye64"
     c.vm.synced_folder '.', '/vagrant', disabled: true
-    c.vm.hostname = "mean.local"
+    c.vm.hostname = "media.local"
     c.vm.provider "virtualbox" do |v|
       v.gui = true
-      v.name = "Mediaserver (mean)"
+      v.name = "Mediaserver (media)"
     end
   end
 
-  config.vm.define "zero" do |c|
-    c.vm.box = "debian/contrib-jessie64"
+  config.vm.define "daily" do |c|
+    c.vm.box = "debian/bullseye64"
     c.vm.synced_folder '.', '/vagrant', disabled: true
-    c.vm.hostname = "zero.local"
+    c.vm.hostname = "daily.local"
+    c.vm.provision :shell, inline: $script
     c.vm.provider "virtualbox" do |v|
-      v.name = "Webserver (zero)"
+      v.gui = true
+      v.name = "Daily Driver (daily)"
+      v.memory = 2048
+      v.cpus = 2
+    end
+  end
+
+  config.vm.define "vm" do |c|
+    c.vm.box = "debian/bullseye64"
+    c.vm.synced_folder '.', '/vagrant', disabled: true
+    c.vm.hostname = "vm.local"
+    c.vm.provider "virtualbox" do |v|
+      v.name = "Virtual Machine (vm)"
+    end
+    c.vm.provision "ansible" do |ansible|
+      ansible.playbook = "vmservers.yml"
+      ansible.inventory_path = "env/development/inventory"
+    end
+  end
+  
+
+  config.vm.define "web" do |c|
+    c.vm.box = "debian/bullseye64"
+    c.vm.synced_folder '.', '/vagrant', disabled: true
+    c.vm.hostname = "web.local"
+    c.vm.provider "virtualbox" do |v|
+      v.name = "Webserver (web)"
     end
     c.vm.provision "ansible" do |ansible|
       ansible.playbook = "webserver.yml"
       ansible.inventory_path = "env/development/inventory"
     end
   end
-  
-  config.vm.define "double" do |c|
-    c.vm.box = "debian/stretch64"
-    c.vm.synced_folder '.', '/vagrant', disabled: true
-    c.vm.hostname = "double.local"
-    c.vm.provision :shell, inline: $script
-    c.vm.provider "virtualbox" do |v|
-      v.gui = true
-      v.name = "Daily Dirver (double)"
-    end
-    c.ssh.shell = "bash -c 'BASH_ENV=/etc/profile exec bash'"
-  end
-
-
-
 
   # Create a public network, which generally matched to bridged network.
   # Bridged networks make the machine appear as another physical device on

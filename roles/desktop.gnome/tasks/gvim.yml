@@ -1,3 +1,5 @@
 - name: Install Vim
-  apt: name=vim-gtk state=present
+  apt:
+    name: vim-gtk
+    state: present
   become: yes

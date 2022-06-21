@@ -8,7 +8,7 @@
   become: yes
 
 - name: install numix theme and install circle icon theme
-  apt: 
+  apt:
     name:
       - numix-icon-theme-circle
       - numix-gtk-theme
@@ -16,14 +16,15 @@
       - nautilus-image-converter
     state: present
   become: yes
-  
+
 - name: Create dconf cache dir
   become: yes
-  become_user: "{{ansible_user_id}}"
+  become_user: "{{ ansible_user_id }}"
   file:
     path: "~/.cache/dconf"
     state: directory
-    owner: "{{ansible_user_id}}"
+    owner: "{{ ansible_user_id }}"
+    mode: '0775'
 
 - name: Install dependencies for gsettings
   apt:
@@ -33,66 +34,72 @@
 
 - name: Set icons to numix circle+
   become: yes
-  become_user: "{{ansible_user_id}}"
+  become_user: "{{ ansible_user_id }}"
   gsettings:
-    key: org.gnome.desktop.interface.icon-theme 
+    key: org.gnome.desktop.interface.icon-theme
     value: Numix-Circle
 
 - name: Set number of worspaces to 4
   become: yes
-  become_user: "{{ansible_user_id}}"
+  become_user: "{{ ansible_user_id }}"
   gsettings:
-        key: org.gnome.desktop.wm.preferences.num-workspaces
-        value: 4
-        
+    key: org.gnome.desktop.wm.preferences.num-workspaces
+    value: 4
+
 - name: Disable dynamic workspaces
   become: yes
-  become_user: "{{ansible_user_id}}"
+  become_user: "{{ ansible_user_id }}"
   gsettings:
-        key: org.gnome.shell.overrides.dynamic-workspaces
-        value: 'false'
-        
+    key: org.gnome.shell.overrides.dynamic-workspaces
+    value: 'false'
+
 - name: Enable workspaces on all screens
   become: yes
-  become_user: "{{ansible_user_id}}"
+  become_user: "{{ ansible_user_id }}"
   gsettings:
-        key: org.gnome.shell.overrides.workspaces-only-on-primary
-        value: 'false'
-        
-        
+    key: org.gnome.shell.overrides.workspaces-only-on-primary
+    value: 'false'
+
 - name: Show date
   become: yes
-  become_user: "{{ansible_user_id}}"
+  become_user: "{{ ansible_user_id }}"
   gsettings:
-        key: org.gnome.desktop.interface.clock-show-date
-        value: 'true'
-        
+    key: org.gnome.desktop.interface.clock-show-date
+    value: 'true'
+
 - name: Show seconds
   become: yes
-  become_user: "{{ansible_user_id}}"
+  become_user: "{{ ansible_user_id }}"
   gsettings:
-        key: org.gnome.desktop.interface.clock-show-seconds
-        value: 'true'
+    key: org.gnome.desktop.interface.clock-show-seconds
+    value: 'true'
 
 - name: Add minimize to button layout
   become: yes
-  become_user: "{{ansible_user_id}}"
+  become_user: "{{ ansible_user_id }}"
   gsettings:
-        key: org.gnome.desktop.wm.preferences.button-layout
-        value: ":minimize,close"
-        
-- name: Set wallpaper
+    key: org.gnome.desktop.wm.preferences.button-layout
+    value: ":minimize,close"
+
+- name: Copy Wallpaper
+  copy:
+    src: Grass.jpg
+    dest: "/usr/share/backgrounds/"
+    mode: '0644'
   become: yes
-  become_user: "{{ansible_user_id}}"
+
+- name: Set Wallpaper
+  become: yes
+  become_user: "{{ ansible_user_id }}"
   gsettings:
-        key:  org.gnome.desktop.background.picture-uri
-        value: "file:///usr/share/backgrounds/gnome/Bokeh_Tails.jpg"
-        
+    key:  org.gnome.desktop.background.picture-uri
+    value: "file:///usr/share/backgrounds/Grass.jpg"
+
 - name: Remember numlock state
   become: yes
-  become_user: "{{ansible_user_id}}"
+  become_user: "{{ ansible_user_id }}"
   gsettings:
-        key: org.gnome.settings-daemon.peripherals.keyboard.remember-numlock-state
-        value: 'true'
+    key: org.gnome.settings-daemon.peripherals.keyboard.remember-numlock-state
+    value: 'true'
 
 

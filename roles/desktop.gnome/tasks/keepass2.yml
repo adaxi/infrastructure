@@ -1,4 +1,5 @@
 ---
 - name: Install keepassxc
-  apt: name=keepassxc
+  apt:
+    name: keepassxc
   become: yes

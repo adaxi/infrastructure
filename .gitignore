@@ -5,3 +5,7 @@ env/production
 .project
 .vagrant
 .vscode
+
+# ansible-galaxy roles
+roles/geerlingguy.ntp
+roles/lae.proxmox

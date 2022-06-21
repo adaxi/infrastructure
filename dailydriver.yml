@@ -1,7 +1,7 @@
 ---
 - name: install a daily driver
   hosts: dailydrivers
-  connection: local
+  # connection: local
   roles:
      - common._base
      - common.vim

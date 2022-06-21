@@ -1,6 +1,6 @@
 ---
 - name: Install development tools for machines with an GUI
-  apt: 
+  apt:
     name:
       - wireshark
       - terminator

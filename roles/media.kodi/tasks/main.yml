@@ -5,50 +5,8 @@
     name: "{{item}}" 
     state: present 
   with_items:
-    - xinit
-    - xauth
-    - dbus-x11
-    - xorg
-    - xserver-xorg
-    - xserver-common
-    - python-gnutls 
-    - python-pycurl
+    - task-xfce-desktop 
+    - xfce4
+    - upower
     - kodi
-    - alsa-utils
-    - pulseaudio
-
-- name: Add groups to kodi user.
-  user:
-    name: essencia
-    groups: audio,video,input,dialout,plugdev,tty
-    append: yes
-
-- name: Use debconf to tell x11-common that xinit can be started by Anybody
-  debconf:
-    name: "x11-common"
-    question: "x11-common/xwrapper/allowed_users"
-    vtype: "select"
-    value: "Anybody"
- 
-- name: Overwrite x11-common default configuration which superseeds debconf 
-  copy:
-    src: Xwrapper.config
-    dest: /etc/X11/Xwrapper.config
-    mode: 0644
-        
-- name: Reconfigure x11-common so that anyone can start xinit
-  command: "dpkg-reconfigure -f noninteractive x11-common"
-  changed_when: False
-  
-- name: Copy Kodi systemd service
-  template:
-    src: "kodi.service.j2"
-    dest: /etc/systemd/system/kodi.service
-    mode: "0755"
-  
-- name: Ensure Kodi is enabled on boot
-  service:
-    name: kodi 
-    enabled: yes
-
 

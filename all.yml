@@ -2,4 +2,3 @@
 - include: mediaserver.yml
 - include: dailydriver.yml
 - include: webserver.yml
-- include: vpnserver.yml

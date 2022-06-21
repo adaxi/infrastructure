@@ -25,41 +25,18 @@ git clone git://github.com/adaxi/infrastructure.git .
 git clone git://github.com/ansible/ansible.git --recursive
 source ansible/hacking/env-setup
 
-vagrant up mediaserver
+vagrant up media
 
-ssh-copy-id vagrant@mean # password is "vagrant"
+ssh-copy-id vagrant@media # password is "vagrant"
 
 ansible-playbook -i env/development/inventory mediaserver.yml
 ```
 
 
-Media Server
-------------
-
-My media server is based on a Debian Wheezy contains the following components:
- * Open Media Vault: NAS management
- * Sabnzbdplus: Usenet download
- * Sickbeard: TV Series episode management
- * Plex Media Server: Streams media to all my devices
- * Plex Home Theater: Media center
-
-
-Before reinstalling your system make sure that the following items are safe:
- * /etc/mdadm.conf
-
-After installing the production system:
- * Install LVM over LUKS over RAID5.
- * ```mv /media/raid/* /media/<uuid> && rm -rf /media/raid && ln -sf /media/<uuid> /media/raid```
- * Backup ```/etc/mdadm.conf```
- * Add media libraries to Plex Media Server
- * Configure addns in OMV
- * Add certificates and restart OpenVPN
-
-
 Daily Driver
 ------------
 
-My daily drivers consists of a Debian Jessie distribution. It contains all the tools
+My daily driver consists of a Debian distribution. It contains all the tools
 I use regularly. It is also pre-configured for my needs: my dotfiles are included.
 
 Before reinstalling your system make sure that the following items are safe:
@@ -100,5 +77,17 @@ Place a backup of the lusoleaves products in ```/backups/products``` for it to b
 After installing the production system:
  * Add the debian packages to the repository
 
+Media Server (deprecated)
+------------
+
+My media server is based on a Debian contains the following components:
+  * OpenMediaVault
+
+Before reinstalling your system make sure that the following items are safe:
+ * /etc/mdadm.conf
+
+After installing the production system:
+ * Backup ```/etc/mdadm.conf```
+ * ddclient for DynDNS
 
 

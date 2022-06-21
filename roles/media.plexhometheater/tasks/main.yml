@@ -41,16 +41,17 @@
 
 - name: Ensure plexhometheater and its dependencies are installed
   apt:
-    name: "{{item}}"
+    name: 
+      - xinit
+      - xorg
+      - python-gnutls 
+      - python-pycurl
+      - plexhometheater
+      - alsa-utils
+      - pulseaudio
     state: present 
   with_items:
-    - xinit
-    - xorg
-    - python-gnutls 
-    - python-pycurl
-    - plexhometheater
-    - alsa-utils
-    - pulseaudio
+
 
 - name: Use debconf to tell x11-common that xinit can be started by Anybody
   debconf:

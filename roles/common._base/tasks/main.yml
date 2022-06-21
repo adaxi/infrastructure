@@ -1,7 +1,7 @@
 ---
 - name: Add contrib and non-free section to debian repositories
-  apt_repository: 
-    repo: 'deb http://httpredir.debian.org/debian {{ansible_distribution_release}} contrib non-free'
+  apt_repository:
+    repo: 'deb http://httpredir.debian.org/debian {{ ansible_distribution_release }} contrib non-free'
     state: present
   become: yes
 
@@ -16,10 +16,12 @@
       - git
       - apt-transport-https
     state: present
+    update_cache: yes
   become: yes
 
 - name: Add root bashrc
   copy:
     src: bashrc
     dest: /root/.bashrc
+    mode: '0644'
   become: yes

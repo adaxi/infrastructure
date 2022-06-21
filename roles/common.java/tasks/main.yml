@@ -1,7 +1,7 @@
 ---
 
-- name: Install Java 
+- name: Install Java
   apt:
-    name: "{{java_package}}"
+    name: "{{ java_package }}"
     state: present
-  become: yes 
+  become: yes

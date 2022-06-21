@@ -1,10 +1,12 @@
 ---
 
 - name: Ensure OpenVPN packages are installed
-  apt: "name={{ item }} state=installed update_cache=yes"
-  with_items:
-    - openvpn
-    - easy-rsa
+  apt:
+    name:
+      - openvpn
+      - easy-rsa
+    state: installed
+    update_cache: yes
   become: yes
 
 - name: Ensure that we can start openvpn

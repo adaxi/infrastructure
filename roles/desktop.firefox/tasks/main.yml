@@ -1,16 +1,6 @@
 ---
-- name: Add mint repository key
-  apt_key: keyserver=pgp.mit.edu id=3EE67F3D0FF405B2
-  become: yes
-  
-- name: Add mint repositories 
-  apt_repository: repo='deb http://packages.linuxmint.com debian import' state=present
-  become: yes
-
-- name: Pin firefox package
-  copy: src=pin-firefox dest=/etc/apt/preferences.d/
-  become: yes
-  
-- name: Install firefox
-  apt: name=firefox update_cache=yes
+- name: Install Firefox
+  apt: 
+    name: firefox 
+    update_cache: yes
   become: yes
