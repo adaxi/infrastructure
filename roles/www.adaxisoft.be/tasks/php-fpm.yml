@@ -1,5 +1,0 @@
-- name: Make adaxisoft_be.conf php-fpm configuration available
-  template: src=php-fpm.adaxisoft_be.conf.j2 
-            dest=/etc/php5/fpm/pool.d/adaxisoft_be.conf
-  notify: restart php-fpm
-  
