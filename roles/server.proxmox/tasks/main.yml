@@ -1,0 +1,26 @@
+- name: Run apt update
+  ansible.builtin.apt:
+    update_cache: yes
+
+- name: Remove 'source-directory' from /etc/network/interfaces as it breaks installation of ifupdown2 requerement of proxmox
+  ansible.builtin.lineinfile:
+    path: /etc/network/interfaces
+    state: absent
+    regexp: '^source-directory'
+
+- name: Create /volumes/proxmox directory 
+  ansible.builtin.file:
+    path: /volumes/proxmox
+    state: directory
+    mode: '0755'
+
+- name: Create an account for adaxi
+  ansible.builtin.user:
+    state: present
+    name: adaxi
+    password: '$y$j9T$Qqtdii04kowsWFOENHguQ.$6GBgzmrfljpwaAU3s7M6vAgd0YTTdy.BhVN4gGemuD5' # adaxi
+    shell: /bin/bash
+    group: adaxi
+    append: yes
+    groups:
+      - sudo

@@ -1,0 +1,21 @@
+# {{ ansible_managed }}
+auto lo
+iface lo inet loopback
+
+allow-hotplug eth0
+iface eth0 inet dhcp
+
+auto eth1
+iface eth1 inet dhcp
+    post-up ip route del default dev $IFACE || true
+
+auto eth2
+iface eth2 inet manual
+
+auto vmbr0
+iface vmbr0 inet static
+    address 10.68.0.50
+    netmask 255.255.255.0
+    bridge_ports eth2
+    bridge_stp off
+    bridge_fd 0

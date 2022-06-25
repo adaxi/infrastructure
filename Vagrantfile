@@ -54,8 +54,11 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     c.vm.box = "debian/bullseye64"
     c.vm.synced_folder '.', '/vagrant', disabled: true
     c.vm.hostname = "vm.local"
+    c.vm.network "public_network", ip: "10.68.0.50", bridge: "enp4s0"
     c.vm.provider "virtualbox" do |v|
       v.name = "Virtual Machine (vm)"
+      v.memory = 2048
+      v.cpus = 2
     end
     c.vm.provision "ansible" do |ansible|
       ansible.playbook = "vmservers.yml"
@@ -80,7 +83,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # Create a public network, which generally matched to bridged network.
   # Bridged networks make the machine appear as another physical device on
   # your network.
-  config.vm.network "public_network"
+  config.vm.network "public_network", bridge: "enp4s0"
 
   # Create a private network, which allows host-only access to the machine
   # using a specific IP.

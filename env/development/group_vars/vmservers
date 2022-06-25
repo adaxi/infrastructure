@@ -4,7 +4,7 @@
 # \date		2022
 # \brief	Configuration file for your web server.
 # 
-# Basic information required to setup your web server.
+# Basic information required to setup your vm server.
 # 
 
 ###
@@ -16,5 +16,83 @@
 #
 installation_environment: development
 
+#
+# \var interfaces_template is set to the path of a template we'll use for configuring the network on these Debian machines. 
+#
+interfaces_template: "env/development/templates/interfaces-{{ pve_group }}.j2"
 
+#
+# \var address to be used by the cluster
+# Change the Vagrant file as well if you are changing this address for development
+# 
 
+pve_cluster_addr0: "10.68.0.50" 
+
+#
+# \var set to the group name of our cluster 
+#
+pve_group: vmservers
+
+#
+# \var if set to true, will automatically reboot the machine on kernel updates
+#
+pve_reboot_on_kernel_update: true
+
+#
+# \var set this to yes to configure hosts to be clustered together
+#
+pve_cluster_enabled: yes
+
+#
+# pve_groups, pve_users, and pve_acls authorizes some local UNIX users (they must already exist)
+# to access PVE and gives them the Administrator role as part of the ops group. 
+#
+pve_groups:
+  - name: ops
+    comment: Operations Team
+pve_users:
+  - name: adaxi@pam
+    email: lab@adaxisoft.be
+    firstname: Gerik
+    lastname: Bonaert
+    groups: [ "ops" ]
+pve_acls:
+  - path: /
+    roles: [ "Administrator" ]
+    groups: [ "ops" ]
+pve_storages:
+  - name: backups
+    type: dir
+    content: [ "backup" ]
+    path: /volumes/proxmox/backups
+    maxfiles: 4
+  - name: images
+    type: dir
+    content: [ "images"]
+    path: /volumes/proxmox/images
+  - name: iso
+    type: dir
+    content: [ "iso" ]
+    path: /volumes/proxmox/iso
+  - name: vzdump
+    type: dir
+    content: [ "vztmpl" ]
+    path: /volumes/proxmox/vzdump
+  - name: rootdir
+    type: dir
+    content: [ "rootdir" ]
+    path: /volumes/rootdir
+  - name: snippets
+    type: dir
+    content: [ "snippets" ]
+    path: /volumes/proxmox/snippets
+
+#
+# \var set to true to allow 'geerlingguy.ntp' role to manage the NTP configuration file
+#
+ntp_manage_config: true
+
+#
+# \var set the NTP Pool Area to use. Defaults to none, which uses the worldwide pool.
+#
+ntp_area: 'europe'
