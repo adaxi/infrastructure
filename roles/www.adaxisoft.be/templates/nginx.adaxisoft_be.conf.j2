@@ -1,7 +1,3 @@
-upstream php_adaxisoft_be {
-	server unix:/var/run/php5-fpm-{{adaxisoft_be_user}}.sock;
-}
-
 server {
 	listen           80;
 	listen           [::]:80;
@@ -57,7 +53,7 @@ server {
 	}
 
 	location / {
-		index           index.html index.php;
+		index           index.html;
 	}
 
 	# deny access to .dotfiles files
