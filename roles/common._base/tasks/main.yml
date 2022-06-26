@@ -4,6 +4,7 @@
     repo: 'deb http://httpredir.debian.org/debian {{ ansible_distribution_release }} contrib non-free'
     state: present
   become: yes
+  when: ansible_distribution == 'Debian'
 
 - name: Install debconf, debconf utils and git required for ansible deployment
   apt:
@@ -25,3 +26,4 @@
     dest: /root/.bashrc
     mode: '0644'
   become: yes
+  when: ansible_distribution == 'Debian'

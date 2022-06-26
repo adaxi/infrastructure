@@ -1,0 +1,86 @@
+- name: "Fix for Rancher on Debian 11: https://github.com/rancher/rancher/issues/36238#issuecomment-1141244691"
+  block:
+    - name: Patch /etc/default/grub
+      ansible.builtin.lineinfile:
+        path: /etc/default/grub
+        regexp: '^GRUB_CMDLINE_LINUX='
+        line: 'GRUB_CMDLINE_LINUX="consoleblank=0 cgroup_memory=1 cgroup_enable=memory swapaccount=1 systemd.unified_cgroup_hierarchy=0"'
+      register: _default_grub
+    
+    - name: Patch /etc/default/grub
+      ansible.builtin.lineinfile:
+        path: /etc/default/grub
+        regexp: '^GRUB_CMDLINE_LINUX='
+        line: 'GRUB_CMDLINE_LINUX="consoleblank=0 cgroup_memory=1 cgroup_enable=memory swapaccount=1 systemd.unified_cgroup_hierarchy=0"'
+      register: _default_grub
+
+    - name: Update GRUB
+      command: update-grub
+      when: _default_grub is changed
+
+    - block:
+      - name: Reboot for grub update
+        shell: "sleep 5 && shutdown -r now 'Grub changes found, rebooting'"
+        async: 1
+        poll: 0
+
+      - name: Wait for server to come back online
+        wait_for_connection:
+          delay: 15
+      when: _default_grub is changed
+  when: ansible_distribution_release == 'bullseye'
+
+- name: Ensure gpg is installed
+  apt:
+    name: gpg
+    state: present
+
+- name: Install docker public key
+  apt_key:
+    url: "https://download.docker.com/linux/{{ ansible_distribution | lower }}/gpg"
+    state: present
+
+- name: Add docker repository
+  apt_repository:
+    repo: "deb [arch=amd64] https://download.docker.com/linux/{{ ansible_distribution | lower }} {{ansible_distribution_release}} stable"
+    state: present
+
+- name: Install docker
+  apt:
+    name:
+      - docker-ce
+      - docker-ce-cli
+      - containerd.io
+      - docker-compose-plugin
+      - python3-docker
+  # might require a re-run on failure.
+
+- name: Create group
+  group:
+    name: adaxi
+    state: present
+
+- name: Create an account for adaxi
+  ansible.builtin.user:
+    state: present
+    name: adaxi
+    password: '$y$j9T$Qqtdii04kowsWFOENHguQ.$6GBgzmrfljpwaAU3s7M6vAgd0YTTdy.BhVN4gGemuD5' # adaxi
+    shell: /bin/bash
+    group: adaxi
+    append: yes
+    groups:
+      - sudo
+      - docker
+  
+- name: Install rancher container
+  community.docker.docker_container:
+    name: rancher
+    image: rancher/rancher:v2.6.5
+    ports: 
+      - '80:80'
+      - '443:443'
+    volumes:
+      - '/opt/rancher:/var/lib/rancher'
+    restart_policy: 'unless-stopped'
+    privileged: true
+    timeout: 600

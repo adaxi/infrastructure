@@ -61,7 +61,26 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       v.cpus = 2
     end
     c.vm.provision "ansible" do |ansible|
-      ansible.playbook = "vmservers.yml"
+      ansible.playbook = "vmserver.yml"
+      ansible.inventory_path = "env/development/inventory"
+    end
+  end
+
+  # export SSH_AUTH_SOCK="" in case of:
+  #  kube: Warning: Connection reset. Retrying...
+  #  kube: Warning: Remote connection disconnect. Retrying...
+  config.vm.define "kube" do |c|
+    c.vm.box = "ubuntu/focal64"
+    c.vm.synced_folder '.', '/vagrant', disabled: true
+    c.vm.hostname = "kube.local"
+    c.vm.network "public_network", ip: "10.68.0.51", bridge: "enp4s0"
+    c.vm.provider "virtualbox" do |v|
+      v.name = "Virtual Machine (vm)"
+      v.memory = 8192
+      v.cpus = 2
+    end
+    c.vm.provision "ansible" do |ansible|
+      ansible.playbook = "kubernetesserver.yml"
       ansible.inventory_path = "env/development/inventory"
     end
   end

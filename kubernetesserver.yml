@@ -1,0 +1,23 @@
+---
+# Install dependencies
+#
+# ansible-galaxy collection install community.docker
+#
+# Run it
+#
+# ansible-playbook kubernetesservers  .yml -i inventory -u adaxi --ask-become-pass
+
+#
+# Source: https://www.youtube.com/watch?v=oILc0ywDVTk
+#
+
+#
+# Racher Host OS support matrix: https://www.suse.com/assets/EN-2.6.5SupportMatrix-300422-0116-26.pdf
+#
+
+- hosts: kubernetesservers
+  become: True
+  roles:
+    - role: common._base
+    - role: server.rancher
+

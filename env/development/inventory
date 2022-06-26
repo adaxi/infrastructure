@@ -39,6 +39,12 @@
 ; The default username on a vagrant machine is 'vagrant'.
 ;
 ;
+; Add the servers to host files
+; -----------------------------
+;
+; In order to be able to access the servers by their names either ensure there are DNS
+; records pointing to the machine, or add them to your /etc/hosts file.
+;
 
 [mediaservers]
 media:2222 ansible_user=vagrant ansible_ssh_private_key_file=.vagrant/machines/media/virtualbox/private_key
@@ -51,3 +57,6 @@ web:2222 ansible_user=vagrant ansible_ssh_private_key_file=.vagrant/machines/web
 
 [vmservers]
 vm:2222 ansible_user=vagrant ansible_ssh_private_key_file=.vagrant/machines/vm/virtualbox/private_key
+
+[kubernetesservers]
+kube:2222 ansible_user=vagrant ansible_ssh_private_key_file=.vagrant/machines/kube/virtualbox/private_key

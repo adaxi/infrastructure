@@ -1,0 +1,20 @@
+---
+#
+# \author	Gerik Bonaert
+# \date		2015
+# \brief	Configuration file for your kubernetes server.
+# 
+# Basic information required to setup your kubernetes server.
+# 
+
+###
+# Environment
+###
+
+#
+# \var environment on which the installation is launched
+#
+installation_environment: development
+
+
+
