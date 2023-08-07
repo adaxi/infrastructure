@@ -24,6 +24,7 @@
     state: present
     name: adaxi
     password: '$y$j9T$Qqtdii04kowsWFOENHguQ.$6GBgzmrfljpwaAU3s7M6vAgd0YTTdy.BhVN4gGemuD5' # adaxi
+    update_password: 'on_create'
     shell: /bin/bash
     group: adaxi
     append: yes
