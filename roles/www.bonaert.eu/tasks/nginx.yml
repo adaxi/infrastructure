@@ -1,11 +1,14 @@
 ---
 
 - name: Make bonaert_eu.conf nginx configuration is available
-  template: dest="/etc/nginx/sites-available/bonaert_eu.conf" src="nginx.bonaert_eu.conf.j2" 
+  template: 
+    dest: "/etc/nginx/sites-available/bonaert_eu.conf"
+    src: "nginx.bonaert_eu.conf.j2" 
   notify: reload nginx
   
 - name: Enable nginx bonaert_eu.conf
-  file: src=/etc/nginx/sites-available/bonaert_eu.conf 
-        dest=/etc/nginx/sites-enabled/bonaert_eu.conf
-        state=link
+  file: 
+    src: /etc/nginx/sites-available/bonaert_eu.conf
+    dest: /etc/nginx/sites-enabled/bonaert_eu.conf
+    state: link
   

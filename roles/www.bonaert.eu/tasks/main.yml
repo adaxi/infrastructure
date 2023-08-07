@@ -1,23 +1,29 @@
 ---
 
-- name: create bonaert.eu group
-  group: name="{{bonaert_eu_group}}" 
+- name: Create bonaert.eu group
+  group: 
+    name: "{{bonaert_eu_group}}" 
 
-- name: create empty dir
-  file: path=/dev/empty state=directory
+- name: Create empty dir
+  file: 
+    path: /dev/empty
+    state: directory
   become: yes
 
-- name: create bonaert.eu user
-  user: name="{{bonaert_eu_user}}" 
-        shell=/bin/nologin 
-        group="{{bonaert_eu_group}}" 
-        append=yes
-        home={{bonaert_eu_home}}
-        createhome=yes
-        skeleton=/dev/empty
+- name: Create bonaert.eu user
+  user: 
+    name: "{{bonaert_eu_user}}" 
+    shell: /bin/nologin 
+    group: "{{bonaert_eu_group}}" 
+    append: yes
+    home: "{{bonaert_eu_home}}"
+    createhome: yes
+    skeleton: /dev/empty
 
 - name: deploy bonaert.eu
-  git: repo=https://github.com/adaxi/adaxisoft.be.git dest="{{bonaert_eu_home}}"
+  git: 
+    repo: https://github.com/adaxi/adaxisoft.be.git 
+    dest: "{{bonaert_eu_home}}"
   become: yes
   become_user: "{{bonaert_eu_user}}"
   
@@ -25,5 +31,7 @@
   include: nginx.yml
   
 - name: Reload nginx
-  service: name=nginx state=reloaded
+  service: 
+    name: nginx
+    state: reloaded
 

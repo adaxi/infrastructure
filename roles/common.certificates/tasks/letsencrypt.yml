@@ -21,7 +21,6 @@
   apt:
     name: certbot
     state: present
-  when: ansible_distribution_release != "jessie"
 
 - name: Crate .well-known directory for LetsEncrypt
   file:

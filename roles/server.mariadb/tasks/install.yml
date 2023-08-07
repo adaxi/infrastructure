@@ -8,14 +8,10 @@
     update_cache: yes
   when: mysql_installed.stat.exists == false
 
-- name: Ensure MySQL Python libraries are installed.
-  apt:
-    name: python-mysqldb
-    state: installed
-
 - name: Ensure MySQL packages are installed.
   apt:
-    name: "{{mysql_packages}}"
+    name:
+      - python-mysqldb
+      - mariadb-client
+      - mariadb-server
     state: installed
-    update_cache: yes
-  register: deb_mysql_install_packages
