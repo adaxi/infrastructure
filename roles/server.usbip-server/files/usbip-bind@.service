@@ -1,0 +1,13 @@
+[Unit]
+Description=Bind USB device to usbipd
+After=network-online.target usbipd.service
+Wants=network-online.target usbipd.service
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStartPre=/usr/sbin/modprobe usbip-core
+ExecStart=/bin/sh -c "host=$(echo %i | cut -f1 -d'_'); host=$(echo %i | cut -f2 -d'_');  /usr/sbin/usbip attach $host -b $busid"
+
+[Install]
+WantedBy=multi-user.target

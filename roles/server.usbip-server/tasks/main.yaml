@@ -1,0 +1,24 @@
+- name: Install usbipd
+  apt:
+    name: usbip
+    state: present
+
+- name: Copy usbip-bind unit to server
+  copy:
+    src: usbip-bind@.service
+    dest:  /etc/systemd/system/usbip-bind@.service
+
+- name: Copy usbipd unit to server
+  copy:
+    src: usbipd.service
+    dest:  /etc/systemd/system/usbipd.service
+
+- name: Reload systemd
+  systemd:
+    daemon_reload: true
+
+- name: Reload systemd
+  systemd:
+    name: usbipd
+    enabled: true
+    state: started
