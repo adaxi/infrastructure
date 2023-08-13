@@ -8,6 +8,11 @@
     src: usbip-bind@.service
     dest:  /etc/systemd/system/usbip-bind@.service
 
+# Then add binds with:
+# 
+# systemctl enable usbip-bind@1-1.2.3
+# systemctl start usbip-bind@1-1.2.3
+
 - name: Copy usbipd unit to server
   copy:
     src: usbipd.service

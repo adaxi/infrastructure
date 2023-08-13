@@ -11,3 +11,9 @@
 - name: Reload systemd
   systemd:
     daemon_reload: true
+
+
+# Then add binds with:
+# 
+# systemctl enable usbip-attach@127.0.0.1_1-1.2.3
+# systemctl start usbip-attach@127.0.0.1_1-1.2.3
