@@ -4,6 +4,8 @@
     name:
       - network-manager-openvpn
       - network-manager-openvpn-gnome
+      - network-manager-openconnect
+      - network-manager-openconnect-gnome
 #     - network-manager-iodine
 #     - network-manager-iodine-gnome
     state: present

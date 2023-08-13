@@ -11,6 +11,7 @@
      - desktop.virtualbox
      - desktop.devtools
      - desktop.chrome
+     - desktop.firefox
      - desktop.gnome
      - desktop.vscode
 

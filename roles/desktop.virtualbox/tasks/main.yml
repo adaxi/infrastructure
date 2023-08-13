@@ -13,7 +13,7 @@
 
 - name: Add Virtualbox repositories
   apt_repository:
-    repo: "deb http://download.virtualbox.org/virtualbox/debian bullseye contrib"
+    repo: "deb http://download.virtualbox.org/virtualbox/debian {{ ansible_distribution_release }} contrib"
     state: present
   become: yes
 
