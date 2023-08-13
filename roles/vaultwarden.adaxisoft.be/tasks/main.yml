@@ -1,0 +1,24 @@
+---
+
+- name: Create vaultwarden.adaxisoft.be group
+  group: 
+    name: "{{vaultwarden_adaxisoft_be_group}}" 
+
+- name: Create vaultwarden.adaxisoft.be user
+  user: 
+    name: "{{vaultwarden_adaxisoft_be_user}}" 
+    shell: /bin/nologin 
+    group: "{{vaultwarden_adaxisoft_be_group}}" 
+    home: "{{vaultwarden_adaxisoft_be_home}}"
+
+- name: Install NGINX configuration
+  include: nginx.yml
+
+- name: Install adaxisoft-vaultwarden configuration
+  include: adaxisoft-vaultwarden.yml
+
+- name: Reload NGINX
+  service: 
+    name: nginx
+    state: reloaded
+

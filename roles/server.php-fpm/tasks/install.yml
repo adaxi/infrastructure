@@ -6,7 +6,18 @@
 
 - name: Ensure PHP packages are installed
   apt:
-    name: "{{ item }}"
-    state: installed
-  with_items: "{{ php_packages }}"
+    name:
+      - php8.2
+      - php8.2-mcrypt
+      - php8.2-cli
+      - php8.2-common
+      - php8.2-curl
+      - php8.2-dev
+      - php8.2-fpm
+      - php8.2-gd
+      - php-pear
+      - php-apcu
+      - php8.2-mysql
+      - libpcre3-dev
+    state: present
   notify: restart webserver

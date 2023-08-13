@@ -4,45 +4,42 @@
   group: 
     name: "{{adaxisoft_be_group}}" 
 
-- name: Create adaxisoft.be user
-  user: 
-    name: "{{adaxisoft_be_user}}" 
-    shell: /bin/nologin 
-    group: "{{adaxisoft_be_group}}" 
-    append: yes
-    home: "{{adaxisoft_be_home}}"
-    createhome: yes
-    skeleton: /dev/shm
+- name: Check adaxisoft.be was already installed
+  stat: 
+    path: "{{adaxisoft_be_home}}"
+  register: adaxisoft_be_root
 
 - name: Deploy adaxisoft.be
   git: 
     repo: https://github.com/adaxi/adaxisoft.be.git
     dest: "{{adaxisoft_be_home}}"
-  become: yes
-  become_user: "{{adaxisoft_be_user}}"
+  when: adaxisoft_be_root.stat.exists == False
 
-- name: Ensure blog directory exists
+- name: Create adaxisoft.be user
+  user: 
+    name: "{{adaxisoft_be_user}}" 
+    shell: /bin/nologin 
+    group: "{{adaxisoft_be_group}}" 
+    home: "{{adaxisoft_be_home}}"
+
+- name: Chown to adaxisoft_be
   file: 
-    path: "{{adaxisoft_be_home}}/blog"
-    state: directory
-    mode: '0755'
-  become: yes
-  become_user: "{{adaxisoft_be_user}}"
-
-- name: Deploy adaxisoft.be/blog
-  git: 
-    repo: https://github.com/adaxi/adaxisoft-blog.git
-    dest: "{{adaxisoft_be_home}}/blog"
-    version: master
-  become: yes
-  become_user: "{{adaxisoft_be_user}}"
+    path: "{{adaxisoft_be_home}}"
+    owner: "{{adaxisoft_be_group}}"
+    group: "{{adaxisoft_be_user}}"
+    recurse: true
 
 - name: Install NGINX configuration
   include: nginx.yml
 
-- name: Install nodejs configuration
-  include: nodejs.yml
+- name: Install adaxisoft-api configuration
+  include: adaxisoft-api.yml
+
+- name: Install adaxisoft-blog configuration
+  include: adaxisoft-blog.yml
 
 - name: Reload NGINX
-  service: name=nginx state=reloaded
+  service: 
+    name: nginx
+    state: reloaded
 

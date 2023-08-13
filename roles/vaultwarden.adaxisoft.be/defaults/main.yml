@@ -1,0 +1,21 @@
+---
+vaultwarden_adaxisoft_be_domain: vault.adaxisoft.be
+vaultwarden_adaxisoft_be_group: vaultwarden_adaxisoft_be
+vaultwarden_adaxisoft_be_user: vaultwarden_adaxisoft_be
+vaultwarden_adaxisoft_be_home: /var/www/adaxisoft_be
+
+vaultwarden_adaxisoft_be_openssl_self_signed:
+  - name: '{{vaultwarden_adaxisoft_be_domain}}'
+    domains: ['{{vaultwarden_adaxisoft_be_domain}}']
+    country: 'BE'
+    state: 'Brussels'
+    city: 'Brussels'
+    organization: 'adaxisoft.be'
+    unit: ''
+    email: 'dev@adaxisoft.be'
+    days: 3650
+
+vaultwarden_adaxisoft_be_letsencrypt:
+  - name: '{{vaultwarden_adaxisoft_be_domain}}'
+    domains: ['{{vaultwarden_adaxisoft_be_domain}}']
+    email: 'dev@adaxisoft.be'

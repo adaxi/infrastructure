@@ -8,24 +8,32 @@
   file: 
     path: /dev/empty
     state: directory
-  become: yes
+
+- name: Check if bonaert.eu was already installed
+  stat: 
+    path: "{{bonaert_eu_home}}"
+  register: bonaert_eu_root
+
+- name: Deploy bonaert.eu
+  git: 
+    repo: https://github.com/adaxi/adaxisoft.be.git 
+    dest: "{{bonaert_eu_home}}"
+  when: bonaert_eu_root.stat.exists == False
 
 - name: Create bonaert.eu user
   user: 
     name: "{{bonaert_eu_user}}" 
     shell: /bin/nologin 
     group: "{{bonaert_eu_group}}" 
-    append: yes
     home: "{{bonaert_eu_home}}"
-    createhome: yes
     skeleton: /dev/empty
 
-- name: deploy bonaert.eu
-  git: 
-    repo: https://github.com/adaxi/adaxisoft.be.git 
-    dest: "{{bonaert_eu_home}}"
-  become: yes
-  become_user: "{{bonaert_eu_user}}"
+- name: Chown to bonaert_eu
+  file: 
+    path: "{{bonaert_eu_home}}"
+    owner: "{{bonaert_eu_group}}"
+    group: "{{bonaert_eu_user}}"
+    recurse: true
   
 - name: Install nginx configuration
   include: nginx.yml

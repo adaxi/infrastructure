@@ -1,0 +1,8 @@
+---
+- name: Start adaxisoft blog
+  community.docker.docker_container:
+    name: adaxisoft-blog
+    image: ghcr.io/adaxi/blog:gh-pages
+    ports: "2001:80"
+    restart_policy: "always"
+

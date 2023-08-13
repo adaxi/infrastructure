@@ -1,15 +1,5 @@
 ---
 # Variable setup.
-- name: Define php_packages
-  set_fact:
-    php_packages: "{{ __php_packages | list }}"
-  when: php_packages is not defined
-
-- name: Define php_webserver_daemon
-  set_fact:
-    php_webserver_daemon: "{{ __php_webserver_daemon }}"
-  when: php_webserver_daemon is not defined
-
 - name: Define php_conf_path
   set_fact:
     php_conf_path: "{{ __php_conf_path }}"
@@ -19,11 +9,6 @@
   set_fact:
     php_extension_conf_path: "{{ __php_extension_conf_path }}"
   when: php_extension_conf_path is not defined
-
-- name: Define php_apc_conf_filename
-  set_fact:
-    php_apc_conf_filename: "{{ __php_apc_conf_filename }}"
-  when: php_apc_conf_filename is not defined
 
 - name: Define php_opcache_conf_filename
   set_fact:

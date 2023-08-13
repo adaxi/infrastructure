@@ -4,22 +4,11 @@
 # LetsEncrypt certificates
 ###
 
-- name: Ensure jessie backports repository is present
-  apt_repository:
-    repo: "deb http://ftp.debian.org/debian jessie-backports main"
-    state: present
-  when: ansible_distribution_release == "jessie"
-
-- name: Install Certbot (from backports)
-  apt:
-    name: certbot
-    state: present
-    default_release: jessie-backports
-  when: ansible_distribution_release == "jessie"
-
 - name: Install Certbot
   apt:
-    name: certbot
+    name: 
+      - certbot
+      - python3-certbot-nginx
     state: present
 
 - name: Crate .well-known directory for LetsEncrypt
@@ -39,6 +28,7 @@
     creates: "/etc/letsencrypt/live/{{ item.name }}"
   with_items: "{{ letsencrypt | default([]) }}"
   become: yes
+  when: installation_environment == "production"
 
 - name: Add cron file
   copy:

@@ -1,0 +1,13 @@
+---
+- name: Make vaultwarden.adaxisoft_be.conf nginx configuration is available
+  template:
+    dest: /etc/nginx/sites-available/vaultwarden.adaxisoft_be.conf
+    src: nginx.vaultwarden.adaxisoft_be.conf.j2
+  notify: reload nginx
+
+- name: Enable nginx vaultwarden.adaxisoft_be.conf
+  file:
+    src: /etc/nginx/sites-available/vaultwarden.adaxisoft_be.conf
+    dest: /etc/nginx/sites-enabled/vaultwarden.adaxisoft_be.conf
+    state: link
+  

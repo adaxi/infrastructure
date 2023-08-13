@@ -1,6 +1,0 @@
-- name: Make lusoleaves_com.conf available
-  template:
-    src: php-fpm.lusoleaves_com.conf.j2 
-    dest: /etc/php5/fpm/pool.d/lusoleaves_com.conf
-  notify: restart php-fpm
-  

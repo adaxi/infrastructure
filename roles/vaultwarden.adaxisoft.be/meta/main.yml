@@ -1,0 +1,6 @@
+---
+dependencies:
+  - role: common.certificates
+    openssl_self_signed: '{{vaultwarden_adaxisoft_be_openssl_self_signed | default([]) }}'
+    letsencrypt: '{{vaultwarden_adaxisoft_be_letsencrypt | default([]) }}'
+  - role: server.nginx

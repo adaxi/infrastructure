@@ -3,7 +3,7 @@
   apt: 
     name:
       - nginx-extras
-      - python-passlib
+      - python3-passlib
     state: present
   become: yes
 

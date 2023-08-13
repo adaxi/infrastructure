@@ -70,7 +70,7 @@ server {
 	}
 
 	location /api {
-		proxy_pass http://unix:/var/run/adaxisoft-api/adaxisoft-api.sock;
+		proxy_pass http://localhost:2000;
 		proxy_http_version 1.1;
 		proxy_set_header Upgrade $http_upgrade;
 		proxy_set_header Connection 'upgrade';
@@ -79,7 +79,7 @@ server {
 	}
 
 	location /open-api-to-markdown {
-		proxy_pass http://unix:/var/run/adaxisoft-api/adaxisoft-api.sock;
+		proxy_pass http://localhost:2000;
 		proxy_http_version 1.1;
 		proxy_set_header Upgrade $http_upgrade;
 		proxy_set_header Connection 'upgrade';
@@ -87,4 +87,12 @@ server {
 		proxy_cache_bypass $http_upgrade;
 	}
 
+	location /blog {
+		proxy_pass http://localhost:2001;
+		proxy_http_version 1.1;
+		proxy_set_header Upgrade $http_upgrade;
+		proxy_set_header Connection 'upgrade';
+		proxy_set_header Host $host;
+		proxy_cache_bypass $http_upgrade;
+	}
 }

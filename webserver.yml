@@ -8,7 +8,10 @@
      - common._base
      - common.vim
      - { role: common.dotfiles, install_dofiles: False }
+     - common.tailscale
      - server.motd
+     - server.docker
      - www.lusoleaves.com
      - www.adaxisoft.be
+     - vaultwarden.adaxisoft.be
      - www.bonaert.eu

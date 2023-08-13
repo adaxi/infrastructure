@@ -1,0 +1,8 @@
+---
+- name: Start adaxisoft api
+  community.docker.docker_container:
+    name: adaxisoft-api
+    image: ghcr.io/adaxi/adaxisoft-api:master
+    ports: "2000:80"
+    restart_policy: "always"
+

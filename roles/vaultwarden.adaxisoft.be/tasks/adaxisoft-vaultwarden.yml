@@ -1,0 +1,19 @@
+---
+- name: Create vaultwarden directory
+  file:
+     path: /vaultwarden
+     state: directory
+
+- name: Start adaxisoft vaultwarden
+  community.docker.docker_container:
+    name: adaxisoft-vaultwarden
+    image: vaultwarden/server:latest
+    ports: "2003:80"
+    restart_policy: "always"
+    volumes:
+      - /vaultwarden:/data
+    env:
+      DOMAIN: "https://{{vaultwarden_adaxisoft_be_domain}}"
+      SIGNUPS_ALLOWED: "false"
+      INVITATIONS_ALLOWED: "false"
+

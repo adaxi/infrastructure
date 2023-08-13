@@ -1,4 +1,9 @@
 ---
+- name: Bind mysql on docker interface
+  ansible.builtin.lineinfile:
+    path: /etc/mysql/mariadb.conf.d/50-server.cnf
+    regexp: '^bind-address'
+    line: "bind-address            = {{ ['127.0.0.1', ansible_docker0.ipv4.address | default(0) ] | select() | join (',') }}"
 
 - name: Ensure MySQL is started and enabled on boot.
   service:

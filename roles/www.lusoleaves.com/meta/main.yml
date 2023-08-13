@@ -1,7 +1,6 @@
 ---
 dependencies:
   - role: server.nginx
-  - role: server.php-fpm
   - role: server.mariadb
   - role: common.certificates
     openssl_self_signed: '{{lusoleaves_com_openssl_self_signed | default([]) }}'

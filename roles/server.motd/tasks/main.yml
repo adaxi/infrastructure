@@ -5,18 +5,24 @@
     state: present
   become: yes
 
+- name: Remove /etc/motd
+  file: 
+    path: /etc/motd
+    state: absent
+  become: yes
+
+- name: Remove /etc/update-motd.d
+  file: 
+    path: /etc/update-motd.d
+    state: absent
+  become: yes
+
 - name: Install update motd
   git:
     repo: "https://github.com/adaxi/update-motd.git"
     dest: /etc/update-motd.d
     clone: yes
     update: no
-  become: yes
-  
-- name: Remove /etc/motd
-  file: 
-    path: /etc/motd
-    state: absent
   become: yes
   
 - name: Symlink /var/run/motd to /etc/motd

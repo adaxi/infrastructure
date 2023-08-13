@@ -87,11 +87,13 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   
 
   config.vm.define "web" do |c|
-    c.vm.box = "debian/bullseye64"
+    c.vm.box = "debian/bookworm64"
     c.vm.synced_folder '.', '/vagrant', disabled: true
     c.vm.hostname = "web.local"
     c.vm.provider "virtualbox" do |v|
       v.name = "Webserver (web)"
+      v.memory = 4096
+      v.cpus = 2
     end
     c.vm.provision "ansible" do |ansible|
       ansible.playbook = "webserver.yml"
