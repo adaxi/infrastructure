@@ -7,7 +7,7 @@ Wants=network-online.target usbipd.service
 Type=oneshot
 RemainAfterExit=yes
 ExecStartPre=/sbin/modprobe vhci-hcd
-ExecStart=/bin/sh -c "host=$(echo %i | cut -f1 -d'_'); host=$(echo %i | cut -f2 -d'_');  /usr/sbin/usbip attach -r $host -b $busid"
+ExecStart=/bin/sh -c "host=$(echo %i | cut -f1 -d'_'); busid=$(echo %i | cut -f2 -d'_'); /usr/sbin/usbip attach -r $host -b $busid"
 
 [Install]
 WantedBy=multi-user.target
