@@ -60,3 +60,6 @@ vm:2222 ansible_user=vagrant ansible_ssh_private_key_file=.vagrant/machines/vm/v
 
 [kubernetesservers]
 kube:2222 ansible_user=vagrant ansible_ssh_private_key_file=.vagrant/machines/kube/virtualbox/private_key
+
+[homeassistantservers]
+homeassistant:2222 ansible_user=vagrant ansible_ssh_private_key_file=.vagrant/machines/homeassistant/virtualbox/private_key

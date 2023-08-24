@@ -101,6 +101,22 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     end
   end
 
+
+  config.vm.define "homeassistant" do |c|
+    c.vm.box = "debian/bookworm64"
+    c.vm.synced_folder '.', '/vagrant', disabled: true
+    c.vm.hostname = "homeassistant.local"
+    c.vm.provider "virtualbox" do |v|
+      v.name = "Home Assistant (homeassistant)"
+      v.memory = 4096
+      v.cpus = 2
+    end
+    c.vm.provision "ansible" do |ansible|
+      ansible.playbook = "homeassistant.yml"
+      ansible.inventory_path = "env/development/inventory"
+    end
+  end
+
   # Create a public network, which generally matched to bridged network.
   # Bridged networks make the machine appear as another physical device on
   # your network.

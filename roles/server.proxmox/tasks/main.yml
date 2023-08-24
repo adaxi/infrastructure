@@ -2,7 +2,7 @@
   ansible.builtin.apt:
     update_cache: yes
 
-- name: Remove 'source-directory' from /etc/network/interfaces as it breaks installation of ifupdown2 requerement of proxmox
+- name: Remove 'source-directory' from /etc/network/interfaces as it breaks installation of ifupdown2 requirement of proxmox
   ansible.builtin.lineinfile:
     path: /etc/network/interfaces
     state: absent
@@ -13,6 +13,12 @@
     path: /volumes/proxmox
     state: directory
     mode: '0755'
+
+- name: Install proxmox depdendencies
+  apt:
+    name:
+      - python3-proxmoxer
+      - python3-requests
 
 - name: Create group
   group:

@@ -1,0 +1,10 @@
+- name: Start eltako-automation container
+  community.docker.docker_container:
+    name: eltako
+    image: ghcr.io/adaxi/eltako-automation:main
+    restart_policy: "unless-stopped"
+    privileged: true
+    network_mode: host
+    env:
+      ELTAKO_TTY_PATH: /dev/ttyUSB0
+      ELTAKO_MQTT_URL: mqtt://localhost:1883

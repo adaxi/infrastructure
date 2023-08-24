@@ -8,6 +8,7 @@
      - common.java
      - common.devtools
      - common.dotfiles
+     - common.tailscale
      - desktop.virtualbox
      - desktop.devtools
      - desktop.chrome

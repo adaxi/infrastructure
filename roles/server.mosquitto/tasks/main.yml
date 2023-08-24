@@ -1,0 +1,27 @@
+- name: Create mosquitto config directory
+  file:
+    path: /etc/mosquitto
+    state: directory
+
+- name: Configure mosquitto
+  template:
+    src: mosquitto.conf
+    dest: /etc/mosquitto/mosquitto.conf
+
+- name: Create mosquitto data directory
+  file:
+    path: /mosquitto/data
+    state: directory
+
+- name: Start mosquitto container
+  community.docker.docker_container:
+    name: mqtt
+    image: eclipse-mosquitto:latest
+    ports: 
+      - "9001:9001"
+      - "1883:1883"
+    restart_policy: "always"
+    volumes:
+      - /etc/mosquitto/mosquitto.conf:/mosquitto/config/mosquitto.conf
+      - /mosquitto/data:/mosquitto/data
+

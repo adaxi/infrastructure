@@ -5,6 +5,7 @@
       - tcpdump
       - git
       - colordiff
+      - jq
     state: "present"
   become: yes
 

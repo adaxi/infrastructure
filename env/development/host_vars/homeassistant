@@ -1,0 +1,21 @@
+pve_group: pve01
+pve_cluster_enabled: false
+pve_groups:
+  - name: ops
+    comment: Operations Team
+pve_users:
+  - name: adaxi@pam
+    email: adaxi@lab.local
+    firstname: Gerik
+    lastname: Bonaert
+    groups: [ "ops" ]
+pve_acls:
+  - path: /
+    roles: [ "Administrator" ]
+    groups: [ "ops" ]
+pve_storages:
+  - name: localdir
+    type: dir
+    content: [ "images", "iso", "backup" ]
+    path: /volumes
+pve_ssh_port: 22

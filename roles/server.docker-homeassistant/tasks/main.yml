@@ -1,0 +1,16 @@
+- name: Create home assitant directory
+  file:
+    path: /homeassistant
+    state: directory
+
+- name: Start home assitant container
+  community.docker.docker_container:
+    name: homeassistant
+    image: ghcr.io/home-assistant/home-assistant:stable
+    restart_policy: "unless-stopped"
+    privileged: true
+    network_mode: host
+    volumes:
+      - /homeassistant:/config
+    env:
+      TZ: Europe/Brussels
