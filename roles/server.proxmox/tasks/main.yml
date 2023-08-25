@@ -2,6 +2,12 @@
   ansible.builtin.apt:
     update_cache: yes
 
+- name: Install bridge-utils
+  apt:
+    name:
+      - bridge-utils
+      - net-tools
+
 - name: Remove 'source-directory' from /etc/network/interfaces as it breaks installation of ifupdown2 requirement of proxmox
   ansible.builtin.lineinfile:
     path: /etc/network/interfaces
@@ -36,3 +42,7 @@
     append: yes
     groups:
       - sudo
+
+
+
+

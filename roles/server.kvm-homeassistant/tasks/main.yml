@@ -1,15 +1,59 @@
-- proxmox_kvm:
-    api_user: adaxi@pam
-    api_password: adaxi
-    api_host: localhost
-    name: homeassistant
-    node: homeassistant
-    vmid: 100
-    state: present
-    vcpus: 2
-    memory: 2048
-    bios: ovmf
-    net: '{"net0":"virtio,bridge=vmbr0"}'
-    virtio: '{"virtio0":"VMs_LVM:10", "virtio1":"VMs:2,format=qcow2", "virtio2":"VMs:5,format=raw"}'
-    validate_certs: no
-    proxmox_default_behavior: no_defaults
+# Use the GUI and go to "YourNodeName -> System -> Network -> Create -> Linux Bridge".
+# Use as "Name" the value "vmbr0", as "IPv4/CIDR" the IP and subnet your server should get (for example "192.168.0.2/24"),
+# for "Gateway (IPv4)" the IP of your Router (for example "192.168.0.1"),
+# set the "Autostart" checkbox and use the value "enp8s0" for the field "Bridge ports".
+
+- name: Create image directory
+  file:
+    path: /proxmox-images
+    state: directory
+
+- name: Create dummy vm directory
+  file:
+    path: /volumes/images/999
+    state: directory
+
+- name: Download Home Assistant
+  ansible.builtin.get_url:
+    url: https://github.com/home-assistant/operating-system/releases/download/10.5/haos_ova-10.5.qcow2.xz
+    dest: /proxmox-images/home-assistant.qcow2.xz
+    mode: '0440'
+
+- name: Unarchive Home Assistant
+  shell:
+    cmd: xzcat /proxmox-images/home-assistant.qcow2.xz > /volumes/images/999/home-assistant.qcow2
+    creates: /volumes/images/999/home-assistant.qcow2
+
+- name: Create home assistant virtual machine (Please create "vmbr0" in GUI when skipped)
+  proxmox_kvm:
+      proxmox_default_behavior: no_defaults
+      validate_certs: no
+      api_user: adaxi@pam
+      api_password: adaxi
+      api_host: localhost
+      name: homeassistant
+      node: homeassistant
+      vmid: 100
+      state: present
+      vcpus: 1
+      memory: 2048
+      bios: ovmf
+      autostart: true
+      scsihw: virtio-scsi-single
+      net:
+        net0: "virtio,bridge=vmbr0"
+      scsi:
+        sata0: "local:0,import-from=localdir:999/home-assistant.qcow2,format=qcow2"
+  when: '"vmbr0" in ansible_facts.interfaces'
+
+- name: Start home assistant
+  proxmox_kvm:
+      proxmox_default_behavior: no_defaults
+      validate_certs: no
+      api_user: adaxi@pam
+      api_password: adaxi
+      api_host: localhost
+      name: homeassistant
+      node: homeassistant
+      vmid: 100
+      state: started
