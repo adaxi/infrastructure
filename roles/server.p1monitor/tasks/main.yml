@@ -1,0 +1,23 @@
+- name: Create p1monitor directories
+  file:
+    name: "{{ item }}"
+    state: directory
+  with_items:
+    - /p1monitor
+    - /p1monitor/data
+    - /p1monitor/usbdisk
+    - /p1monitor/ramdisk
+
+- name: Start p1monitor container
+  community.docker.docker_container:
+    name: p1monitor
+    image: mclaassen/p1mon
+    restart_policy: "unless-stopped"
+    devices: 
+      - "/dev/ttyUSB2:/dev/ttyUSB0"
+    volumes:
+      - /p1monitor/data:/p1mon/data
+      - /p1monitor/usbdisk:/p1mon/mnt/usb
+      - /p1monitor/ramdisk:/p1mon/mnt/ramdisk
+    ports:
+      - 8124:80

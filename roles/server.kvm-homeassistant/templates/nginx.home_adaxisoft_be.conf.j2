@@ -1,0 +1,36 @@
+server {
+	listen           80;
+	listen           [::]:80;
+	server_name      {{home_adaxisoft_be_domain}};
+
+	location /.well-known {
+		root /var/www/html/;
+		allow all;
+	}
+
+	location / {
+		return 301 https://$server_name$request_uri;
+	}
+}
+
+server {
+	listen              443 ssl;
+	listen              [::]:443 ssl;
+	ssl_certificate     /etc/letsencrypt/live/{{home_adaxisoft_be_domain}}/fullchain.pem;
+	ssl_certificate_key /etc/letsencrypt/live/{{home_adaxisoft_be_domain}}/privkey.pem;
+	keepalive_timeout   70;
+
+	server_name         {{home_adaxisoft_be_domain}};
+	root                {{home_adaxisoft_be_home}};
+	access_log          /var/log/nginx/{{home_adaxisoft_be_domain}}.access.log	combined;
+	error_log           /var/log/nginx/{{home_adaxisoft_be_domain}}.error.log    error;
+
+	location / {
+		proxy_pass http://192.168.0.22:8123;
+		proxy_http_version 1.1;
+		proxy_set_header Upgrade $http_upgrade;
+		proxy_set_header Connection 'upgrade';
+		proxy_set_header Host $host;
+		proxy_cache_bypass $http_upgrade;
+	}
+}

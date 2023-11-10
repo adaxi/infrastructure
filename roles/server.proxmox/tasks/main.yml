@@ -4,7 +4,7 @@
 
 - name: Install bridge-utils
   apt:
-    name:
+    name:q
       - bridge-utils
       - net-tools
 

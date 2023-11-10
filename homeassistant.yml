@@ -7,9 +7,11 @@
   roles:
       - common._base
       - common.devtools
+      - server.usbip-client
       - common.tailscale
       - server.docker
       - server.mosquitto
+      - server.grott
       - server.eltako-automation
       - role: geerlingguy.ntp # ansible-galaxy install geerlingguy.ntp
         vars:
@@ -24,4 +26,5 @@
           - pve_reboot_on_kernel_update: true
       - server.proxmox
       - server.kvm-homeassistant
+      - server.p1monitor
 

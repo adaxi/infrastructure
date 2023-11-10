@@ -1,0 +1,7 @@
+home_adaxisoft_be_home: /var/www/home_adaxisoft_be
+home_adaxisoft_be_domain: home.adaxisoft.be
+
+home_adaxisoft_be_letsencrypt:
+  - name: '{{home_adaxisoft_be_domain}}'
+    domains: ['{{home_adaxisoft_be_domain}}']
+    email: 'dev@adaxisoft.be'

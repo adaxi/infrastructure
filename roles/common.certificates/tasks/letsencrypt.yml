@@ -36,3 +36,11 @@
     dest: "/etc/cron.d/letsencrypt.conf"
   become: yes
 
+- name: Add reload nginx file
+  copy:
+    src: 01-nginx-reload
+    dest: "/etc/letsencrypt/renewal-hooks/deploy/01-nginx-reload"
+  become: yes
+
+
+

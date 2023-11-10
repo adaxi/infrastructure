@@ -1,0 +1,6 @@
+---
+dependencies:
+  - role: common.certificates
+    openssl_self_signed: []
+    letsencrypt: '{{ home_adaxisoft_be_letsencrypt | default([]) }}'
+  - role: server.nginx

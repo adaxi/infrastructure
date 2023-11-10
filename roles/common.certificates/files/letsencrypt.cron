@@ -1,4 +1,4 @@
 SHELL=/bin/sh
 PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 
-50 16 15 * * root /usr/bin/certbot renew >> /var/log/le-renew.log && /bin/systemctl reload nginx
+50 16 15 * * root /usr/bin/certbot renew >> /var/log/le-renew.log

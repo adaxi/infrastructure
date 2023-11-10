@@ -6,5 +6,6 @@
     privileged: true
     network_mode: host
     env:
-      ELTAKO_TTY_PATH: /dev/ttyUSB0
+      ELTAKO_USB_TTY_PATH: /dev/ttyUSB0
+      ELTAKO_RADIO_TTY_PATH: /dev/ttyUSB1
       ELTAKO_MQTT_URL: mqtt://localhost:1883

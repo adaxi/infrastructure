@@ -108,8 +108,9 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     c.vm.hostname = "homeassistant.local"
     c.vm.provider "virtualbox" do |v|
       v.name = "Home Assistant (homeassistant)"
-      v.memory = 4096
+      v.memory = 6096
       v.cpus = 2
+      v.customize ["modifyvm", :id, "--nicpromisc3", "allow-all"]
     end
     c.vm.provision "ansible" do |ansible|
       ansible.playbook = "homeassistant.yml"

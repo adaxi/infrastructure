@@ -16,6 +16,7 @@
       - software-properties-common
       - git
       - apt-transport-https
+      - dnsutils
     state: present
     update_cache: yes
   become: yes

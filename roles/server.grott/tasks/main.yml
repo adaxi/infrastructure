@@ -1,0 +1,13 @@
+- name: Start grott container
+  community.docker.docker_container:
+    name: grott 
+    image: ledidobe/grott
+    restart_policy: "unless-stopped"
+    ports:
+      - 5279:5279
+    env:
+      gmqttip: "{{ ansible_docker0.ipv4.address }}"
+    etc_hosts: >
+      {
+        "host.docker.internal": "host-gateway"
+      }
