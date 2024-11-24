@@ -1,6 +1,6 @@
 ---
 - name: install a home assistant server
-  hosts: [homeassistantservers]
+  hosts: [proxmoxservers]
   gather_facts: yes
   become: yes
   become_user: root
@@ -9,10 +9,6 @@
       - common.devtools
       - server.usbip-client
       - common.tailscale
-      - server.docker
-      - server.mosquitto
-      - server.grott
-      - server.eltako-automation
       - role: geerlingguy.ntp # ansible-galaxy install geerlingguy.ntp
         vars:
           ntp_manage_config: true
@@ -20,11 +16,10 @@
             - clock.sjc.he.net,
             - clock.fmt.he.net,
             - clock.nyc.he.net
-      - role: lae.proxmox # ansible-galaxy install lae.proxmox 
-        vars:
-          - pve_group: all
-          - pve_reboot_on_kernel_update: true
-      - server.proxmox
-      - server.kvm-homeassistant
-      - server.p1monitor
+      # - role: lae.proxmox # ansible-galaxy install lae.proxmox 
+      #  vars:
+      #    - pve_group: all
+      #    - pve_reboot_on_kernel_update: true
+      # - server.proxmox
+      # - server.kvm-homeassistant
 
