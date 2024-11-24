@@ -1,0 +1,27 @@
+- name: Create deluge directories
+  file:
+    name: "{{ item }}"
+    state: directory
+    owner: 1000
+    group: 1000
+  with_items:
+    - /deluge
+    - /deluge/config
+    - /deluge/downloads
+
+- name: Start deluge container
+  community.docker.docker_container:
+    name: deluge
+    image: lscr.io/linuxserver/deluge:latest
+    env:
+      "PUID": "1000"
+      "PGID": "1000"
+    ports:
+      - 8112:8112
+      - 6881:6881
+      - 6881:6881/udp
+    restart_policy: "always"
+    volumes:
+    volumes:
+      - /deluge/config:/config
+      - /deluge/downloads:/downloads

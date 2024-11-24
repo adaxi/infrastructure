@@ -24,6 +24,7 @@
     -d {{ item.domains | join(" -d ") }}
     --agree-tos
     --email {{ item.email }}
+    --non-interactive
   args:
     creates: "/etc/letsencrypt/live/{{ item.name }}"
   with_items: "{{ letsencrypt | default([]) }}"

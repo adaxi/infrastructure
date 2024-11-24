@@ -1,0 +1,25 @@
+- name: Create jackett directories
+  file:
+    name: "{{ item }}"
+    state: directory
+    owner: 1000
+    group: 1000
+  with_items:
+    - /jackett
+    - /jackett/config
+    - /jackett/downloads
+
+- name: Start deluge container
+  community.docker.docker_container:
+    name: jackett
+    image: lscr.io/linuxserver/jackett:latest
+    env:
+      "PUID": "1000"
+      "PGID": "1000"
+    ports:
+      - 9117:9117
+    restart_policy: "always"
+    volumes:
+    volumes:
+      - /jackett/config:/config
+      - /jackett/downloads:/downloads
