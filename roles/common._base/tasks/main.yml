@@ -10,6 +10,7 @@
   apt:
     name:
       - sudo
+      - curl
       - unzip
       - debconf
       - debconf-utils

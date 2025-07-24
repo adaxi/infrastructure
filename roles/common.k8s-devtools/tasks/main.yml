@@ -1,0 +1,100 @@
+- name: Download and install Kubernetes GPG key
+  shell: |
+    curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.33/deb/Release.key | \
+    gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+  args:
+    creates: "/etc/apt/keyrings/kubernetes-apt-keyring.gpg"
+  become: yes
+
+- name: Add kubtctl APT repository with signed-by
+  ansible.builtin.apt_repository:
+    repo: "deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.33/deb/ /"
+    state: present
+    filename: 'kubectl'
+  become: yes
+
+- name: Add APT pinning for kubtctl repository
+  copy:
+    dest: /etc/apt/preferences.d/kubectl
+    content: |
+      Package: kubectl
+      Pin: origin pkgs.k8s.io
+      Pin-Priority: 1001
+  become: yes
+  
+- name: Install kubectl 
+  apt:
+    name: kubectl
+    state: "present"
+  become: yes
+
+- name: Install k9s (via deb file)
+  apt:
+    deb: "https://github.com/derailed/k9s/releases/download/v0.50.9/k9s_linux_amd64.deb"
+  become: yes
+
+- name: Install minikube (via deb)
+  apt:
+    deb: "https://storage.googleapis.com/minikube/releases/latest/minikube_latest_amd64.deb"
+  become: yes
+
+- name: Install leapp (via deb file)
+  apt:
+    deb: "https://asset.noovolari.com/latest/Leapp_0.26.1_amd64.deb"
+  become: yes
+
+- name: Install Lens
+  apt:
+    deb: https://github.com/MuhammedKalkan/OpenLens/releases/download/v6.5.2-366/OpenLens-6.5.2-366.amd64.deb
+  become: yes
+
+- name: Download and extract oc CLI to /usr/local/bin
+  ansible.builtin.unarchive:
+    src: https://mirror.openshift.com/pub/openshift-v4/clients/oc/latest/linux/oc.tar.gz
+    dest: /usr/local/bin
+    remote_src: yes
+    include: 
+      - oc
+    mode: '0755'
+  become: yes
+
+- name: Install awscli
+  apt:
+    name: awscli
+    state: "present"
+  become: yes
+
+- name: Install aws session-manager-plugin
+  apt:
+    deb: https://s3.amazonaws.com/session-manager-downloads/plugin/latest/ubuntu_64bit/session-manager-plugin.deb
+  become: yes
+
+
+- name: Download GitLab key
+  ansible.builtin.get_url:
+    url: https://packages.gitlab.com/runner/gitlab-runner/gpgkey
+    dest: /usr/share/keyrings/runner_gitlab-runner-archive-keyring.gpg
+    mode: '0644'
+  become: yes
+
+- name: Add GitLab repository with signed-by option
+  ansible.builtin.apt_repository:
+    repo: "deb [signed-by=/usr/share/keyrings/runner_gitlab-runner-archive-keyring.gpg] https://packages.gitlab.com/runner/gitlab-runner/debian/ {{ ansible_distribution_release }} main"
+    state: present
+    filename: gitlab
+  become: yes
+
+- name: Add APT pinning for gitlab-runner repository
+  copy:
+    dest: /etc/apt/preferences.d/gitlab
+    content: |
+      Package: gitlab-runner
+      Pin: origin packages.gitlab.com
+      Pin-Priority: 1001
+  become: yes
+
+- name: Install gitlab-runner
+  apt:
+    name: gitlab-runner
+    state: "present"
+  become: yes

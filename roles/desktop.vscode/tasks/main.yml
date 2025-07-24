@@ -1,14 +1,25 @@
 ---
-- name: Add Microsoft public key
-  apt_key:
+- name: Download Microsoft GPG key
+  ansible.builtin.get_url:
     url: https://packages.microsoft.com/keys/microsoft.asc
-    state: present
+    dest: /usr/share/keyrings/microsoft.gpg
+    mode: '0644'
   become: yes
 
-- name: Add Visual Studio Code repository
-  apt_repository:
-    repo: deb [arch=amd64] https://packages.microsoft.com/repos/vscode stable main
+- name: Add Visual Studio Code repository with signed-by option
+  ansible.builtin.apt_repository:
+    repo: "deb [arch=amd64 signed-by=/usr/share/keyrings/microsoft.gpg] https://packages.microsoft.com/repos/vscode stable main"
     state: present
+    filename: vscode
+  become: yes
+
+- name: Add apt pinning preference for Microsoft VS Code repo
+  copy:
+    dest: /etc/apt/preferences.d/microsoft-vscode
+    content: |
+      Package: code
+      Pin: origin packages.microsoft.com
+      Pin-Priority: 1001
   become: yes
 
 - name: Download and Install Visual Studio Code

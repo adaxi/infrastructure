@@ -4,6 +4,5 @@
     name:
       - wireshark
       - terminator
-      - vagrant
     state: present
   become: yes

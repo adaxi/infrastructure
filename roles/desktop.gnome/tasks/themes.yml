@@ -1,12 +1,4 @@
 ---
-- name: Add numix repository key
-  apt_key: keyserver=keyserver.ubuntu.com id=0F164EEB
-  become: yes
-
-- name: Add numix repository
-  apt_repository: repo='deb http://ppa.launchpad.net/numix/ppa/ubuntu trusty main' state=present
-  become: yes
-
 - name: install numix theme and install circle icon theme
   apt:
     name:

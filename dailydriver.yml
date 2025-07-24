@@ -7,6 +7,8 @@
      - common.vim
      - common.java
      - common.devtools
+     - common.k8s-devtools
+     - common.gitlab-runner
      - common.dotfiles
      - common.tailscale
      - desktop.devtools

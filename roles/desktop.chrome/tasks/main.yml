@@ -1,17 +1,29 @@
 ---
-- name: Add Google repository key
-  apt_key:
-    url: "https://dl-ssl.google.com/linux/linux_signing_key.pub"
+
+- name: Add Google signing key
+  ansible.builtin.apt_key:
+    url: https://dl-ssl.google.com/linux/linux_signing_key.pub
     state: present
   become: yes
 
 - name: Add Google repository
   apt_repository:
-    repo: "deb http://dl.google.com/linux/chrome/deb/ stable main"
+    repo: "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main"
     state: present
+    filename: chrome
+  become: yes
+
+- name: Add apt pinning preferences for Google Chrome
+  copy:
+    dest: /etc/apt/preferences.d/google-chrome
+    content: |
+      Package: *
+      Pin: origin dl.google.com
+      Pin-Priority: 1001
   become: yes
 
 - name: Install Chrome stable
   apt:
     name: google-chrome-stable
+    state: present
   become: yes
