@@ -12,7 +12,7 @@
     name:
       - numix-icon-theme-circle
       - numix-gtk-theme
-      - gnome-tweak-tool
+      - gnome-tweaks
       - nautilus-image-converter
     state: present
   become: yes
@@ -39,26 +39,26 @@
     key: org.gnome.desktop.interface.icon-theme
     value: Numix-Circle
 
-- name: Set number of worspaces to 4
-  become: yes
-  become_user: "{{ ansible_user_id }}"
-  gsettings:
-    key: org.gnome.desktop.wm.preferences.num-workspaces
-    value: 4
+# - name: Set number of worspaces to 4
+#   become: yes
+#   become_user: "{{ ansible_user_id }}"
+#   gsettings:
+#     key: org.gnome.desktop.wm.preferences.num-workspaces
+#     value: 4
 
-- name: Disable dynamic workspaces
-  become: yes
-  become_user: "{{ ansible_user_id }}"
-  gsettings:
-    key: org.gnome.shell.overrides.dynamic-workspaces
-    value: 'false'
+# - name: Disable dynamic workspaces
+#   become: yes
+#   become_user: "{{ ansible_user_id }}"
+#   gsettings:
+#     key: org.gnome.shell.overrides.dynamic-workspaces
+#     value: 'false'
 
-- name: Enable workspaces on all screens
-  become: yes
-  become_user: "{{ ansible_user_id }}"
-  gsettings:
-    key: org.gnome.shell.overrides.workspaces-only-on-primary
-    value: 'false'
+# - name: Enable workspaces on all screens
+#   become: yes
+#   become_user: "{{ ansible_user_id }}"
+#   gsettings:
+#     key: org.gnome.shell.overrides.workspaces-only-on-primary
+#     value: 'false'
 
 - name: Show date
   become: yes
@@ -88,18 +88,18 @@
     mode: '0644'
   become: yes
 
-- name: Set Wallpaper
-  become: yes
-  become_user: "{{ ansible_user_id }}"
-  gsettings:
-    key:  org.gnome.desktop.background.picture-uri
-    value: "file:///usr/share/backgrounds/Grass.jpg"
+# - name: Set Wallpaper
+#   become: yes
+#   become_user: "{{ ansible_user_id }}"
+#   gsettings:
+#     key:  org.gnome.desktop.background.picture-uri
+#     value: "file:///usr/share/backgrounds/Grass.jpg"
 
-- name: Remember numlock state
-  become: yes
-  become_user: "{{ ansible_user_id }}"
-  gsettings:
-    key: org.gnome.settings-daemon.peripherals.keyboard.remember-numlock-state
-    value: 'true'
+# - name: Remember numlock state
+#   become: yes
+#   become_user: "{{ ansible_user_id }}"
+#   gsettings:
+#     key: org.gnome.settings-daemon.peripherals.keyboard.remember-numlock-state
+#     value: 'true'
 
 
