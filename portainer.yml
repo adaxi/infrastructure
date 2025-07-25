@@ -12,7 +12,9 @@
       - server.portainer
       - server.deluge
       - server.jackett
+      - server.radarr
       - server.sonarr
+      - server.jellyseerr
       - server.mosquitto
       - server.grott
       - server.eltako-automation
@@ -23,6 +25,5 @@
             - clock.sjc.he.net,
             - clock.fmt.he.net,
             - clock.nyc.he.net
-      - server.p1monitor
       - www.home.adaxisoft.be
 

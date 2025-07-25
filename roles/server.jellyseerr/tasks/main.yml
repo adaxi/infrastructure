@@ -1,0 +1,23 @@
+- name: Create jellyseerr directories
+  file:
+    name: "{{ item }}"
+    state: directory
+    owner: 1000
+    group: 1000
+  with_items:
+    - /jellyseerr
+    - /jellyseerr/config
+
+- name: Start jellyseerr container
+  community.docker.docker_container:
+    name: jellyseerr
+    image: ghcr.io/fallenbagel/jellyseerr
+    env:
+      "PUID": "1000"
+      "PGID": "1000"
+      "TZ": "Europe/Brussels"
+    ports:
+      - 5055:5055
+    restart_policy: "always"
+    volumes:
+      - /jellyseerr/config:/app/config

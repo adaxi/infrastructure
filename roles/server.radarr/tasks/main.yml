@@ -1,0 +1,25 @@
+- name: Create radarr directories
+  file:
+    name: "{{ item }}"
+    state: directory
+    owner: 1000
+    group: 1000
+  with_items:
+    - /radarr
+    - /radarr/config
+
+- name: Start radarr container
+  community.docker.docker_container:
+    name: radarr
+    image: lscr.io/linuxserver/radarr:latest
+    env:
+      "PUID": "1000"
+      "PGID": "1000"
+      "TZ": "Europe/Brussels"
+    ports:
+      - 7878:7878
+    restart_policy: "always"
+    volumes:
+      - /radarr/config:/config
+      - /nas/gamma/films:/movies
+      - /deluge/downloads:/downloads
