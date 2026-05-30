@@ -1,45 +1,44 @@
 ---
 
 - name: Create adaxisoft.be group
-  group: 
-    name: "{{adaxisoft_be_group}}" 
+  ansible.builtin.group:
+    name: "{{ adaxisoft_be_group }}"
 
 - name: Check adaxisoft.be was already installed
-  stat: 
-    path: "{{adaxisoft_be_home}}"
+  ansible.builtin.stat:
+    path: "{{ adaxisoft_be_home }}"
   register: adaxisoft_be_root
 
 - name: Deploy adaxisoft.be
-  git: 
+  ansible.builtin.git:
     repo: https://github.com/adaxi/adaxisoft.be.git
-    dest: "{{adaxisoft_be_home}}"
-  when: adaxisoft_be_root.stat.exists == False
+    dest: "{{ adaxisoft_be_home }}"
+  when: not adaxisoft_be_root.stat.exists
 
 - name: Create adaxisoft.be user
-  user: 
-    name: "{{adaxisoft_be_user}}" 
-    shell: /bin/nologin 
-    group: "{{adaxisoft_be_group}}" 
-    home: "{{adaxisoft_be_home}}"
+  ansible.builtin.user:
+    name: "{{ adaxisoft_be_user }}"
+    shell: /bin/nologin
+    group: "{{ adaxisoft_be_group }}"
+    home: "{{ adaxisoft_be_home }}"
 
 - name: Chown to adaxisoft_be
-  file: 
-    path: "{{adaxisoft_be_home}}"
-    owner: "{{adaxisoft_be_group}}"
-    group: "{{adaxisoft_be_user}}"
+  ansible.builtin.file:
+    path: "{{ adaxisoft_be_home }}"
+    owner: "{{ adaxisoft_be_group }}"
+    group: "{{ adaxisoft_be_user }}"
     recurse: true
 
 - name: Install NGINX configuration
-  include: nginx.yml
+  ansible.builtin.include_tasks: nginx.yml
 
 - name: Install adaxisoft-api configuration
-  include: adaxisoft-api.yml
+  ansible.builtin.include_tasks: adaxisoft-api.yml
 
 - name: Install adaxisoft-blog configuration
-  include: adaxisoft-blog.yml
+  ansible.builtin.include_tasks: adaxisoft-blog.yml
 
 - name: Reload NGINX
-  service: 
+  ansible.builtin.service:
     name: nginx
     state: reloaded
-

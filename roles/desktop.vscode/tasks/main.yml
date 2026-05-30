@@ -14,7 +14,7 @@
   become: yes
 
 - name: Add apt pinning preference for Microsoft VS Code repo
-  copy:
+  ansible.builtin.copy:
     dest: /etc/apt/preferences.d/microsoft-vscode
     content: |
       Package: code
@@ -23,7 +23,7 @@
   become: yes
 
 - name: Download and Install Visual Studio Code
-  apt:
+  ansible.builtin.apt:
     name: code
     state: present
     update_cache: yes

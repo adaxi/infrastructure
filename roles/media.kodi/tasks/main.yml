@@ -1,12 +1,10 @@
 ---
 
 - name: Ensure Kodi and its dependencies are installed
-  apt:
-    name: "{{item}}" 
-    state: present 
-  with_items:
-    - task-xfce-desktop 
-    - xfce4
-    - upower
-    - kodi
-
+  ansible.builtin.apt:
+    name:
+      - task-xfce-desktop
+      - xfce4
+      - upower
+      - kodi
+    state: present

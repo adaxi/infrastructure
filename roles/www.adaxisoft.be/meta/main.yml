@@ -1,7 +1,7 @@
 ---
 dependencies:
   - role: common.certificates
-    openssl_self_signed: '{{adaxisoft_be_openssl_self_signed | default([]) }}'
-    letsencrypt: '{{adaxisoft_be_letsencrypt | default([]) }}'
+    openssl_self_signed: '{{ adaxisoft_be_openssl_self_signed | default([]) }}'
+    letsencrypt: '{{ adaxisoft_be_letsencrypt | default([]) }}'
   - role: server.nginx
   - role: server.nodejs

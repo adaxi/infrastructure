@@ -1,6 +1,6 @@
 ---
-- name: install numix theme and install circle icon theme
-  apt:
+- name: Install numix theme and install circle icon theme
+  ansible.builtin.apt:
     name:
       - numix-icon-theme-circle
       - numix-gtk-theme
@@ -12,16 +12,16 @@
 - name: Create dconf cache dir
   become: yes
   become_user: "{{ ansible_user_id }}"
-  file:
+  ansible.builtin.file:
     path: "~/.cache/dconf"
     state: directory
     owner: "{{ ansible_user_id }}"
     mode: '0775'
 
 - name: Install dependencies for gsettings
-  apt:
-   name: dbus-x11
-   state: present
+  ansible.builtin.apt:
+    name: dbus-x11
+    state: present
   become: yes
 
 - name: Set icons to numix circle+
@@ -74,7 +74,7 @@
     value: ":minimize,close"
 
 - name: Copy Wallpaper
-  copy:
+  ansible.builtin.copy:
     src: Grass.jpg
     dest: "/usr/share/backgrounds/"
     mode: '0644'
@@ -93,5 +93,3 @@
 #   gsettings:
 #     key: org.gnome.settings-daemon.peripherals.keyboard.remember-numlock-state
 #     value: 'true'
-
-

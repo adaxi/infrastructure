@@ -1,54 +1,54 @@
 ---
 
 - name: Ensure SickBeard service group exists
-  group:
+  ansible.builtin.group:
     name: "{{ sickbeard_group_name }}"
     state: present
-          
+
 - name: Ensure SickBeard service user exists
-  user: 
+  ansible.builtin.user:
     name: "{{ sickbeard_user_name }}"
     group: "{{ sickbeard_group_name }}"
     shell: "/usr/sbin/nologin"
     home: "{{ sickbeard_user_home }}"
-    createhome: yes
+    create_home: true
     state: present
 
 - name: Ensure SickBeard service user environment is set up
-  shell: "cp /etc/skel/{.bash*,.login,.profile} {{ sickbeard_user_home }}/"
+  ansible.builtin.shell: "cp /etc/skel/{.bash*,.login,.profile} {{ sickbeard_user_home }}/"
   args:
     creates: "{{ sickbeard_user_home }}/.bashrc"
-    
+
 - name: Ensure SickBeard dependencies are installed
-  apt:
+  ansible.builtin.apt:
     name: sickbeard
     state: present
 
 # When stopping sickbeard writes is configuration to the disk
 # and overwrites potential configuration written by ansible
 - name: Ensure SickBeard service is stopped to write configuration
-  service: 
+  ansible.builtin.service:
     name: sickbeard
     state: stopped
     enabled: yes
-  
+
 - name: Copy defaults values
-  template: 
-    src: sickbeard.defaults.j2 
+  ansible.builtin.template:
+    src: sickbeard.defaults.j2
     dest: /etc/default/sickbeard
     owner: "{{ sickbeard_user_name }}"
   notify: Restart Sickbeard
-      
+
 - name: Ensure SickBeard config directory exists
-  file:
+  ansible.builtin.file:
     dest: "{{ sickbeard_conf_path }}"
     owner: "{{ sickbeard_user_name }}"
     group: "{{ sickbeard_group_name }}"
     state: directory
-  
+
 - name: Create default configuration for sickbeard in sickbeard.ini
-  template: 
-    src: sickbeard.config.ini.j2 
+  ansible.builtin.template:
+    src: sickbeard.config.ini.j2
     dest: "{{ sickbeard_conf_path }}/sickbeard.ini"
     owner: "{{ sickbeard_user_name }}"
     group: "{{ sickbeard_group_name }}"
@@ -56,15 +56,15 @@
   notify: Restart Sickbeard
 
 - name: Ensure SickBeard logs directory exists
-  file: 
+  ansible.builtin.file:
     dest: "{{ sickbeard_logs_dir }}"
     owner: "{{ sickbeard_user_name }}"
-    recurse: yes 
+    recurse: yes
     state: directory
 
 - name: Ensure SickBeard service is running and enabled on boot
-  service:
-    name: sickbeard 
+  ansible.builtin.service:
+    name: sickbeard
     pattern: sickbeard
-    state: started 
+    state: started
     enabled: yes

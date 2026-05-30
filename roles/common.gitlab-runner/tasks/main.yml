@@ -1,10 +1,17 @@
-- name: Download and install GitLab GPG key
-  shell: |
-    curl -fsSL https://packages.gitlab.com/runner/gitlab-runner/gpgkey | \
-    gpg --dearmor -o /usr/share/keyrings/runner_gitlab-runner-archive-keyring.gpg
-  args:
-    creates: "/usr/share/keyrings/runner_gitlab-runner-archive-keyring.gpg"
+---
+- name: Download GitLab GPG key
+  ansible.builtin.get_url:
+    url: https://packages.gitlab.com/runner/gitlab-runner/gpgkey
+    dest: /tmp/runner_gitlab-runner.gpg
+    mode: '0644'
   become: yes
+
+- name: Dearmor GitLab GPG key
+  ansible.builtin.command:
+    cmd: gpg --dearmor -o /usr/share/keyrings/runner_gitlab-runner-archive-keyring.gpg /tmp/runner_gitlab-runner.gpg
+    creates: /usr/share/keyrings/runner_gitlab-runner-archive-keyring.gpg
+  become: yes
+  changed_when: true
 
 - name: Add GitLab repository with signed-by option
   ansible.builtin.apt_repository:
@@ -14,7 +21,7 @@
   become: yes
 
 - name: Add APT pinning for gitlab-runner repository
-  copy:
+  ansible.builtin.copy:
     dest: /etc/apt/preferences.d/gitlab
     content: |
       Package: gitlab-runner
@@ -23,7 +30,7 @@
   become: yes
 
 - name: Install gitlab-runner
-  apt:
+  ansible.builtin.apt:
     name: gitlab-runner
-    state: "present"
+    state: present
   become: yes

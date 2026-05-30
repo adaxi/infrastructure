@@ -1,11 +1,11 @@
 ---
 - name: Update apt cache
-  apt: 
-    update_cache: yes 
+  ansible.builtin.apt:
+    update_cache: yes
     cache_valid_time: 86400
 
 - name: Ensure PHP packages are installed
-  apt:
+  ansible.builtin.apt:
     name:
       - php8.2
       - php8.2-mcrypt
@@ -20,4 +20,4 @@
       - php8.2-mysql
       - libpcre3-dev
     state: present
-  notify: restart webserver
+  notify: Restart webserver

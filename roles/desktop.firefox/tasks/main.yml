@@ -1,6 +1,6 @@
 ---
 - name: Install Firefox
-  apt: 
+  ansible.builtin.apt:
     name: firefox-esr
     update_cache: yes
   become: yes

@@ -1,5 +1,5 @@
 ---
-openvpn_server_key_name: "{{ansible_fqdn}}"
+openvpn_server_key_name: "{{ ansible_fqdn }}"
 openvpn_clients:
   - pitstop.m.adaxisoft.be
   - buzz.m.adaxisoft.be

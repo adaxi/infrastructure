@@ -1,0 +1,16 @@
+---
+profile: basic
+
+exclude_paths:
+  - roles/geerlingguy.ntp/
+  - roles/lae.proxmox/
+  - roles/desktop.webstorm/tests/
+
+warn_list:
+  - experimental
+  - role-name
+  - name[casing]
+
+skip_list:
+  - yaml[truthy]
+  - yaml[line-length]

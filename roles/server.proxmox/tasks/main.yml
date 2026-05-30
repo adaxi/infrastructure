@@ -3,8 +3,8 @@
     update_cache: yes
 
 - name: Install bridge-utils
-  apt:
-    name:q
+  ansible.builtin.apt:
+    name:
       - bridge-utils
       - net-tools
 
@@ -14,20 +14,20 @@
     state: absent
     regexp: '^source-directory'
 
-- name: Create /volumes/proxmox directory 
+- name: Create /volumes/proxmox directory
   ansible.builtin.file:
     path: /volumes/proxmox
     state: directory
     mode: '0755'
 
 - name: Install proxmox depdendencies
-  apt:
+  ansible.builtin.apt:
     name:
       - python3-proxmoxer
       - python3-requests
 
 - name: Create group
-  group:
+  ansible.builtin.group:
     name: adaxi
     state: present
 
@@ -42,7 +42,3 @@
     append: yes
     groups:
       - sudo
-
-
-
-

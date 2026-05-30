@@ -1,7 +1,7 @@
 ---
 
 - name: Install Java
-  apt:
+  ansible.builtin.apt:
     name: "{{ java_package }}"
     state: present
   become: yes

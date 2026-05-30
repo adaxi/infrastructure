@@ -1,27 +1,26 @@
 ---
 
 - name: Download and decompress WebStorm
-  unarchive:
+  ansible.builtin.unarchive:
     src=https://download.jetbrains.com/webstorm/WebStorm-10.0.4.tar.gz
     dest="{{ webstorm_install_dir }}"
     creates="{{ webstorm_install_dir }}/webstorm"
     copy=no
   become: yes
-    
+
 - name: Rename WebStorm
-  shell:
+  ansible.builtin.shell:
     mv {{ webstorm_install_dir }}/WebStorm-* {{ webstorm_install_dir }}/webstorm
     creates="{{ webstorm_install_dir }}/webstorm"
   become: yes
 
 - name: Create symlink
-  file:
+  ansible.builtin.file:
     src="{{ webstorm_install_dir }}/webstorm/bin/webstorm.sh"
     dest="{{ webstorm_bin }}"
     state=link
   become: yes
-    
-- name: Create desktop icon
-  copy: src=webstorm.desktop dest=/usr/share/applications
-  become: yes
 
+- name: Create desktop icon
+  ansible.builtin.copy: src=webstorm.desktop dest=/usr/share/applications
+  become: yes

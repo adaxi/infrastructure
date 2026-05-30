@@ -1,6 +1,6 @@
 ---
 - name: Install development tools for machines with an GUI
-  apt:
+  ansible.builtin.apt:
     name:
       - wireshark
       - terminator

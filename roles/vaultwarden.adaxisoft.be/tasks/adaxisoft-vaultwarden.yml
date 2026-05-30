@@ -1,8 +1,8 @@
 ---
 - name: Create vaultwarden directory
-  file:
-     path: /vaultwarden
-     state: directory
+  ansible.builtin.file:
+    path: /vaultwarden
+    state: directory
 
 - name: Start adaxisoft vaultwarden
   community.docker.docker_container:
@@ -13,7 +13,6 @@
     volumes:
       - /vaultwarden:/data
     env:
-      DOMAIN: "https://{{vaultwarden_adaxisoft_be_domain}}"
+      DOMAIN: "https://{{ vaultwarden_adaxisoft_be_domain }}"
       SIGNUPS_ALLOWED: "false"
       INVITATIONS_ALLOWED: "false"
-

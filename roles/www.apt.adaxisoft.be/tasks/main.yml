@@ -1,35 +1,36 @@
+---
 - name: Creating user repo
-  user:
+  ansible.builtin.user:
     name: "{{ aptly_user }}"
-    shell: "/bin/false home={{ aptly_home }}"
+    shell: "/bin/false"
+    home: "{{ aptly_home }}"
   become: yes
 
 - name: Install aptly debian repository
-  apt_repository:
+  ansible.builtin.apt_repository:
     repo: 'deb http://repo.aptly.info/ squeeze main'
     state: present
     update_cache: yes
   become: yes
 
 - name: Import aptly key
-  apt_key:
+  ansible.builtin.apt_key:
     id: "9E3E53F19C7DE460"
     keyserver: "keys.gnupg.net"
     state: "present"
   become: yes
 
 - name: Install GPG and Aptly
-  apt:
-   name: "{{ item }}"
-   state: "present"
-   update_cache: no
-  with_items:
-    - "aptly"
-    - "gnupg"
+  ansible.builtin.apt:
+    name:
+      - aptly
+      - gnupg
+    state: present
+    update_cache: no
   become: yes
 
 - name: Upload repository key
-  copy:
+  ansible.builtin.copy:
     src: "{{ aptly_secret_key_path }}/{{ aptly_secret_key_file }}"
     dest: "/tmp"
     owner: "{{ aptly_user }}"
@@ -38,73 +39,82 @@
   become: yes
 
 - name: Import repository key to gnupg
-  shell: >
-      ( gpg --list-secret-keys | grep -q "{{ aptly_secret_key_id }}" ) || gpg --allow-secret-key-import --import /tmp/{{ aptly_secret_key_file }}
+  ansible.builtin.shell: >
+    ( gpg --list-secret-keys | grep -q "{{ aptly_secret_key_id }}" ) || gpg --allow-secret-key-import --import /tmp/{{ aptly_secret_key_file }}
   become: yes
   become_user: "{{ aptly_user }}"
+  changed_when: true
 
 - name: Remove secret key from remote host
-  file: path="/tmp/{{ aptly_secret_key_file }}" state=absent
+  ansible.builtin.file:
+    path: "/tmp/{{ aptly_secret_key_file }}"
+    state: absent
   become: yes
 
 - name: Create repositories
-  shell: >
-      (aptly repo list -raw | grep -q "{{ item.name }}" )
-      || (
-          aptly repo create \
-              --comment "{{ item.comment|default('\"\"') }}" \
-              --distribution "{{ item.distribution|default('main') }}" \
-              --component "{{ item.component|default('main') }}" \
-              "{{ item.name }}"
-      )
+  ansible.builtin.shell: >
+    (aptly repo list -raw | grep -q "{{ item.name }}" )
+    || (
+        aptly repo create \
+            --comment "{{ item.comment | default('\"\"') }}" \
+            --distribution "{{ item.distribution | default('main') }}" \
+            --component "{{ item.component | default('main') }}" \
+            "{{ item.name }}"
+    )
   become: yes
   become_user: "{{ aptly_user }}"
-  with_items: '{{aptly_repositories}}'
+  loop: '{{ aptly_repositories }}'
   when: aptly_repositories is defined
+  changed_when: true
 
 - name: Upload dummy package
-  copy: src=dummy_0.1_all.deb dest=/tmp/
+  ansible.builtin.copy:
+    src: dummy_0.1_all.deb
+    dest: /tmp/
   become: yes
 
 - name: Import dummy package to repository
-  command: aptly repo add {{ item.name }} /tmp/dummy_0.1_all.deb
+  ansible.builtin.command: aptly repo add {{ item.name }} /tmp/dummy_0.1_all.deb
   become: yes
   become_user: "{{ aptly_user }}"
-  with_items: '{{aptly_repositories}}'
+  loop: '{{ aptly_repositories }}'
   when: aptly_repositories is defined
+  changed_when: true
 
 - name: Unpublish repositories
-  shell: >
-      (aptly publish list | grep -q "{{ item.name }}")
-      && aptly publish drop \
-          "{{ item.name }}" \
-          "{{ item.prefix | default(item.name) }}" || true
+  ansible.builtin.shell: >
+    (aptly publish list | grep -q "{{ item.name }}")
+    && aptly publish drop \
+        "{{ item.name }}" \
+        "{{ item.prefix | default(item.name) }}" || true
   become: yes
   become_user: "{{ aptly_user }}"
-  with_items: '{{aptly_repositories}}'
+  loop: '{{ aptly_repositories }}'
   when: aptly_repositories is defined
+  changed_when: true
 
 - name: Publish repositories
-  shell: >
-      (aptly publish list | grep -q "{{ item.name }}")
-      || aptly publish repo \
-          --gpg-key "{{ aptly_secret_key_id }}" \
-          --architectures "{{ item.architectures|default('amd64,i386,all') }}" \
-          "{{ item.name }}" \
-          "{{ item.prefix|default(item.name) }}"
+  ansible.builtin.shell: >
+    (aptly publish list | grep -q "{{ item.name }}")
+    || aptly publish repo \
+        --gpg-key "{{ aptly_secret_key_id }}" \
+        --architectures "{{ item.architectures | default('amd64,i386,all') }}" \
+        "{{ item.name }}" \
+        "{{ item.prefix | default(item.name) }}"
   become: yes
   become_user: "{{ aptly_user }}"
-  with_items: "{{ aptly_repositories }}"
+  loop: "{{ aptly_repositories }}"
   when: aptly_repositories is defined
+  changed_when: true
 
 - name: Make public key available
-  copy:
+  ansible.builtin.copy:
     src: "{{ aptly_public_key_path }}/{{ aptly_public_key_file }}"
     dest: "{{ aptly_home }}/.aptly/public"
   become: yes
 
 - name: Upload nginx configuration file
-  template:
+  ansible.builtin.template:
     src: "nginx-aptly.conf.j2"
     dest: "/etc/nginx/sites-available/aptly.conf"
     owner: "root"
@@ -114,7 +124,7 @@
   become: yes
 
 - name: Creating nginx configuration symlinks
-  file:
+  ansible.builtin.file:
     src: /etc/nginx/sites-available/aptly.conf
     dest: /etc/nginx/sites-enabled/aptly.conf
     state: link

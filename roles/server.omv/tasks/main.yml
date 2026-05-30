@@ -1,49 +1,53 @@
 ---
 
 - name: Install gpg
-  apt:
+  ansible.builtin.apt:
     name: gpg
     state: present
 
 - name: Add OMV repository keys
-  apt_key:
+  ansible.builtin.apt_key:
     url: https://packages.openmediavault.org/public/archive.key
     state: present
 
 - name: Add packages.openmediavault.org repository
-  apt_repository:
-    repo: "deb http://packages.openmediavault.org/public shaitan main" 
+  ansible.builtin.apt_repository:
+    repo: "deb http://packages.openmediavault.org/public shaitan main"
     state: present
 
 - name: Ensure OpenMediaVault is installed
-  apt: 
-    name: [ 'openmediavault-keyring', 'openmediavault' ]
+  ansible.builtin.apt:
+    name:
+      - openmediavault-keyring
+      - openmediavault
     install_recommends: no
     state: present
     update_cache: yes
 
 - name: Add Vagrant user to the "ssh" group (development only)
-  user:
+  ansible.builtin.user:
     name: vagrant
     groups: ssh
     append: yes
   when: installation_environment == "development"
- 
-- name: Initialize OpenMediaVault 
-  shell: '/usr/sbin/omv-confdbadm populate'
-  
+
+- name: Initialize OpenMediaVault
+  ansible.builtin.command: /usr/sbin/omv-confdbadm populate
+  changed_when: true
+
 - name: Ensure optional modules are installed
-  apt: 
-    name: [ 'ddclient' ]
+  ansible.builtin.apt:
+    name:
+      - ddclient
     state: present
     update_cache: yes
 
 - name: Ensure SSH engine is running and enabled on boot
-  service:
+  ansible.builtin.service:
     name: ssh
-    state: started 
+    state: started
     enabled: yes
 
 - name: Print credentials
-  debug:
+  ansible.builtin.debug:
     msg: "By default the web control panel administrator account has the username 'admin' and password 'openmediavault'."

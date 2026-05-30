@@ -1,25 +1,25 @@
 ---
 - name: Install Microsoft core fonts
-  apt:
+  ansible.builtin.apt:
     name: "ttf-mscorefonts-installer"
     state: present
   become: yes
 
 - name: Create directory to install Droid Sans Mono for Powerline
-  file:
+  ansible.builtin.file:
     path: "/usr/share/fonts/droid/"
     state: directory
     mode: '0755'
   become: yes
 
 - name: Install Droid Sans Mono for Powerline
-  copy:
+  ansible.builtin.copy:
     src: "Droid Sans Mono for Powerline.otf"
     dest: "/usr/share/fonts/droid/"
     mode: '0644'
   become: yes
 
 - name: Rebuild font cache
-  command: "/usr/bin/fc-cache -fv"
+  ansible.builtin.command: "/usr/bin/fc-cache -fv"
   become: yes
   changed_when: False

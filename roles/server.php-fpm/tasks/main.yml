@@ -1,22 +1,23 @@
 ---
 # Variable setup.
 - name: Define php_conf_path
-  set_fact:
+  ansible.builtin.set_fact:
     php_conf_path: "{{ __php_conf_path }}"
   when: php_conf_path is not defined
 
 - name: Define php_extension_conf_path
-  set_fact:
+  ansible.builtin.set_fact:
     php_extension_conf_path: "{{ __php_extension_conf_path }}"
   when: php_extension_conf_path is not defined
 
 - name: Define php_opcache_conf_filename
-  set_fact:
+  ansible.builtin.set_fact:
     php_opcache_conf_filename: "{{ __php_opcache_conf_filename }}"
   when: php_opcache_conf_filename is not defined
 
-# Setup/install tasks.
-- include: install.yml
+- name: Run install tasks
+  ansible.builtin.include_tasks: install.yml
 
 # Configure PHP.
-- include: configure.yml
+- name: Run configure tasks
+  ansible.builtin.include_tasks: configure.yml

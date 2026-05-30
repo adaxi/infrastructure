@@ -5,4 +5,3 @@
     image: ghcr.io/adaxi/adaxisoft-api:master
     ports: "2000:80"
     restart_policy: "always"
-

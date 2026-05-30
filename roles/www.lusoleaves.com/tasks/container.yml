@@ -6,16 +6,15 @@
     ports: "2002:80"
     restart_policy: "always"
     env:
-      LUSOLEAVES_COM_DOMAIN: "{{lusoleaves_com_domain}}"
-      LUSOLEAVES_COM_ENCRYPTION_KEY: "{{lusoleaves_com_encryption_key}}"
-      LUSOLEAVES_COM_UPLOAD_KEY: "{{lusoleaves_com_upload_key}}"
+      LUSOLEAVES_COM_DOMAIN: "{{ lusoleaves_com_domain }}"
+      LUSOLEAVES_COM_ENCRYPTION_KEY: "{{ lusoleaves_com_encryption_key }}"
+      LUSOLEAVES_COM_UPLOAD_KEY: "{{ lusoleaves_com_upload_key }}"
       LUSOLEAVES_COM_DB_HOSTNAME: host.docker.internal
-      LUSOLEAVES_COM_DB_USERNAME: "{{lusoleaves_com_db_username}}"
-      LUSOLEAVES_COM_DB_PASSWORD: "{{lusoleaves_com_db_password}}"
-      LUSOLEAVES_COM_DB_NAME: "{{lusoleaves_com_db_name}}"
+      LUSOLEAVES_COM_DB_USERNAME: "{{ lusoleaves_com_db_username }}"
+      LUSOLEAVES_COM_DB_PASSWORD: "{{ lusoleaves_com_db_password }}"
+      LUSOLEAVES_COM_DB_NAME: "{{ lusoleaves_com_db_name }}"
       FORCE_HTTPS_BASE_URI: 'true'
     etc_hosts: >
       {
         "host.docker.internal": "host-gateway"
       }
-

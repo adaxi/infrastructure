@@ -5,7 +5,7 @@ aptly_repositories:
     prefix: debian
     distribution: wheezy
     component: main
-    
+
   - name: debian-jessie
     comment: adaxisoft apt repository for jessie packages
     prefix: debian
@@ -17,4 +17,3 @@ aptly_repositories:
     prefix: debian
     distribution: stretch
     component: main
-   

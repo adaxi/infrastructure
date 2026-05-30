@@ -1,24 +1,23 @@
 ---
 
 - name: Create vaultwarden.adaxisoft.be group
-  group: 
-    name: "{{vaultwarden_adaxisoft_be_group}}" 
+  ansible.builtin.group:
+    name: "{{ vaultwarden_adaxisoft_be_group }}"
 
 - name: Create vaultwarden.adaxisoft.be user
-  user: 
-    name: "{{vaultwarden_adaxisoft_be_user}}" 
-    shell: /bin/nologin 
-    group: "{{vaultwarden_adaxisoft_be_group}}" 
-    home: "{{vaultwarden_adaxisoft_be_home}}"
+  ansible.builtin.user:
+    name: "{{ vaultwarden_adaxisoft_be_user }}"
+    shell: /bin/nologin
+    group: "{{ vaultwarden_adaxisoft_be_group }}"
+    home: "{{ vaultwarden_adaxisoft_be_home }}"
 
 - name: Install NGINX configuration
-  include: nginx.yml
+  ansible.builtin.include_tasks: nginx.yml
 
 - name: Install adaxisoft-vaultwarden configuration
-  include: adaxisoft-vaultwarden.yml
+  ansible.builtin.include_tasks: adaxisoft-vaultwarden.yml
 
 - name: Reload NGINX
-  service: 
+  ansible.builtin.service:
     name: nginx
     state: reloaded
-

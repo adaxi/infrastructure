@@ -1,24 +1,24 @@
 ---
 
 - name: Ensure fail2ban is installed
-  apt: 
+  ansible.builtin.apt:
     name: fail2ban
     state: present
   notify:
-    - restart fail2ban
+    - Restart fail2ban
 
 - name: Ensure fail2ban is configured
-  template: 
+  ansible.builtin.template:
     src: "{{ item }}.j2"
     dest: "/{{ item }}"
-  with_items:
+  loop:
     - etc/fail2ban/jail.local
     - etc/fail2ban/fail2ban.local
   notify:
-    - restart fail2ban
+    - Restart fail2ban
 
 - name: Ensure fail2ban starts on a fresh reboot
-  service:
+  ansible.builtin.service:
     name: fail2ban
     state: started
     enabled: yes

@@ -1,6 +1,5 @@
 ---
-- name: restart openmediavault-engined
-  service:
+- name: Restart openmediavault-engined
+  ansible.builtin.service:
     name: openmediavault-engined
     state: restarted
-

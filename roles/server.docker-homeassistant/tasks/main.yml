@@ -1,5 +1,5 @@
 - name: Create home assitant directory
-  file:
+  ansible.builtin.file:
     path: /homeassistant
     state: directory
 

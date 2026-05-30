@@ -13,16 +13,16 @@
   become: yes
 
 - name: Add APT pinning for Tailscale repository
-  copy:
+  ansible.builtin.copy:
     dest: /etc/apt/preferences.d/tailscale
     content: |
       Package: tailscale
       Pin: origin pkgs.tailscale.com
       Pin-Priority: 1001
   become: yes
-  
-- name: Install tailscale 
-  apt:
+
+- name: Install tailscale
+  ansible.builtin.apt:
     name: tailscale
     state: "present"
   become: yes

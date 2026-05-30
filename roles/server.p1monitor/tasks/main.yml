@@ -1,8 +1,8 @@
 - name: Create p1monitor directories
-  file:
-    name: "{{ item }}"
+  ansible.builtin.file:
+    path: "{{ item }}"
     state: directory
-  with_items:
+  loop:
     - /p1monitor
     - /p1monitor/data
     - /p1monitor/usbdisk
@@ -13,7 +13,7 @@
     name: p1monitor
     image: mclaassen/p1mon
     restart_policy: "unless-stopped"
-    devices: 
+    devices:
       - "/dev/ttyUSB2:/dev/ttyUSB0"
     volumes:
       - /p1monitor/data:/p1mon/data

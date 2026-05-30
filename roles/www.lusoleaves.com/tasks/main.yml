@@ -1,19 +1,18 @@
 ---
 
 - name: Install acl
-  apt:
+  ansible.builtin.apt:
     name: acl
     state: present
 
 - name: Install nginx configuration
-  include: nginx.yml
+  ansible.builtin.include_tasks: nginx.yml
 
 - name: Install mariadb configuration
-  include: mariadb.yml
+  ansible.builtin.include_tasks: mariadb.yml
 
 - name: Install lusoleaves.com configuration
-  include: container.yml
+  ansible.builtin.include_tasks: container.yml
 
-#- name: Reload nginx
-#  service: name=nginx state=reloaded
-
+# - name: Reload nginx
+#   service: name=nginx state=reloaded

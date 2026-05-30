@@ -1,6 +1,6 @@
 ---
 - name: Install network manager addons
-  apt:
+  ansible.builtin.apt:
     name:
       - network-manager-openvpn
       - network-manager-openvpn-gnome

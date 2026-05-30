@@ -1,10 +1,11 @@
 ---
 - name: Install development tools
-  apt:
+  ansible.builtin.apt:
     name:
       - tcpdump
       - git
       - colordiff
       - jq
+      - shellcheck
     state: "present"
   become: yes

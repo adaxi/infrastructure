@@ -1,83 +1,81 @@
 ---
-  
+
 - name: Add shell.ninthgate.se public key
-  apt_key:
+  ansible.builtin.apt_key:
     data: "{{ lookup('file', 'shell.ninthgate.se.pubkey') }}"
     state: present
 
 - name: Add shell.ninthgate.se repository
-  apt_repository:
+  ansible.builtin.apt_repository:
     repo: 'deb http://shell.ninthgate.se/packages/debian wheezy main'
     state: present
-  
+
 - name: Ensure Wheezy backports are present
-  apt_repository: 
+  ansible.builtin.apt_repository:
     repo: 'deb http://httpredir.debian.org/debian wheezy-backports main'
     state: present
   when: ansible_distribution_release == "wheezy"
-  
+
 - name: Download ubuntu fonts
-  get_url: 
+  ansible.builtin.get_url:
     url: "http://mirrors.kernel.org/ubuntu/pool/main/u/ubuntu-font-family-sources/ttf-ubuntu-font-family_0.80-0ubuntu2_all.deb"
     dest: /tmp
-  
+
 - name: Install Ubuntu fonts
-  apt:
+  ansible.builtin.apt:
     deb: "/tmp/ttf-ubuntu-font-family_0.80-0ubuntu2_all.deb"
 
 - name: Ensure plexhometheater service group is present
-  group:
+  ansible.builtin.group:
     name: "{{ plexhometheater_group_name }}"
     state: present
-           
+
 - name: Ensure plexhometheater service user is present
-  user: 
+  ansible.builtin.user:
     name: "{{ plexhometheater_user_name }}"
     group: "{{ plexhometheater_group_name }}"
     shell: "/usr/sbin/nologin"
     home: "{{ plexhometheater_user_home }}"
-    createhome: yes
+    create_home: true
     state: present
 
 - name: Ensure plexhometheater and its dependencies are installed
-  apt:
-    name: 
+  ansible.builtin.apt:
+    name:
       - xinit
       - xorg
-      - python-gnutls 
+      - python-gnutls
       - python-pycurl
       - plexhometheater
       - alsa-utils
       - pulseaudio
-    state: present 
-  with_items:
-
+    state: present
 
 - name: Use debconf to tell x11-common that xinit can be started by Anybody
-  debconf:
+  ansible.builtin.debconf:
     name: "x11-common"
     question: "x11-common/xwrapper/allowed_users"
     vtype: "select"
     value: "Anybody"
- 
-- name: Overwrite x11-common default configuration which superseeds debconf 
-  copy: 
+
+- name: Overwrite x11-common default configuration which superseeds debconf
+  ansible.builtin.copy:
     src: Xwrapper.config
     dest: /etc/X11/Xwrapper.config
-    mode: 0644
-        
+    mode: '0644'
+
 - name: Reconfigure x11-common so that anyone can start xinit
-  command: "dpkg-reconfigure -f noninteractive x11-common"
-  changed_when: False
-  
+  ansible.builtin.command: "dpkg-reconfigure -f noninteractive x11-common"
+  changed_when: false
+
 - name: Copy plexhometheater init.d service
-  template:
+  ansible.builtin.template:
     src: plexhometheater.j2
     dest: /etc/init.d/plexhometheater
-    mode: 0755
-            
+    mode: '0755'
+
 - name: Ensure plexhometheater service is enabled on boot
-  service: 
-    name: plexhometheater 
+  ansible.builtin.service:
+    name: plexhometheater
     pattern: "plexhometheater"
     enabled: yes

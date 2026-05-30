@@ -1,15 +1,16 @@
 ---
 - name: Check if MySQL is already installed.
-  stat: path=/etc/init.d/mysql
+  ansible.builtin.stat:
+    path: /etc/init.d/mysql
   register: mysql_installed
 
 - name: Update apt cache if MySQL is not yet installed.
-  apt: 
+  ansible.builtin.apt:
     update_cache: yes
-  when: mysql_installed.stat.exists == false
+  when: not mysql_installed.stat.exists
 
 - name: Ensure MySQL packages are installed.
-  apt:
+  ansible.builtin.apt:
     name:
       - python3-mysqldb
       - mariadb-client

@@ -1,10 +1,10 @@
 - name: Create radarr directories
-  file:
-    name: "{{ item }}"
+  ansible.builtin.file:
+    path: "{{ item }}"
     state: directory
     owner: 1000
     group: 1000
-  with_items:
+  loop:
     - /radarr
     - /radarr/config
 

@@ -1,12 +1,12 @@
 ---
 - name: Install development tools
-  apt:
+  ansible.builtin.apt:
     name: stow
     state: present
   become: yes
 
 - name: Clone all dot files
-  git:
+  ansible.builtin.git:
     repo: "https://github.com/adaxi/.dotfiles"
     dest: "/home/{{ ansible_user_id }}/.dotfiles"
     version: master
@@ -15,7 +15,7 @@
   become_user: "{{ ansible_user_id }}"
 
 - name: Install all dotfiles
-  shell: "/usr/bin/find * -mindepth 0 -maxdepth 0 -type d -not -path '*/\\.*' -exec stow {} \\;"
+  ansible.builtin.shell: "/usr/bin/find * -mindepth 0 -maxdepth 0 -type d -not -path '*/\\.*' -exec stow {} \\;"
   args:
     chdir: "/home/{{ ansible_user_id }}/.dotfiles"
   when: install_dotfiles

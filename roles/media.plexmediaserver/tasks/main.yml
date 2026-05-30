@@ -1,44 +1,44 @@
 ---
-  
+
 - name: Add downloads.plex.tv public key
-  apt_key:
+  ansible.builtin.apt_key:
     data: "{{ lookup('file', 'downloads.plex.tv.pubkey') }}"
     state: present
 
 - name: Add downloads.plex.tv repository
-  apt_repository: 
+  ansible.builtin.apt_repository:
     repo: 'deb https://downloads.plex.tv/repo/deb public main' # jessie packages not available on 16/04/2017
     state: present
 
 - name: Ensure plexmediaserver service group is present
-  group:
+  ansible.builtin.group:
     name: "{{ plexmediaserver_group_name }}"
     state: present
 
 - name: Ensure plexmediaserver service user is present
-  user:
+  ansible.builtin.user:
     name: "{{ plexmediaserver_user_name }}"
     group: "{{ plexmediaserver_group_name }}"
     shell: "/bin/bash"
     home: "{{ plexmediaserver_user_home }}"
-    createhome: yes
+    create_home: true
     state: present
 
 - name: Ensure plexmediaserver and its dependencies are installed
-  apt:
+  ansible.builtin.apt:
     name: plexmediaserver
-    state: present 
+    state: present
   notify: Restart plexmediaserver
-  
+
 - name: Copy defaults values
-  template:
-    src: plexmediaserver.defaults.j2 
+  ansible.builtin.template:
+    src: plexmediaserver.defaults.j2
     dest: /etc/default/plexmediaserver
     owner: "{{ plexmediaserver_user_name }}"
   notify: Restart plexmediaserver
-              
+
 - name: Ensure plexmediaserver service is running and enabled on boot
-  service:
-    name: plexmediaserver 
-    state: started 
+  ansible.builtin.service:
+    name: plexmediaserver
+    state: started
     enabled: yes

@@ -1,5 +1,12 @@
 ---
-- include: fonts.yml
-- include: themes.yml
-- include: keepass2.yml
-- include: network-manager.yml
+- name: Include fonts tasks
+  ansible.builtin.include_tasks: fonts.yml
+
+- name: Include themes tasks
+  ansible.builtin.include_tasks: themes.yml
+
+- name: Include keepass2 tasks
+  ansible.builtin.include_tasks: keepass2.yml
+
+- name: Include network-manager tasks
+  ansible.builtin.include_tasks: network-manager.yml

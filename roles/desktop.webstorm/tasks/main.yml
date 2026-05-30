@@ -1,4 +1,7 @@
 ---
 
-- include: install.yml
-- include: test.yml
+- name: Include install tasks
+  ansible.builtin.include_tasks: install.yml
+
+- name: Include test tasks
+  ansible.builtin.include_tasks: test.yml

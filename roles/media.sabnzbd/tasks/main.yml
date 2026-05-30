@@ -1,66 +1,65 @@
 ---
 
 - name: Ensure SABnzbd service group is present
-  group:
+  ansible.builtin.group:
     name: "{{ sabnzbd_group_name }}"
     state: present
-          
+
 - name: Ensure SABnzbd service user is present
-  user: 
+  ansible.builtin.user:
     name: "{{ sabnzbd_user_name }}"
     group: "{{ sabnzbd_group_name }}"
     shell: "/usr/sbin/nologin"
     home: "{{ sabnzbd_user_home }}"
-    createhome: yes
+    create_home: true
     state: present
 
 - name: Ensure sabnzbd and its dependencies are installed
-  apt:
-    name: "{{ item }}" 
-    state: present 
-  with_items:
-    - sabnzbdplus
-    - par2
-    - python-openssl
-    - python-yenc
-    - unrar
-    - unzip
+  ansible.builtin.apt:
+    name:
+      - sabnzbdplus
+      - par2
+      - python-openssl
+      - python-yenc
+      - unrar
+      - unzip
+    state: present
   notify: Restart Sabnzbdplus
-  
+
 - name: Ensure directory for TV content exists
-  file: 
+  ansible.builtin.file:
     dest: "{{ item }}"
     owner: "{{ sabnzbd_user_name }}"
     group: "{{ sabnzbd_group_name }}"
-    recurse: yes 
-    state: directory 
-  with_items:
-   - "{{incoming_content_dir}}/usenet/tv"
-   - "{{incoming_content_dir}}/usenet"
-   - "{{incoming_content_dir}}/usenet/films"
-   - "{{incoming_content_dir}}/usenet/.poll"
-   - "{{incoming_content_dir}}/usenet/.incomplete"
-   - "{{ sabnzbd_admin_dir }}"
-   - "{{ sabnzbd_logs_dir }}"
-   - "{{ sabnzbd_conf_path }}"
+    recurse: yes
+    state: directory
+  loop:
+    - "{{ incoming_content_dir }}/usenet/tv"
+    - "{{ incoming_content_dir }}/usenet"
+    - "{{ incoming_content_dir }}/usenet/films"
+    - "{{ incoming_content_dir }}/usenet/.poll"
+    - "{{ incoming_content_dir }}/usenet/.incomplete"
+    - "{{ sabnzbd_admin_dir }}"
+    - "{{ sabnzbd_logs_dir }}"
+    - "{{ sabnzbd_conf_path }}"
 
 - name: Copy defaults values
-  template:
-    src: sabnzbd.defaults.j2 
+  ansible.builtin.template:
+    src: sabnzbd.defaults.j2
     dest: /etc/default/sabnzbdplus
     owner: "{{ sabnzbd_user_name }}"
   notify: Restart Sabnzbdplus
-  
+
 - name: Create default configuration for sabznbd in config.ini
-  template:
+  ansible.builtin.template:
     src: "sabnzbd.config.ini.j2"
-    dest: "{{sabnzbd_conf_path}}/config.ini"
+    dest: "{{ sabnzbd_conf_path }}/config.ini"
     owner: "{{ sabnzbd_user_name }}"
     force: no
   notify: Restart Sabnzbdplus
-            
+
 - name: Ensure SABnzbd service is running and enabled on boot
-  service:
+  ansible.builtin.service:
     name: sabnzbdplus
     state: started
     enabled: yes

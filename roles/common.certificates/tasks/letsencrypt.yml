@@ -5,19 +5,19 @@
 ###
 
 - name: Install Certbot
-  apt:
-    name: 
+  ansible.builtin.apt:
+    name:
       - certbot
       - python3-certbot-nginx
     state: present
 
 - name: Crate .well-known directory for LetsEncrypt
-  file:
-    name: "/var/www/html/.well-known/"
+  ansible.builtin.file:
+    path: "/var/www/html/.well-known/"
     state: directory
 
 - name: Creating LetsEncrypt certificates
-  command: >
+  ansible.builtin.command: >
     certbot certonly
     -a webroot
     --webroot-path=/var/www/html
@@ -27,21 +27,18 @@
     --non-interactive
   args:
     creates: "/etc/letsencrypt/live/{{ item.name }}"
-  with_items: "{{ letsencrypt | default([]) }}"
+  loop: "{{ letsencrypt | default([]) }}"
   become: yes
   when: installation_environment == "production"
 
 - name: Add cron file
-  copy:
+  ansible.builtin.copy:
     src: letsencrypt.cron
     dest: "/etc/cron.d/letsencrypt.conf"
   become: yes
 
 - name: Add reload nginx file
-  copy:
+  ansible.builtin.copy:
     src: 01-nginx-reload
     dest: "/etc/letsencrypt/renewal-hooks/deploy/01-nginx-reload"
   become: yes
-
-
-

@@ -7,14 +7,14 @@
   become: yes
 
 - name: Add Google repository
-  apt_repository:
+  ansible.builtin.apt_repository:
     repo: "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main"
     state: present
     filename: chrome
   become: yes
 
 - name: Add apt pinning preferences for Google Chrome
-  copy:
+  ansible.builtin.copy:
     dest: /etc/apt/preferences.d/google-chrome
     content: |
       Package: *
@@ -23,7 +23,7 @@
   become: yes
 
 - name: Install Chrome stable
-  apt:
+  ansible.builtin.apt:
     name: google-chrome-stable
     state: present
   become: yes

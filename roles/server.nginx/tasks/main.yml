@@ -1,6 +1,6 @@
 ---
 - name: Install nginx
-  apt: 
+  ansible.builtin.apt:
     name:
       - nginx-extras
       - python3-passlib
@@ -8,7 +8,7 @@
   become: yes
 
 - name: Include SSL configuration
-  copy: 
-    src: ssl.conf 
+  ansible.builtin.copy:
+    src: ssl.conf
     dest: /etc/nginx/conf.d/ssl.conf
   become: yes

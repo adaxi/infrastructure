@@ -1,23 +1,21 @@
 ---
 
 - name: Extract eclipse into installation path
-  unarchive:
-    src: "{{eclipse_download_url}}" 
-    dest: "{{eclipse_installation_path}}" 
-    creates: "{{eclipse_installation_path}}/eclipse"
-    copy: no
+  ansible.builtin.unarchive:
+    src: "{{ eclipse_download_url }}"
+    dest: "{{ eclipse_installation_path }}"
+    creates: "{{ eclipse_installation_path }}/eclipse"
+    remote_src: false
   become: yes
-    
+
 - name: Add eclipse to path
-  file:
+  ansible.builtin.file:
     src: /usr/share/eclipse/eclipse
     dest: /usr/bin/eclipse
     state: link
     force: yes
   become: yes
-  
-- name: Create desktop icon
-  copy: src=eclipse.desktop dest=/usr/share/applications
-  become: yes
 
-  
+- name: Create desktop icon
+  ansible.builtin.copy: src=eclipse.desktop dest=/usr/share/applications
+  become: yes

@@ -1,18 +1,18 @@
 ---
 
 - name: Create lusoleaves database
-  mysql_db: 
-    name: "{{lusoleaves_com_db_name}}" 
+  mysql_db:
+    name: "{{ lusoleaves_com_db_name }}"
     state: "present"
 
 - name: Create lusoleaves user
-  mysql_user: 
-    name: "{{lusoleaves_com_db_username}}"
+  mysql_user:
+    name: "{{ lusoleaves_com_db_username }}"
     host: "%"
-    password: "{{lusoleaves_com_db_password}}" 
-    priv: "{{lusoleaves_com_db_name}}.*:ALL"
+    password: "{{ lusoleaves_com_db_password }}"
+    priv: "{{ lusoleaves_com_db_name }}.*:ALL"
     state: "present"
 
 - name: Check if we need to import something
-  stat: path=/backups/lusoleaves.sql
+  ansible.builtin.stat: path=/backups/lusoleaves.sql
   register: lusoleaves_com_backup

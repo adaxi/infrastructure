@@ -1,16 +1,16 @@
 - name: Add docker public key
-  apt_key:
+  ansible.builtin.apt_key:
     url: "https://download.docker.com/linux/debian/gpg"
     state: present
 
 - name: Add docker repository
-  apt_repository:
+  ansible.builtin.apt_repository:
     repo: "deb [arch=amd64] https://download.docker.com/linux/debian {{ ansible_distribution_release }} stable"
     state: present
 
 - name: Ensure docker is installed
-  apt: 
-    name: 
+  ansible.builtin.apt:
+    name:
       - docker-ce
       - docker-ce-cli
       - containerd.io
@@ -21,7 +21,7 @@
     state: present
 
 - name: Ensure docker deamon is running
-  service:
+  ansible.builtin.service:
     name: docker
     state: started
     enabled: true

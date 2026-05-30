@@ -1,7 +1,6 @@
 ---
 
 - name: Restart Sickbeard
-  service:
+  ansible.builtin.service:
     name: sickbeard
     state: restarted
-

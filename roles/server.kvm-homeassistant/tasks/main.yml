@@ -1,15 +1,16 @@
+---
 # Use the GUI and go to "YourNodeName -> System -> Network -> Create -> Linux Bridge".
 # Use as "Name" the value "vmbr0", as "IPv4/CIDR" the IP and subnet your server should get (for example "192.168.0.2/24"),
 # for "Gateway (IPv4)" the IP of your Router (for example "192.168.0.1"),
 # set the "Autostart" checkbox and use the value "enp8s0" for the field "Bridge ports".
 
 - name: Create image directory
-  file:
+  ansible.builtin.file:
     path: /proxmox-images
     state: directory
 
 - name: Create dummy vm directory
-  file:
+  ansible.builtin.file:
     path: /volumes/images/999
     state: directory
 
@@ -20,40 +21,41 @@
     mode: '0440'
 
 - name: Unarchive Home Assistant
-  shell:
+  ansible.builtin.shell:
     cmd: xzcat /proxmox-images/home-assistant.qcow2.xz > /volumes/images/999/home-assistant.qcow2
     creates: /volumes/images/999/home-assistant.qcow2
+  changed_when: true
 
 - name: Create home assistant virtual machine (Please create "vmbr0" in GUI when skipped)
   proxmox_kvm:
-      proxmox_default_behavior: no_defaults
-      validate_certs: no
-      api_user: adaxi@pam
-      api_password: "{{proxmox_password}}"
-      api_host: localhost
-      name: homeassistant
-      node: slag
-      vmid: 100
-      state: present
-      vcpus: 2
-      memory: 2048
-      bios: ovmf
-      autostart: true
-      scsihw: virtio-scsi-single
-      net:
-        net0: "virtio,bridge=vmbr0"
-      scsi:
-        sata0: "local:0,import-from=localdir:999/home-assistant.qcow2,format=qcow2"
+    proxmox_default_behavior: no_defaults
+    validate_certs: no
+    api_user: adaxi@pam
+    api_password: "{{ proxmox_password }}"
+    api_host: localhost
+    name: homeassistant
+    node: slag
+    vmid: 100
+    state: present
+    vcpus: 2
+    memory: 2048
+    bios: ovmf
+    autostart: true
+    scsihw: virtio-scsi-single
+    net:
+      net0: "virtio,bridge=vmbr0"
+    scsi:
+      sata0: "local:0,import-from=localdir:999/home-assistant.qcow2,format=qcow2"
   when: '"vmbr0" in ansible_facts.interfaces'
 
 - name: Start home assistant
   proxmox_kvm:
-      proxmox_default_behavior: no_defaults
-      validate_certs: no
-      api_user: adaxi@pam
-      api_password: "{{proxmox_password}}"
-      api_host: localhost
-      name: homeassistant
-      node: slag
-      vmid: 100
-      state: started
+    proxmox_default_behavior: no_defaults
+    validate_certs: no
+    api_user: adaxi@pam
+    api_password: "{{ proxmox_password }}"
+    api_host: localhost
+    name: homeassistant
+    node: slag
+    vmid: 100
+    state: started

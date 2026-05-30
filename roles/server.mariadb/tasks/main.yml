@@ -1,7 +1,15 @@
 ---
-# Setup/install tasks.
-- include: install.yml
-- include: configure.yml
-- include: secure-installation.yml
-- include: databases.yml
-- include: users.yml
+- name: Run install tasks
+  ansible.builtin.include_tasks: install.yml
+
+- name: Run configure tasks
+  ansible.builtin.include_tasks: configure.yml
+
+- name: Run secure-installation tasks
+  ansible.builtin.include_tasks: secure-installation.yml
+
+- name: Run databases tasks
+  ansible.builtin.include_tasks: databases.yml
+
+- name: Run users tasks
+  ansible.builtin.include_tasks: users.yml

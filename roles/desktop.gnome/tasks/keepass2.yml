@@ -1,5 +1,5 @@
 ---
 - name: Install keepassxc
-  apt:
+  ansible.builtin.apt:
     name: keepassxc
   become: yes

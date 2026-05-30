@@ -1,6 +1,6 @@
 - name: Start grott container
   community.docker.docker_container:
-    name: grott 
+    name: grott
     image: ledidobe/grott
     restart_policy: "unless-stopped"
     ports:

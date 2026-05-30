@@ -5,8 +5,8 @@ adaxisoft_be_user: adaxisoft_be
 adaxisoft_be_home: /var/www/adaxisoft_be
 
 adaxisoft_be_openssl_self_signed:
-  - name: '{{adaxisoft_be_domain}}'
-    domains: ['{{adaxisoft_be_domain}}', 'www.{{adaxisoft_be_domain}}']
+  - name: '{{ adaxisoft_be_domain }}'
+    domains: ['{{ adaxisoft_be_domain }}', 'www.{{ adaxisoft_be_domain }}']
     country: 'BE'
     state: 'Brussels'
     city: 'Brussels'
@@ -16,6 +16,6 @@ adaxisoft_be_openssl_self_signed:
     days: 3650
 
 adaxisoft_be_letsencrypt:
-  - name: '{{adaxisoft_be_domain}}'
-    domains: ['{{adaxisoft_be_domain}}', 'www.{{adaxisoft_be_domain}}']
+  - name: '{{ adaxisoft_be_domain }}'
+    domains: ['{{ adaxisoft_be_domain }}', 'www.{{ adaxisoft_be_domain }}']
     email: 'dev@adaxisoft.be'
