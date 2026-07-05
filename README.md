@@ -77,17 +77,4 @@ Place a backup of the lusoleaves products in ```/backups/products``` for it to b
 After installing the production system:
  * Add the debian packages to the repository
 
-Media Server (deprecated)
-------------
-
-My media server is based on a Debian contains the following components:
-  * OpenMediaVault
-
-Before reinstalling your system make sure that the following items are safe:
- * /etc/mdadm.conf
-
-After installing the production system:
- * Backup ```/etc/mdadm.conf```
- * ddclient for DynDNS
-
 
