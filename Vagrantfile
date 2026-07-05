@@ -28,7 +28,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   # Every Vagrant virtual environment requires a box to build off of.
   config.vm.define "media" do |c|
-    c.vm.box = "debian/bullseye64"
+    c.vm.box = "debian/trixie64"
     c.vm.synced_folder '.', '/vagrant', disabled: true
     c.vm.hostname = "media.local"
     c.vm.provider "virtualbox" do |v|
@@ -38,7 +38,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   end
 
   config.vm.define "daily" do |c|
-    c.vm.box = "debian/bullseye64"
+    c.vm.box = "debian/trixie64"
     c.vm.synced_folder '.', '/vagrant', disabled: true
     c.vm.hostname = "daily.local"
     c.vm.provision :shell, inline: $script
@@ -51,7 +51,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   end
 
   config.vm.define "vm" do |c|
-    c.vm.box = "debian/bullseye64"
+    c.vm.box = "debian/trixie64"
     c.vm.synced_folder '.', '/vagrant', disabled: true
     c.vm.hostname = "vm.local"
     c.vm.network "public_network", ip: "10.68.0.50", bridge: "enp4s0"
@@ -87,7 +87,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   
 
   config.vm.define "web" do |c|
-    c.vm.box = "debian/bookworm64"
+    c.vm.box = "debian/trixie64"
     c.vm.synced_folder '.', '/vagrant', disabled: true
     c.vm.hostname = "web.local"
     c.vm.provider "virtualbox" do |v|
@@ -103,7 +103,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
 
   config.vm.define "homeassistant" do |c|
-    c.vm.box = "debian/bookworm64"
+    c.vm.box = "debian/trixie64"
     c.vm.synced_folder '.', '/vagrant', disabled: true
     c.vm.hostname = "homeassistant.local"
     c.vm.provider "virtualbox" do |v|
