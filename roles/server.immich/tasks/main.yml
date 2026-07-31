@@ -1,0 +1,79 @@
+---
+- name: Create immich directories
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+  loop:
+    - "{{ immich_data_path }}"
+    - "{{ immich_db_data_path }}"
+    - "{{ immich_model_cache_path }}"
+    - "{{ immich_upload_location }}"
+
+- name: Create immich docker network
+  community.docker.docker_network:
+    name: immich
+
+- name: Start immich database container
+  community.docker.docker_container:
+    name: immich_database
+    image: ghcr.io/immich-app/postgres:14-vectorchord0.3.0
+    pull: yes
+    env:
+      POSTGRES_USER: "{{ immich_db_user }}"
+      POSTGRES_PASSWORD: "{{ immich_db_password }}"
+      POSTGRES_DB: "{{ immich_db_name }}"
+      POSTGRES_INITDB_ARGS: "--data-checksums"
+    networks:
+      - name: immich
+    restart_policy: "always"
+    volumes:
+      - "{{ immich_db_data_path }}:/var/lib/postgresql/data"
+
+- name: Start immich redis container
+  community.docker.docker_container:
+    name: immich_redis
+    image: docker.io/redis:6.2-alpine
+    pull: yes
+    networks:
+      - name: immich
+    restart_policy: "always"
+
+- name: Start immich machine learning container
+  community.docker.docker_container:
+    # Immich's default Machine Learning URL system setting is hardcoded to
+    # http://immich-machine-learning:3003, matching the official
+    # docker-compose service name. Keep this container name matching that
+    # (hyphens, not underscores) so the server can resolve it without
+    # requiring a manual Admin > Settings > Machine Learning override.
+    name: immich-machine-learning
+    image: "ghcr.io/immich-app/immich-machine-learning:{{ immich_version }}"
+    pull: yes
+    env:
+      TZ: "{{ immich_timezone }}"
+    networks:
+      - name: immich
+    restart_policy: "always"
+    volumes:
+      - "{{ immich_model_cache_path }}:/cache"
+
+- name: Start immich server container
+  community.docker.docker_container:
+    name: immich_server
+    image: "ghcr.io/immich-app/immich-server:{{ immich_version }}"
+    pull: yes
+    env:
+      DB_HOSTNAME: immich_database
+      DB_USERNAME: "{{ immich_db_user }}"
+      DB_PASSWORD: "{{ immich_db_password }}"
+      DB_DATABASE_NAME: "{{ immich_db_name }}"
+      REDIS_HOSTNAME: immich_redis
+      TZ: "{{ immich_timezone }}"
+    networks:
+      - name: immich
+    ports:
+      - "{{ immich_port }}:2283"
+    restart_policy: "always"
+    volumes:
+      - "{{ immich_upload_location }}:/usr/src/app/upload"
+      - "{{ immich_library_admin_host_path }}:/usr/src/app/upload/library/admin:rw"
+      - /etc/localtime:/etc/localtime:ro

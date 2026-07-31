@@ -1,0 +1,12 @@
+#!/bin/bash
+#
+# Enable Wake-on-LAN (magic packet) on every ethernet interface that supports
+# it, so Home Assistant can power this host back on. Managed by Ansible.
+#
+for iface in /sys/class/net/*; do
+  name="$(basename "$iface")"
+  [ -e "$iface/device" ] || continue
+  if ethtool "$name" 2>/dev/null | grep -q "Supports Wake-on"; then
+    ethtool -s "$name" wol g || true
+  fi
+done

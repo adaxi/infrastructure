@@ -1,0 +1,280 @@
+#!/bin/bash
+#
+# Home Assistant MQTT control agent (managed by Ansible - do not edit).
+#
+# Publishes MQTT discovery config so this host shows up in Home Assistant as a
+# device with a Connectivity sensor, Shutdown{% if ha_agent_allow_reboot %}/Reboot{% endif %} button(s), and diagnostic
+# sensors (CPU/memory/root-filesystem usage, load average, uptime, CPU
+# temperature), advertises its availability, periodically publishes the
+# metrics, and listens for commands to power the machine off/reboot it.
+#
+set -euo pipefail
+
+MQTT_HOST="{{ ha_agent_mqtt_host }}"
+MQTT_PORT="{{ ha_agent_mqtt_port }}"
+{% if ha_agent_mqtt_username %}
+AUTH=(-u "{{ ha_agent_mqtt_username }}" -P "{{ ha_agent_mqtt_password }}")
+{% else %}
+AUTH=()
+{% endif %}
+
+DISCOVERY_PREFIX="{{ ha_agent_discovery_prefix }}"
+DEVICE_ID="{{ ha_agent_device_id }}"
+FRIENDLY_NAME="{{ ha_agent_friendly_name }}"
+BASE="{{ ha_agent_topic_prefix }}/${DEVICE_ID}"
+AVAILABILITY_TOPIC="${BASE}/availability"
+COMMAND_TOPIC="${BASE}/command"
+METRICS_TOPIC="${BASE}/metrics"
+# Home Assistant's birth/will topic. HA publishes "online" here whenever it
+# (re)starts, which we use as a cue to re-announce ourselves.
+STATUS_TOPIC="${DISCOVERY_PREFIX}/status"
+
+DEVICE_JSON="{\"identifiers\": [\"${DEVICE_ID}\"], \"name\": \"${FRIENDLY_NAME}\", \"manufacturer\": \"Ansible\", \"model\": \"homeassistant-agent\"}"
+
+pub() {
+  mosquitto_pub -h "$MQTT_HOST" -p "$MQTT_PORT" "${AUTH[@]}" "$@"
+}
+
+# --- Metrics collection ---------------------------------------------------
+{% raw %}
+# Aggregate CPU jiffies from /proc/stat: "<total> <idle+iowait>". CPU usage is
+# computed from the delta between two samples, so it averages over the metrics
+# interval instead of a single instant.
+cpu_sample() {
+  awk '/^cpu /{total=0; for (i=2; i<=NF; i++) total+=$i; print total, $5+$6}' /proc/stat
+}
+
+# Hottest thermal zone in °C, as a proxy for CPU temperature. Prints nothing
+# (and returns non-zero) on hosts without thermal zones (e.g. some VMs).
+cpu_temp() {
+  local zone temp max=""
+  for zone in /sys/class/thermal/thermal_zone*/temp; do
+    temp=$(cat "$zone" 2>/dev/null) || continue
+    [ -n "$temp" ] || continue
+    if [ -z "$max" ] || [ "$temp" -gt "$max" ]; then max=$temp; fi
+  done
+  [ -n "$max" ] && awk -v t="$max" 'BEGIN{printf "%.1f", t/1000}'
+}
+
+publish_metrics() {
+  local total idle cpu=0
+  read -r total idle < <(cpu_sample)
+  if [ "$total" -gt "$PREV_CPU_TOTAL" ]; then
+    cpu=$(( (100 * ((total - PREV_CPU_TOTAL) - (idle - PREV_CPU_IDLE))) / (total - PREV_CPU_TOTAL) ))
+  fi
+  PREV_CPU_TOTAL=$total
+  PREV_CPU_IDLE=$idle
+
+  local mem_total mem_avail
+  read -r mem_total mem_avail < <(awk '/^MemTotal:/{t=$2} /^MemAvailable:/{a=$2} END{print t, a}' /proc/meminfo)
+  local mem=$(( (100 * (mem_total - mem_avail)) / mem_total ))
+
+  local rootfs load uptime
+  rootfs=$(df --output=pcent / | awk 'NR==2 {gsub(/[ %]/, ""); print}')
+  load=$(awk '{print $1}' /proc/loadavg)
+  uptime=$(awk '{print int($1)}' /proc/uptime)
+
+  local temp temp_json=""
+  temp=$(cpu_temp || true)
+  [ -n "$temp" ] && temp_json=", \"cpu_temp\": ${temp}"
+
+  pub -r -t "$METRICS_TOPIC" -m "{\"cpu_percent\": ${cpu}, \"mem_percent\": ${mem}, \"rootfs_percent\": ${rootfs}, \"load_1\": ${load}, \"uptime\": ${uptime}${temp_json}}" || true
+}
+{% endraw %}
+
+# --- Home Assistant MQTT discovery ---------------------------------------
+# Publish discovery config + our current availability. Called on startup and
+# again whenever Home Assistant restarts (its birth message on $STATUS_TOPIC),
+# so the device reappears even if the broker lost its retained messages.
+announce() {
+# Connectivity sensor: reads the availability topic as its *state* (not as an
+# availability_topic) so it reports "off"/disconnected instead of going
+# "unavailable" when this host is offline. The retained Last Will flips it to
+# "offline" if the host dies unexpectedly.
+pub -r -t "${DISCOVERY_PREFIX}/binary_sensor/${DEVICE_ID}/connectivity/config" -m "{
+  \"name\": \"Status\",
+  \"unique_id\": \"${DEVICE_ID}_connectivity\",
+  \"state_topic\": \"${AVAILABILITY_TOPIC}\",
+  \"payload_on\": \"online\",
+  \"payload_off\": \"offline\",
+  \"device_class\": \"connectivity\",
+  \"device\": ${DEVICE_JSON}
+}"
+
+pub -r -t "${DISCOVERY_PREFIX}/button/${DEVICE_ID}/shutdown/config" -m "{
+  \"name\": \"Shutdown\",
+  \"unique_id\": \"${DEVICE_ID}_shutdown\",
+  \"command_topic\": \"${COMMAND_TOPIC}\",
+  \"payload_press\": \"shutdown\",
+  \"icon\": \"mdi:power\",
+  \"availability_topic\": \"${AVAILABILITY_TOPIC}\",
+  \"device\": ${DEVICE_JSON}
+}"
+{% if ha_agent_allow_reboot %}
+
+pub -r -t "${DISCOVERY_PREFIX}/button/${DEVICE_ID}/reboot/config" -m "{
+  \"name\": \"Reboot\",
+  \"unique_id\": \"${DEVICE_ID}_reboot\",
+  \"command_topic\": \"${COMMAND_TOPIC}\",
+  \"payload_press\": \"reboot\",
+  \"icon\": \"mdi:restart\",
+  \"availability_topic\": \"${AVAILABILITY_TOPIC}\",
+  \"device\": ${DEVICE_JSON}
+}"
+{% endif %}
+{% raw %}
+
+# Diagnostic sensors: all read from the single JSON payload the metrics loop
+# publishes on $METRICS_TOPIC. (Double braces below are Home Assistant
+# templates evaluated by HA, not by this script.)
+pub -r -t "${DISCOVERY_PREFIX}/sensor/${DEVICE_ID}/cpu_percent/config" -m "{
+  \"name\": \"CPU usage\",
+  \"unique_id\": \"${DEVICE_ID}_cpu_percent\",
+  \"state_topic\": \"${METRICS_TOPIC}\",
+  \"value_template\": \"{{ value_json.cpu_percent }}\",
+  \"unit_of_measurement\": \"%\",
+  \"state_class\": \"measurement\",
+  \"icon\": \"mdi:cpu-64-bit\",
+  \"entity_category\": \"diagnostic\",
+  \"availability_topic\": \"${AVAILABILITY_TOPIC}\",
+  \"device\": ${DEVICE_JSON}
+}"
+
+pub -r -t "${DISCOVERY_PREFIX}/sensor/${DEVICE_ID}/mem_percent/config" -m "{
+  \"name\": \"Memory usage\",
+  \"unique_id\": \"${DEVICE_ID}_mem_percent\",
+  \"state_topic\": \"${METRICS_TOPIC}\",
+  \"value_template\": \"{{ value_json.mem_percent }}\",
+  \"unit_of_measurement\": \"%\",
+  \"state_class\": \"measurement\",
+  \"icon\": \"mdi:memory\",
+  \"entity_category\": \"diagnostic\",
+  \"availability_topic\": \"${AVAILABILITY_TOPIC}\",
+  \"device\": ${DEVICE_JSON}
+}"
+
+pub -r -t "${DISCOVERY_PREFIX}/sensor/${DEVICE_ID}/rootfs_percent/config" -m "{
+  \"name\": \"Root filesystem usage\",
+  \"unique_id\": \"${DEVICE_ID}_rootfs_percent\",
+  \"state_topic\": \"${METRICS_TOPIC}\",
+  \"value_template\": \"{{ value_json.rootfs_percent }}\",
+  \"unit_of_measurement\": \"%\",
+  \"state_class\": \"measurement\",
+  \"icon\": \"mdi:harddisk\",
+  \"entity_category\": \"diagnostic\",
+  \"availability_topic\": \"${AVAILABILITY_TOPIC}\",
+  \"device\": ${DEVICE_JSON}
+}"
+
+pub -r -t "${DISCOVERY_PREFIX}/sensor/${DEVICE_ID}/load_1/config" -m "{
+  \"name\": \"Load average (1m)\",
+  \"unique_id\": \"${DEVICE_ID}_load_1\",
+  \"state_topic\": \"${METRICS_TOPIC}\",
+  \"value_template\": \"{{ value_json.load_1 }}\",
+  \"state_class\": \"measurement\",
+  \"icon\": \"mdi:gauge\",
+  \"entity_category\": \"diagnostic\",
+  \"availability_topic\": \"${AVAILABILITY_TOPIC}\",
+  \"device\": ${DEVICE_JSON}
+}"
+
+pub -r -t "${DISCOVERY_PREFIX}/sensor/${DEVICE_ID}/uptime/config" -m "{
+  \"name\": \"Uptime\",
+  \"unique_id\": \"${DEVICE_ID}_uptime\",
+  \"state_topic\": \"${METRICS_TOPIC}\",
+  \"value_template\": \"{{ value_json.uptime }}\",
+  \"unit_of_measurement\": \"s\",
+  \"device_class\": \"duration\",
+  \"icon\": \"mdi:timer-outline\",
+  \"entity_category\": \"diagnostic\",
+  \"availability_topic\": \"${AVAILABILITY_TOPIC}\",
+  \"device\": ${DEVICE_JSON}
+}"
+
+if [ -n "$(cpu_temp || true)" ]; then
+pub -r -t "${DISCOVERY_PREFIX}/sensor/${DEVICE_ID}/cpu_temp/config" -m "{
+  \"name\": \"CPU temperature\",
+  \"unique_id\": \"${DEVICE_ID}_cpu_temp\",
+  \"state_topic\": \"${METRICS_TOPIC}\",
+  \"value_template\": \"{{ value_json.cpu_temp }}\",
+  \"unit_of_measurement\": \"°C\",
+  \"device_class\": \"temperature\",
+  \"state_class\": \"measurement\",
+  \"entity_category\": \"diagnostic\",
+  \"availability_topic\": \"${AVAILABILITY_TOPIC}\",
+  \"device\": ${DEVICE_JSON}
+}"
+fi
+{% endraw %}
+
+# Availability last, so HA never sees a config referencing a not-yet-published
+# state topic.
+pub -r -t "$AVAILABILITY_TOPIC" -m "online"
+}
+
+announce
+
+# --- Availability heartbeat ----------------------------------------------
+# Periodically re-assert "online" so we recover if the broker restarts and
+# drops the retained availability message (which would otherwise leave Home
+# Assistant showing this host as disconnected until the next reboot/HA restart).
+heartbeat() {
+  while true; do
+    sleep "{{ ha_agent_heartbeat_interval }}"
+    pub -r -t "$AVAILABILITY_TOPIC" -m "online" || true
+  done
+}
+heartbeat &
+HEARTBEAT_PID=$!
+
+# --- Metrics loop ---------------------------------------------------------
+# Publish a metrics snapshot every interval. The first CPU sample is taken
+# here so the first published value already averages over a full interval.
+read -r PREV_CPU_TOTAL PREV_CPU_IDLE < <(cpu_sample)
+metrics() {
+  while true; do
+    sleep "{{ ha_agent_metrics_interval }}"
+    publish_metrics
+  done
+}
+metrics &
+METRICS_PID=$!
+
+cleanup() {
+  kill "$HEARTBEAT_PID" "$METRICS_PID" 2>/dev/null || true
+  pub -r -t "$AVAILABILITY_TOPIC" -m "offline" || true
+}
+trap cleanup EXIT
+
+# --- Event loop ----------------------------------------------------------
+# Subscribe (verbose, so each line is "<topic> <payload>") to both our command
+# topic and Home Assistant's status topic. The Last Will marks us offline in HA
+# if this process/host dies unexpectedly.
+mosquitto_sub -v -h "$MQTT_HOST" -p "$MQTT_PORT" "${AUTH[@]}" \
+  --will-topic "$AVAILABILITY_TOPIC" --will-payload "offline" --will-retain \
+  -t "$COMMAND_TOPIC" -t "$STATUS_TOPIC" | while read -r topic payload; do
+  if [ "$topic" = "$STATUS_TOPIC" ]; then
+    if [ "$payload" = "online" ]; then
+      logger -t ha-agent "Home Assistant came online; re-announcing"
+      announce
+    fi
+    continue
+  fi
+
+  case "$payload" in
+    shutdown|poweroff)
+      logger -t ha-agent "Received shutdown command"
+      pub -r -t "$AVAILABILITY_TOPIC" -m "offline" || true
+      systemctl poweroff
+      ;;
+{% if ha_agent_allow_reboot %}
+    reboot|restart)
+      logger -t ha-agent "Received reboot command"
+      systemctl reboot
+      ;;
+{% endif %}
+    *)
+      logger -t ha-agent "Ignoring unknown command: ${payload}"
+      ;;
+  esac
+done

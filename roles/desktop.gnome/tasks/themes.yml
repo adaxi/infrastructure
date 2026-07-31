@@ -5,7 +5,6 @@
       - numix-icon-theme-circle
       - numix-gtk-theme
       - gnome-tweaks
-      - nautilus-image-converter
     state: present
   become: yes
 
@@ -24,9 +23,20 @@
     state: present
   become: yes
 
+- name: Look up the desktop user's uid (for the session D-Bus address)
+  ansible.builtin.getent:
+    database: passwd
+    key: "{{ ansible_user_id }}"
+
+- name: Compute the session D-Bus address
+  ansible.builtin.set_fact:
+    gnome_session_dbus: "unix:path=/run/user/{{ ansible_facts.getent_passwd[ansible_user_id][1] }}/bus"
+
 - name: Set icons to numix circle+
   become: yes
   become_user: "{{ ansible_user_id }}"
+  environment:
+    DBUS_SESSION_BUS_ADDRESS: "{{ gnome_session_dbus }}"
   gsettings:
     key: org.gnome.desktop.interface.icon-theme
     value: Numix-Circle
@@ -55,6 +65,8 @@
 - name: Show date
   become: yes
   become_user: "{{ ansible_user_id }}"
+  environment:
+    DBUS_SESSION_BUS_ADDRESS: "{{ gnome_session_dbus }}"
   gsettings:
     key: org.gnome.desktop.interface.clock-show-date
     value: 'true'
@@ -62,6 +74,8 @@
 - name: Show seconds
   become: yes
   become_user: "{{ ansible_user_id }}"
+  environment:
+    DBUS_SESSION_BUS_ADDRESS: "{{ gnome_session_dbus }}"
   gsettings:
     key: org.gnome.desktop.interface.clock-show-seconds
     value: 'true'
@@ -69,6 +83,8 @@
 - name: Add minimize to button layout
   become: yes
   become_user: "{{ ansible_user_id }}"
+  environment:
+    DBUS_SESSION_BUS_ADDRESS: "{{ gnome_session_dbus }}"
   gsettings:
     key: org.gnome.desktop.wm.preferences.button-layout
     value: ":minimize,close"

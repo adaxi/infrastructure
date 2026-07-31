@@ -1,0 +1,85 @@
+---
+- name: Install the MQTT client (and ethtool for Wake-on-LAN)
+  ansible.builtin.apt:
+    name:
+      - mosquitto-clients
+      - ethtool
+    update_cache: yes
+  become: yes
+
+- name: Install the Home Assistant control agent
+  ansible.builtin.template:
+    src: ha-agent.sh.j2
+    dest: /usr/local/bin/ha-agent
+    owner: root
+    group: root
+    mode: '0755'
+  become: yes
+  notify: Restart ha-agent
+
+- name: Install the ha-agent systemd unit
+  ansible.builtin.template:
+    src: ha-agent.service.j2
+    dest: /etc/systemd/system/ha-agent.service
+    owner: root
+    group: root
+    mode: '0644'
+  become: yes
+  notify:
+    - Reload systemd
+    - Restart ha-agent
+
+- name: Enable and start the ha-agent service
+  ansible.builtin.systemd_service:
+    name: ha-agent
+    enabled: yes
+    state: started
+  become: yes
+
+- name: Ensure the systemd system-sleep hook directory exists
+  ansible.builtin.file:
+    path: /usr/lib/systemd/system-sleep
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
+  become: yes
+
+- name: Install the resume hook so the agent re-announces after sleep
+  ansible.builtin.template:
+    src: ha-agent-resume.sh.j2
+    dest: /usr/lib/systemd/system-sleep/ha-agent
+    owner: root
+    group: root
+    mode: '0755'
+  become: yes
+
+# --- Wake-on-LAN ---------------------------------------------------------
+- name: Install the Wake-on-LAN helper
+  ansible.builtin.template:
+    src: ha-agent-wol.sh.j2
+    dest: /usr/local/bin/ha-agent-wol
+    owner: root
+    group: root
+    mode: '0755'
+  become: yes
+  when: ha_agent_enable_wol
+
+- name: Install the Wake-on-LAN systemd unit
+  ansible.builtin.template:
+    src: ha-agent-wol.service.j2
+    dest: /etc/systemd/system/ha-agent-wol.service
+    owner: root
+    group: root
+    mode: '0644'
+  become: yes
+  when: ha_agent_enable_wol
+  notify: Reload systemd
+
+- name: Enable and start the Wake-on-LAN service
+  ansible.builtin.systemd_service:
+    name: ha-agent-wol
+    enabled: yes
+    state: started
+  become: yes
+  when: ha_agent_enable_wol

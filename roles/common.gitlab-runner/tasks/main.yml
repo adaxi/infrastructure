@@ -1,10 +1,24 @@
 ---
 - name: Download GitLab GPG key
-  ansible.builtin.get_url:
-    url: https://packages.gitlab.com/runner/gitlab-runner/gpgkey
-    dest: /tmp/runner_gitlab-runner.gpg
-    mode: '0644'
-  become: yes
+  block:
+    - name: Download GitLab GPG key (get_url)
+      ansible.builtin.get_url:
+        url: https://packages.gitlab.com/runner/gitlab-runner/gpgkey
+        dest: /tmp/runner_gitlab-runner.gpg
+        mode: '0644'
+      become: yes
+  rescue:
+    # Older ansible-core (< 2.17) fails on Python 3.12+ remotes with
+    # "HTTPSConnection.__init__() got an unexpected keyword argument 'cert_file'".
+    # Fall back to curl, which does not go through Ansible's urllib wrapper.
+    - name: Download GitLab GPG key (curl fallback)  # noqa: command-instead-of-module
+      ansible.builtin.command:
+        cmd: >-
+          curl -fsSL
+          https://packages.gitlab.com/runner/gitlab-runner/gpgkey
+          -o /tmp/runner_gitlab-runner.gpg
+        creates: /tmp/runner_gitlab-runner.gpg
+      become: yes
 
 - name: Dearmor GitLab GPG key
   ansible.builtin.command:

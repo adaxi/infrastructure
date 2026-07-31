@@ -1,0 +1,20 @@
+---
+# Install a living-room media center mini PC.
+#
+# Provides a graphical Debian desktop with Firefox and the Jellyfin client,
+# and exposes the machine to Home Assistant over
+# MQTT so it can be shut down / rebooted / woken remotely.
+#
+# ansible-playbook -i env/production/inventory mediacenter.yml -u adaxi --ask-become-pass
+
+- name: Install a media center
+  hosts: mediacenters
+  gather_facts: yes
+  roles:
+    - common._base
+    - common.vim
+    - common.tailscale
+    - desktop.gnome
+    - desktop.firefox
+    - media.jellyfin
+    - common.homeassistant-agent

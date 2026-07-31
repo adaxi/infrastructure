@@ -1,7 +1,14 @@
 ---
-- name: Add contrib and non-free section to debian repositories
+- name: Remove legacy contrib/non-free repository line (pre non-free-firmware)
   ansible.builtin.apt_repository:
     repo: 'deb http://httpredir.debian.org/debian {{ ansible_distribution_release }} contrib non-free'
+    state: absent
+  become: yes
+  when: ansible_distribution == 'Debian'
+
+- name: Add contrib and non-free section to debian repositories
+  ansible.builtin.apt_repository:
+    repo: 'deb http://httpredir.debian.org/debian {{ ansible_distribution_release }} contrib non-free non-free-firmware'
     state: present
   become: yes
   when: ansible_distribution == 'Debian'
@@ -14,7 +21,6 @@
       - unzip
       - debconf
       - debconf-utils
-      - software-properties-common
       - git
       - apt-transport-https
       - dnsutils

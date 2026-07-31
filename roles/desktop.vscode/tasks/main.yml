@@ -1,10 +1,30 @@
 ---
 - name: Download Microsoft GPG key
-  ansible.builtin.get_url:
-    url: https://packages.microsoft.com/keys/microsoft.asc
-    dest: /usr/share/keyrings/microsoft.gpg
-    mode: '0644'
-  become: yes
+  block:
+    - name: Download Microsoft GPG key (get_url)
+      ansible.builtin.get_url:
+        url: https://packages.microsoft.com/keys/microsoft.asc
+        dest: /usr/share/keyrings/microsoft.gpg
+        mode: '0644'
+      become: yes
+  rescue:
+    # Older ansible-core (< 2.17) fails on Python 3.12+ remotes with
+    # "HTTPSConnection.__init__() got an unexpected keyword argument 'cert_file'".
+    # Fall back to curl, which does not go through Ansible's urllib wrapper.
+    - name: Download Microsoft GPG key (curl fallback)  # noqa: command-instead-of-module
+      ansible.builtin.command:
+        cmd: >-
+          curl -fsSL
+          https://packages.microsoft.com/keys/microsoft.asc
+          -o /usr/share/keyrings/microsoft.gpg
+        creates: /usr/share/keyrings/microsoft.gpg
+      become: yes
+
+    - name: Ensure Microsoft GPG key permissions
+      ansible.builtin.file:
+        path: /usr/share/keyrings/microsoft.gpg
+        mode: '0644'
+      become: yes
 
 - name: Add Visual Studio Code repository with signed-by option
   ansible.builtin.apt_repository:

@@ -1,0 +1,16 @@
+#!/bin/bash
+#
+# systemd system-sleep hook (managed by Ansible - do not edit).
+#
+# While suspended the network is down, so the MQTT connection drops and the
+# broker publishes our "offline" Last Will. Restart the agent on resume so it
+# immediately re-announces "online" to Home Assistant instead of waiting for
+# the next heartbeat.
+#
+# Called by systemd-sleep as: <script> {pre|post} {suspend|hibernate|...}
+case "$1" in
+  post)
+    systemctl restart ha-agent
+    ;;
+esac
+exit 0

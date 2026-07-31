@@ -1,0 +1,73 @@
+---
+- name: Install rclone and FUSE
+  ansible.builtin.apt:
+    name:
+      - rclone
+      - fuse3
+    state: present
+    update_cache: yes
+  become: yes
+
+- name: Ensure the user's rclone config directory exists
+  ansible.builtin.file:
+    path: "/home/{{ ansible_user_id }}/.config/rclone"
+    state: directory
+    owner: "{{ ansible_user_id }}"
+    group: "{{ ansible_user_id }}"
+    mode: '0700'
+  become: yes
+
+- name: "Install the rclone config for remote: {{ googledrive_remote_name }}"
+  ansible.builtin.copy:
+    src: "{{ googledrive_rclone_conf_path }}"
+    dest: "/home/{{ ansible_user_id }}/.config/rclone/rclone.conf"
+    owner: "{{ ansible_user_id }}"
+    group: "{{ ansible_user_id }}"
+    mode: '0600'
+  become: yes
+  notify: Restart rclone-gdrive mounts
+
+- name: Create the Google Drive mount base directory
+  ansible.builtin.file:
+    path: "{{ googledrive_mount_base }}"
+    state: directory
+    owner: "{{ ansible_user_id }}"
+    group: "{{ ansible_user_id }}"
+    mode: '0755'
+  become: yes
+
+- name: Create a mount point per Google Drive folder
+  ansible.builtin.file:
+    path: "{{ googledrive_mount_base }}/{{ item.local_dir }}"
+    state: directory
+    owner: "{{ ansible_user_id }}"
+    group: "{{ ansible_user_id }}"
+    mode: '0755'
+  become: yes
+  loop: "{{ googledrive_mounts }}"
+  loop_control:
+    label: "{{ item.local_dir }}"
+
+- name: Install a systemd unit per Google Drive mount
+  ansible.builtin.template:
+    src: rclone-gdrive.service.j2
+    dest: "/etc/systemd/system/rclone-gdrive-{{ item.local_dir | lower }}.service"
+    owner: root
+    group: root
+    mode: '0644'
+  become: yes
+  loop: "{{ googledrive_mounts }}"
+  loop_control:
+    label: "{{ item.local_dir }}"
+  notify: Restart rclone-gdrive mounts
+
+- name: Enable and start the Google Drive mounts
+  ansible.builtin.systemd_service:
+    name: "rclone-gdrive-{{ item.local_dir | lower }}.service"
+    enabled: yes
+    state: started
+    daemon_reload: yes
+  become: yes
+  loop: "{{ googledrive_mounts }}"
+  loop_control:
+    label: "{{ item.local_dir }}"

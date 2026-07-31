@@ -5,7 +5,7 @@
 #
 # Run it
 #
-# ansible-playbook kubernetesservers  .yml -i inventory -u adaxi --ask-become-pass
+# ansible-playbook kubernetesservers.yml -i inventory -u adaxi --ask-become-pass
 
 #
 # Source: https://www.youtube.com/watch?v=oILc0ywDVTk

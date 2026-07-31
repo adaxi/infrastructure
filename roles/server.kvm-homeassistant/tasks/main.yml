@@ -15,10 +15,28 @@
     state: directory
 
 - name: Download Home Assistant
-  ansible.builtin.get_url:
-    url: https://github.com/home-assistant/operating-system/releases/download/10.5/haos_ova-10.5.qcow2.xz
-    dest: /proxmox-images/home-assistant.qcow2.xz
-    mode: '0440'
+  block:
+    - name: Download Home Assistant (get_url)
+      ansible.builtin.get_url:
+        url: https://github.com/home-assistant/operating-system/releases/download/10.5/haos_ova-10.5.qcow2.xz
+        dest: /proxmox-images/home-assistant.qcow2.xz
+        mode: '0440'
+  rescue:
+    # Older ansible-core (< 2.17) fails on Python 3.12+ remotes with
+    # "HTTPSConnection.__init__() got an unexpected keyword argument 'cert_file'".
+    # Fall back to curl, which does not go through Ansible's urllib wrapper.
+    - name: Download Home Assistant (curl fallback)  # noqa: command-instead-of-module
+      ansible.builtin.command:
+        cmd: >-
+          curl -fsSL
+          https://github.com/home-assistant/operating-system/releases/download/10.5/haos_ova-10.5.qcow2.xz
+          -o /proxmox-images/home-assistant.qcow2.xz
+        creates: /proxmox-images/home-assistant.qcow2.xz
+
+    - name: Ensure Home Assistant image permissions
+      ansible.builtin.file:
+        path: /proxmox-images/home-assistant.qcow2.xz
+        mode: '0440'
 
 - name: Unarchive Home Assistant
   ansible.builtin.shell:

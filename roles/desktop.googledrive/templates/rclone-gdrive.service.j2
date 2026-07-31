@@ -1,0 +1,16 @@
+[Unit]
+Description=Mount Google Drive "{{ item.remote_path }}" via rclone (managed by Ansible)
+AssertPathIsDirectory={{ googledrive_mount_base }}/{{ item.local_dir }}
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=notify
+User={{ ansible_user_id }}
+ExecStart=/usr/bin/rclone mount "{{ googledrive_remote_name }}:{{ item.remote_path }}" "{{ googledrive_mount_base }}/{{ item.local_dir }}" --config "/home/{{ ansible_user_id }}/.config/rclone/rclone.conf" {{ googledrive_mount_extra_args }}
+ExecStop=/usr/bin/fusermount3 -u "{{ googledrive_mount_base }}/{{ item.local_dir }}"
+Restart=on-failure
+RestartSec=10
+
+[Install]
+WantedBy=default.target

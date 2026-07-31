@@ -14,6 +14,7 @@
   community.docker.docker_container:
     name: jackett
     image: lscr.io/linuxserver/jackett:latest
+    pull: yes
     env:
       PUID: "1000"
       PGID: "1000"

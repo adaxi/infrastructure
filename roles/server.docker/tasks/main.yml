@@ -1,12 +1,34 @@
-- name: Add docker public key
-  ansible.builtin.apt_key:
+- name: Ensure apt keyrings directory exists
+  ansible.builtin.file:
+    path: /etc/apt/keyrings
+    state: directory
+    mode: "0755"
+
+- name: Download docker GPG key (armored)
+  ansible.builtin.get_url:
     url: "https://download.docker.com/linux/debian/gpg"
-    state: present
+    dest: /etc/apt/keyrings/docker.asc
+    mode: "0644"
+
+- name: Dearmor docker GPG key
+  ansible.builtin.command:
+    cmd: gpg --dearmor --yes -o /etc/apt/keyrings/docker.gpg /etc/apt/keyrings/docker.asc
+    creates: /etc/apt/keyrings/docker.gpg
+
+- name: Remove legacy unsigned docker repository line
+  ansible.builtin.apt_repository:
+    repo: "deb [arch=amd64] https://download.docker.com/linux/debian {{ ansible_distribution_release }} stable"
+    state: absent
 
 - name: Add docker repository
   ansible.builtin.apt_repository:
-    repo: "deb [arch=amd64] https://download.docker.com/linux/debian {{ ansible_distribution_release }} stable"
+    repo: "deb [arch=amd64 signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/debian {{ ansible_distribution_release }} stable"
     state: present
+
+- name: Remove legacy docker GPG key from deprecated apt keyring
+  ansible.builtin.apt_key:
+    id: "9DC858229FC7DD38854AE2D88D81803C0EBFCD88"
+    state: absent
 
 - name: Ensure docker is installed
   ansible.builtin.apt:

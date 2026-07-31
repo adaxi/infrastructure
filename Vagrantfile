@@ -118,6 +118,22 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     end
   end
 
+  config.vm.define "mediacenter" do |c|
+    c.vm.box = "debian/trixie64"
+    c.vm.synced_folder '.', '/vagrant', disabled: true
+    c.vm.hostname = "mediacenter.local"
+    c.vm.provider "virtualbox" do |v|
+      v.gui = true
+      v.name = "Media Center (mediacenter)"
+      v.memory = 2048
+      v.cpus = 2
+    end
+    c.vm.provision "ansible" do |ansible|
+      ansible.playbook = "mediacenter.yml"
+      ansible.inventory_path = "env/development/inventory"
+    end
+  end
+
   # Create a public network, which generally matched to bridged network.
   # Bridged networks make the machine appear as another physical device on
   # your network.

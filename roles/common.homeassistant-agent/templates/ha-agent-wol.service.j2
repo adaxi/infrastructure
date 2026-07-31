@@ -1,0 +1,12 @@
+[Unit]
+Description=Enable Wake-on-LAN on ethernet interfaces
+After=network.target
+Wants=network.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/ha-agent-wol
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target

@@ -5,6 +5,10 @@
     restart_policy: "unless-stopped"
     privileged: true
     network_mode: host
+    log_driver: json-file
+    log_options:
+      max-size: "20m"
+      max-file: "3"
     env:
       ELTAKO_USB_TTY_PATH: /dev/ttyUSB0
       ELTAKO_RADIO_TTY_PATH: /dev/ttyUSB1

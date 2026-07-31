@@ -63,3 +63,6 @@ kube:2222 ansible_user=vagrant ansible_ssh_private_key_file=.vagrant/machines/ku
 
 [homeassistantservers]
 homeassistant:2222 ansible_user=vagrant ansible_ssh_private_key_file=.vagrant/machines/homeassistant/virtualbox/private_key
+
+[mediacenters]
+mediacenter:2222 ansible_user=vagrant ansible_ssh_private_key_file=.vagrant/machines/mediacenter/virtualbox/private_key

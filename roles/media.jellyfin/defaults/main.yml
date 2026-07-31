@@ -1,0 +1,12 @@
+---
+# Flatpak application id for Jellyfin Desktop (the officially recommended
+# way to install the desktop client on Linux). The old Jellyfin Media Player
+# id (com.github.iwalton3.jellyfin-media-player) was rebased to this on
+# Flathub and now only resolves via a compatibility alias.
+jellyfin_flatpak_app: org.jellyfin.JellyfinDesktop
+
+# When true, autostart Jellyfin Desktop (fullscreen) on graphical login.
+jellyfin_autostart: yes
+
+# Desktop user the autostart entry is created for.
+jellyfin_user: "{{ ansible_user | default('kodi') }}"

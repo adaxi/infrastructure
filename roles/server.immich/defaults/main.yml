@@ -1,0 +1,23 @@
+---
+# Immich image tag. "release" tracks the latest stable release, matching
+# the official docker-compose.yml.
+immich_version: release
+
+# Directories on the portainer host used for persistent immich data.
+immich_data_path: /immich
+immich_db_data_path: "{{ immich_data_path }}/postgres"
+immich_model_cache_path: "{{ immich_data_path }}/model-cache"
+immich_upload_location: "{{ immich_data_path }}/upload"
+
+# Existing photo library, mounted directly over the admin user's upload
+# library folder so Immich manages these photos as its own library.
+immich_library_admin_host_path: /nas/gamma/photos
+
+# Database credentials shared between the postgres and server containers.
+immich_db_user: immich
+immich_db_password: immich
+immich_db_name: immich
+
+# Networking
+immich_port: 2283
+immich_timezone: Europe/Brussels

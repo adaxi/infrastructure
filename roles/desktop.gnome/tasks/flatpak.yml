@@ -1,0 +1,12 @@
+---
+- name: Install the GNOME Software Flatpak plugin
+  ansible.builtin.apt:
+    name: gnome-software-plugin-flatpak
+  become: yes
+
+- name: Add the Flathub repository
+  community.general.flatpak_remote:
+    name: flathub
+    state: present
+    flatpakrepo_url: https://flathub.org/repo/flathub.flatpakrepo
+  become: yes

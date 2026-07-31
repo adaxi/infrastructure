@@ -1,0 +1,34 @@
+---
+# MQTT broker used to expose this host to Home Assistant.
+# The broker is the eclipse-mosquitto container deployed by server.mosquitto
+# (currently on the portainer server). Override per environment if needed.
+ha_agent_mqtt_host: gravel.m.adaxisoft.be
+ha_agent_mqtt_port: 1883
+ha_agent_mqtt_username: ""
+ha_agent_mqtt_password: ""
+
+# Home Assistant MQTT discovery prefix (default HA value).
+ha_agent_discovery_prefix: homeassistant
+
+# How often (seconds) the agent re-asserts its "online" availability, so the
+# host recovers if the broker restarts and loses the retained availability
+# message. The Last Will still marks the host offline if it dies unexpectedly.
+ha_agent_heartbeat_interval: 300
+
+# How often (seconds) the agent publishes system metrics (CPU, memory, root
+# filesystem, load average, uptime, CPU temperature) to Home Assistant.
+ha_agent_metrics_interval: 60
+
+# Topic prefix under which this host publishes availability / listens for commands.
+ha_agent_topic_prefix: hostcontrol
+
+# Stable identifiers derived from the inventory host name.
+ha_agent_device_id: "{{ inventory_hostname | regex_replace('[^A-Za-z0-9_]', '_') }}"
+ha_agent_friendly_name: "{{ inventory_hostname }}"
+
+# Expose a Reboot button in addition to the Shutdown button.
+ha_agent_allow_reboot: yes
+
+# Enable Wake-on-LAN on ethernet interfaces so Home Assistant can power the
+# host back on (via a wake_on_lan / switch.wake integration).
+ha_agent_enable_wol: yes

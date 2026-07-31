@@ -8,5 +8,8 @@
 - name: Include keepass2 tasks
   ansible.builtin.include_tasks: keepass2.yml
 
+- name: Include flatpak tasks
+  ansible.builtin.include_tasks: flatpak.yml
+
 - name: Include network-manager tasks
   ansible.builtin.include_tasks: network-manager.yml

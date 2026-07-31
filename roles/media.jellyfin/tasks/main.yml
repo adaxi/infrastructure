@@ -1,0 +1,42 @@
+---
+- name: Install Flatpak
+  ansible.builtin.apt:
+    name: flatpak
+    update_cache: yes
+  become: yes
+
+- name: Add the Flathub repository
+  community.general.flatpak_remote:
+    name: flathub
+    state: present
+    flatpakrepo_url: https://flathub.org/repo/flathub.flatpakrepo
+  become: yes
+
+- name: Install Jellyfin Desktop
+  community.general.flatpak:
+    name: "{{ jellyfin_flatpak_app }}"
+    state: present
+  become: yes
+
+- name: Ensure the user autostart directory exists
+  ansible.builtin.file:
+    path: "/home/{{ jellyfin_user }}/.config/autostart"
+    state: directory
+    owner: "{{ jellyfin_user }}"
+    mode: '0755'
+  become: yes
+  when: jellyfin_autostart
+
+- name: Autostart Jellyfin Desktop on login
+  ansible.builtin.copy:
+    dest: "/home/{{ jellyfin_user }}/.config/autostart/jellyfin-media-player.desktop"
+    owner: "{{ jellyfin_user }}"
+    mode: '0644'
+    content: |
+      [Desktop Entry]
+      Type=Application
+      Name=Jellyfin Desktop
+      Exec=flatpak run {{ jellyfin_flatpak_app }} --fullscreen
+      X-GNOME-Autostart-enabled=true
+  become: yes
+  when: jellyfin_autostart

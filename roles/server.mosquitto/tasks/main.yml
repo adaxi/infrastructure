@@ -17,6 +17,7 @@
   community.docker.docker_container:
     name: mqtt
     image: eclipse-mosquitto:latest
+    pull: yes
     ports:
       - "9001:9001"
       - "1883:1883"

@@ -15,6 +15,8 @@
       - server.radarr
       - server.sonarr
       - server.jellyseerr
+      - server.immich
+      - server.watchtower
       - server.mosquitto
       - server.grott
       - server.eltako-automation
@@ -25,5 +27,6 @@
             - clock.sjc.he.net,
             - clock.fmt.he.net,
             - clock.nyc.he.net
+      - www.immich.adaxisoft.be
       - www.home.adaxisoft.be
 

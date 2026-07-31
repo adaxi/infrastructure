@@ -1,0 +1,13 @@
+---
+- name: Start watchtower container
+  community.docker.docker_container:
+    name: watchtower
+    image: ghcr.io/nicholas-fedor/watchtower:latest
+    pull: yes
+    env:
+      TZ: "{{ watchtower_timezone }}"
+      WATCHTOWER_CLEANUP: "true"
+      WATCHTOWER_SCHEDULE: "{{ watchtower_schedule }}"
+    restart_policy: "always"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock

@@ -9,6 +9,7 @@
       - common.devtools
       - server.usbip-client
       - common.tailscale
+      - common.homeassistant-agent
       - role: geerlingguy.ntp # ansible-galaxy install geerlingguy.ntp
         vars:
           ntp_manage_config: true
@@ -16,10 +17,10 @@
             - clock.sjc.he.net,
             - clock.fmt.he.net,
             - clock.nyc.he.net
-      # - role: lae.proxmox # ansible-galaxy install lae.proxmox 
-      #  vars:
-      #    - pve_group: all
-      #    - pve_reboot_on_kernel_update: true
-      # - server.proxmox
-      # - server.kvm-homeassistant
+      - role: lae.proxmox # ansible-galaxy install lae.proxmox 
+        vars:
+         - pve_group: all
+         - pve_reboot_on_kernel_update: true
+      - server.proxmox
+      - server.kvm-homeassistant
 

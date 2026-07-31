@@ -1,0 +1,13 @@
+[Unit]
+Description=Home Assistant MQTT control agent
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+ExecStart=/usr/local/bin/ha-agent
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target

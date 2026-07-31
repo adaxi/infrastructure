@@ -1,0 +1,4 @@
+---
+watchtower_timezone: Europe/Brussels
+# 6-field cron (with seconds): run nightly at 4am, well clear of manual playbook runs.
+watchtower_schedule: "0 0 4 * * *"

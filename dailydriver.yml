@@ -1,7 +1,7 @@
 ---
 - name: install a daily driver
   hosts: dailydrivers
-  # connection: local
+  connection: local
   roles:
      - common._base
      - common.vim
@@ -11,6 +11,8 @@
      - common.gitlab-runner
      - common.dotfiles
      - common.tailscale
+     - common.homeassistant-agent
+     - desktop.googledrive
      - desktop.devtools
      - desktop.chrome
      - desktop.firefox

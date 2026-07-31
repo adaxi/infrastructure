@@ -1,0 +1,11 @@
+---
+- name: Reload systemd
+  ansible.builtin.systemd_service:
+    daemon_reload: yes
+  become: yes
+
+- name: Restart ha-agent
+  ansible.builtin.systemd_service:
+    name: ha-agent
+    state: restarted
+  become: yes

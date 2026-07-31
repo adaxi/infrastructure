@@ -1,0 +1,13 @@
+- name: Make immich_adaxisoft_be.conf nginx configuration is available
+  ansible.builtin.template:
+    dest: /etc/nginx/sites-available/immich_adaxisoft_be.conf
+    src: nginx.immich_adaxisoft_be.conf.j2
+  notify: Reload nginx
+  when: installation_environment == "production"
+
+- name: Enable nginx immich_adaxisoft_be.conf
+  ansible.builtin.file:
+    src: /etc/nginx/sites-available/immich_adaxisoft_be.conf
+    dest: /etc/nginx/sites-enabled/immich_adaxisoft_be.conf
+    state: link
+  when: installation_environment == "production"

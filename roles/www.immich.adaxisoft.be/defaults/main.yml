@@ -1,0 +1,8 @@
+immich_adaxisoft_be_home: /var/www/immich_adaxisoft_be
+immich_adaxisoft_be_domain: immich.adaxisoft.be
+immich_adaxisoft_be_upstream: 192.168.0.100:2283
+
+immich_adaxisoft_be_letsencrypt:
+  - name: '{{ immich_adaxisoft_be_domain }}'
+    domains: ['{{ immich_adaxisoft_be_domain }}']
+    email: 'dev@adaxisoft.be'

@@ -1,12 +1,27 @@
 ---
-- name: Add nodesource repository key
-  ansible.builtin.apt_key:
+- name: Ensure apt keyrings directory exists
+  ansible.builtin.file:
+    path: /etc/apt/keyrings
+    state: directory
+    mode: "0755"
+  become: yes
+
+- name: Download nodesource GPG key (armored)
+  ansible.builtin.get_url:
     url: "https://deb.nodesource.com/gpgkey/nodesource.gpg.key"
+    dest: /etc/apt/keyrings/nodesource.asc
+    mode: "0644"
+  become: yes
+
+- name: Dearmor nodesource GPG key
+  ansible.builtin.command:
+    cmd: gpg --dearmor --yes -o /etc/apt/keyrings/nodesource.gpg /etc/apt/keyrings/nodesource.asc
+    creates: /etc/apt/keyrings/nodesource.gpg
   become: yes
 
 - name: Add nodesource repository
   ansible.builtin.apt_repository:
-    repo: 'deb https://deb.nodesource.com/node_16.x {{ ansible_distribution_release }} main'
+    repo: "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_24.x {{ ansible_distribution_release }} main"
     state: present
   become: yes
 

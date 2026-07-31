@@ -1,0 +1,21 @@
+---
+#
+# \author	Gerik Bonaert
+# \brief	Configuration for the living-room media center mini PC (Vagrant).
+#
+
+installation_environment: development
+
+###
+# Jellyfin client (media.jellyfin)
+# On the Vagrant box the desktop user is "vagrant".
+###
+jellyfin_user: vagrant
+
+###
+# Home Assistant control agent (common.homeassistant-agent)
+# No MQTT broker in the dev environment; point at localhost so the agent
+# just retries harmlessly instead of reaching the production broker.
+###
+ha_agent_mqtt_host: localhost
+
